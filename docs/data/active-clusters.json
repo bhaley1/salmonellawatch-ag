@@ -1,0 +1,6134 @@
+[
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000024682.215",
+    "n_total": 1176,
+    "n_human": 858,
+    "n_nonhuman": 318,
+    "n_food": 141,
+    "n_animal": 6,
+    "n_environment": 109,
+    "earliest_collection_date": "1998-07-01",
+    "latest_collection_date": "2026-05-01",
+    "earliest_target_creation_date": "2015-11-23",
+    "latest_target_creation_date": "2026-05-22",
+    "temporal_span_days": 10166,
+    "histogram_max_year_count": 291,
+    "deposit_lag_median": 1935,
+    "deposit_lag_mean": 1745,
+    "new_humans_in_window": 2,
+    "new_humans_30d": 0,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "IVb",
+    "consensus_serovar_n": 209,
+    "consensus_serovar_total": 481,
+    "mlst_scheme": "lmonocytogenes",
+    "mlst_st": "ST6",
+    "mlst_alleles": "{\"abcZ\": \"3\", \"bglA\": \"9\", \"cat\": \"9\", \"dapE\": \"3\", \"dat\": \"3\", \"ldh\": \"1\", \"lhkA\": \"5\"}",
+    "mlst_representative_pdt": "PDT001618909.1",
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "South Africa",
+        "n": 379
+      },
+      {
+        "country": "Germany",
+        "n": 264
+      },
+      {
+        "country": "United Kingdom",
+        "n": 197
+      },
+      {
+        "country": "Netherlands",
+        "n": 86
+      },
+      {
+        "country": "USA",
+        "n": 32
+      },
+      {
+        "country": "Denmark",
+        "n": 24
+      },
+      {
+        "country": "Switzerland",
+        "n": 20
+      },
+      {
+        "country": "Not Provided",
+        "n": 17
+      },
+      {
+        "country": "Spain",
+        "n": 12
+      },
+      {
+        "country": "Italy",
+        "n": 11
+      },
+      {
+        "country": "Belgium",
+        "n": 9
+      },
+      {
+        "country": "Norway",
+        "n": 9
+      },
+      {
+        "country": "Russia",
+        "n": 7
+      },
+      {
+        "country": "Portugal",
+        "n": 6
+      },
+      {
+        "country": "Japan",
+        "n": 6
+      },
+      {
+        "country": "Ireland",
+        "n": 5
+      },
+      {
+        "country": "Canada",
+        "n": 5
+      },
+      {
+        "country": "Finland",
+        "n": 4
+      },
+      {
+        "country": "Iceland",
+        "n": 4
+      },
+      {
+        "country": "Lithuania",
+        "n": 3
+      },
+      {
+        "country": "Slovenia",
+        "n": 2
+      },
+      {
+        "country": "France",
+        "n": 1
+      },
+      {
+        "country": "Bulgaria",
+        "n": 1
+      },
+      {
+        "country": "Cyprus",
+        "n": 1
+      },
+      {
+        "country": "Poland",
+        "n": 1
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "USA": [
+          {
+            "admin1": "NY",
+            "n": 6
+          },
+          {
+            "admin1": "IL",
+            "n": 4
+          },
+          {
+            "admin1": "FL",
+            "n": 2
+          },
+          {
+            "admin1": "MN",
+            "n": 1
+          },
+          {
+            "admin1": "WV",
+            "n": 1
+          }
+        ],
+        "United Kingdom": [
+          {
+            "admin1": "United Kingdom",
+            "n": 166
+          },
+          {
+            "admin1": "North of England",
+            "n": 19
+          },
+          {
+            "admin1": "None",
+            "n": 5
+          },
+          {
+            "admin1": "Midlands and East of England",
+            "n": 3
+          },
+          {
+            "admin1": "London",
+            "n": 1
+          }
+        ],
+        "Switzerland": [
+          {
+            "admin1": "Zurich",
+            "n": 5
+          }
+        ],
+        "Russia": [
+          {
+            "admin1": "Moscow",
+            "n": 3
+          },
+          {
+            "admin1": "St.Peterburg",
+            "n": 1
+          },
+          {
+            "admin1": "Belgorod",
+            "n": 1
+          },
+          {
+            "admin1": "Bryansk",
+            "n": 1
+          },
+          {
+            "admin1": "Lipetsk",
+            "n": 1
+          }
+        ],
+        "South Africa": [
+          {
+            "admin1": "Gauteng",
+            "n": 194
+          },
+          {
+            "admin1": "Western Cape",
+            "n": 44
+          },
+          {
+            "admin1": "Limpopo",
+            "n": 26
+          },
+          {
+            "admin1": "KwaZulu-Natal",
+            "n": 14
+          },
+          {
+            "admin1": "Eastern Cape",
+            "n": 10
+          },
+          {
+            "admin1": "Mpumalanga",
+            "n": 8
+          },
+          {
+            "admin1": "Free State",
+            "n": 8
+          },
+          {
+            "admin1": "GA",
+            "n": 8
+          },
+          {
+            "admin1": "WC",
+            "n": 3
+          },
+          {
+            "admin1": "North West",
+            "n": 2
+          },
+          {
+            "admin1": "Northern Cape",
+            "n": 2
+          },
+          {
+            "admin1": "NC",
+            "n": 1
+          },
+          {
+            "admin1": "FS",
+            "n": 1
+          },
+          {
+            "admin1": "LP",
+            "n": 1
+          }
+        ],
+        "Canada": [
+          {
+            "admin1": "Quebec",
+            "n": 2
+          }
+        ],
+        "Finland": [
+          {
+            "admin1": "Helsinki",
+            "n": 1
+          }
+        ],
+        "Norway": [
+          {
+            "admin1": "Viken",
+            "n": 1
+          }
+        ],
+        "Japan": [
+          {
+            "admin1": "Hokkaido",
+            "n": 1
+          }
+        ]
+      },
+      "unspecified": {
+        "Switzerland": 15,
+        "United Kingdom": 3,
+        "Netherlands": 86,
+        "Ireland": 5,
+        "USA": 18,
+        "Denmark": 24,
+        "Italy": 11,
+        "France": 1,
+        "South Africa": 57,
+        "Germany": 264,
+        "Belgium": 9,
+        "Finland": 3,
+        "Bulgaria": 1,
+        "Cyprus": 1,
+        "Portugal": 6,
+        "Iceland": 4,
+        "Japan": 5,
+        "Spain": 12,
+        "Lithuania": 3,
+        "Canada": 3,
+        "Not Provided": 17,
+        "Poland": 1,
+        "Norway": 8,
+        "Slovenia": 2
+      }
+    },
+    "source_summary": [
+      {
+        "category": "Human",
+        "source": "human",
+        "n": 435
+      },
+      {
+        "category": "Human",
+        "source": "human listeriosis",
+        "n": 231
+      },
+      {
+        "category": "Human",
+        "source": "(unspecified)",
+        "n": 116
+      },
+      {
+        "category": "Food",
+        "source": "food",
+        "n": 96
+      },
+      {
+        "category": "Environment",
+        "source": "environmental",
+        "n": 54
+      },
+      {
+        "category": "Unknown",
+        "source": "(unspecified)",
+        "n": 43
+      },
+      {
+        "category": "Human",
+        "source": "blood",
+        "n": 28
+      },
+      {
+        "category": "Environment",
+        "source": "food processing environment",
+        "n": 27
+      },
+      {
+        "category": "Human",
+        "source": "not provided",
+        "n": 16
+      },
+      {
+        "category": "Environment",
+        "source": "production environment",
+        "n": 16
+      },
+      {
+        "category": "Food",
+        "source": "food products",
+        "n": 15
+      },
+      {
+        "category": "Human",
+        "source": "csf",
+        "n": 8
+      },
+      {
+        "category": "Food",
+        "source": "beef",
+        "n": 7
+      },
+      {
+        "category": "Human",
+        "source": "blood culture",
+        "n": 6
+      },
+      {
+        "category": "Human",
+        "source": "cerebrospinal fluid",
+        "n": 6
+      },
+      {
+        "category": "Food",
+        "source": "chicken",
+        "n": 5
+      },
+      {
+        "category": "Environment",
+        "source": "environmental swab sponge",
+        "n": 4
+      },
+      {
+        "category": "Food",
+        "source": "meat",
+        "n": 3
+      },
+      {
+        "category": "Unknown",
+        "source": "oxtail",
+        "n": 3
+      },
+      {
+        "category": "Animal",
+        "source": "lamb",
+        "n": 3
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003207382.1",
+      "PDT003180714.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003207382.1",
+        "biosample": "SAMN59684844",
+        "date_added": "2026-05-10",
+        "collection_date": "2026-04",
+        "geo": "United Kingdom: United Kingdom"
+      },
+      {
+        "pdt": "PDT003180714.1",
+        "biosample": "SAMN57333295",
+        "date_added": "2026-04-18",
+        "collection_date": "2026-04",
+        "geo": "United Kingdom: United Kingdom"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT000465713.1",
+      "biosample": "SAMN10929260",
+      "date": "1998-07-01",
+      "date_raw": "1998-07",
+      "geo": "USA:FL",
+      "geo_country": "USA",
+      "geo_admin1": "FL",
+      "source": "muffaletta",
+      "source_category": "Unknown"
+    },
+    "oldest_human": {
+      "pdt": "PDT000153572.2",
+      "biosample": "SAMEA4398450",
+      "date": "2003-01-01",
+      "date_raw": "2003",
+      "geo": "Denmark",
+      "geo_country": "Denmark",
+      "geo_admin1": null,
+      "source": "not provided",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": {
+      "pdt": "PDT000465713.1",
+      "biosample": "SAMN10929260",
+      "date": "1998-07-01",
+      "date_raw": "1998-07",
+      "geo": "USA:FL",
+      "geo_country": "USA",
+      "geo_admin1": "FL",
+      "source": "muffaletta",
+      "source_category": "Unknown"
+    },
+    "histogram": [
+      {
+        "year": 1998,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 1999,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2002,
+        "n_human": 0,
+        "n_nonhuman": 2
+      },
+      {
+        "year": 2003,
+        "n_human": 3,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2004,
+        "n_human": 2,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2005,
+        "n_human": 2,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2006,
+        "n_human": 4,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2007,
+        "n_human": 2,
+        "n_nonhuman": 2
+      },
+      {
+        "year": 2008,
+        "n_human": 3,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2009,
+        "n_human": 14,
+        "n_nonhuman": 6
+      },
+      {
+        "year": 2010,
+        "n_human": 22,
+        "n_nonhuman": 6
+      },
+      {
+        "year": 2011,
+        "n_human": 26,
+        "n_nonhuman": 13
+      },
+      {
+        "year": 2012,
+        "n_human": 8,
+        "n_nonhuman": 8
+      },
+      {
+        "year": 2013,
+        "n_human": 16,
+        "n_nonhuman": 4
+      },
+      {
+        "year": 2014,
+        "n_human": 23,
+        "n_nonhuman": 3
+      },
+      {
+        "year": 2015,
+        "n_human": 22,
+        "n_nonhuman": 6
+      },
+      {
+        "year": 2016,
+        "n_human": 31,
+        "n_nonhuman": 38
+      },
+      {
+        "year": 2017,
+        "n_human": 270,
+        "n_nonhuman": 21
+      },
+      {
+        "year": 2018,
+        "n_human": 199,
+        "n_nonhuman": 50
+      },
+      {
+        "year": 2019,
+        "n_human": 74,
+        "n_nonhuman": 40
+      },
+      {
+        "year": 2020,
+        "n_human": 20,
+        "n_nonhuman": 11
+      },
+      {
+        "year": 2021,
+        "n_human": 27,
+        "n_nonhuman": 6
+      },
+      {
+        "year": 2022,
+        "n_human": 10,
+        "n_nonhuman": 28
+      },
+      {
+        "year": 2023,
+        "n_human": 4,
+        "n_nonhuman": 2
+      },
+      {
+        "year": 2024,
+        "n_human": 8,
+        "n_nonhuman": 5
+      },
+      {
+        "year": 2025,
+        "n_human": 2,
+        "n_nonhuman": 16
+      },
+      {
+        "year": 2026,
+        "n_human": 3,
+        "n_nonhuman": 4
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "Switzerland",
+        "lon": 8.2,
+        "lat": 46.8,
+        "n_human": 8,
+        "n_nonhuman": 12,
+        "days_ago": 507
+      },
+      {
+        "label": "United Kingdom",
+        "lon": -1.5,
+        "lat": 52.4,
+        "n_human": 90,
+        "n_nonhuman": 106,
+        "days_ago": 22
+      },
+      {
+        "label": "Netherlands",
+        "lon": 5.3,
+        "lat": 52.1,
+        "n_human": 60,
+        "n_nonhuman": 12,
+        "days_ago": 2274
+      },
+      {
+        "label": "United States",
+        "lon": -98.5,
+        "lat": 39.8,
+        "n_human": 22,
+        "n_nonhuman": 7,
+        "days_ago": 235
+      },
+      {
+        "label": "Ireland",
+        "lon": -7.7,
+        "lat": 53.4,
+        "n_human": 3,
+        "n_nonhuman": 1,
+        "days_ago": 4160
+      },
+      {
+        "label": "Denmark",
+        "lon": 10.0,
+        "lat": 56.0,
+        "n_human": 14,
+        "n_nonhuman": 10,
+        "days_ago": 3064
+      },
+      {
+        "label": "Italy",
+        "lon": 12.5,
+        "lat": 42.8,
+        "n_human": 9,
+        "n_nonhuman": 2,
+        "days_ago": 3064
+      },
+      {
+        "label": "France",
+        "lon": 2.2,
+        "lat": 46.6,
+        "n_human": 1,
+        "n_nonhuman": 0,
+        "days_ago": 5621
+      },
+      {
+        "label": "South Africa",
+        "lon": 25.1,
+        "lat": -29.0,
+        "n_human": 306,
+        "n_nonhuman": 28,
+        "days_ago": 2942
+      },
+      {
+        "label": "Germany",
+        "lon": 10.4,
+        "lat": 51.2,
+        "n_human": 232,
+        "n_nonhuman": 32,
+        "days_ago": 1603
+      },
+      {
+        "label": "Belgium",
+        "lon": 4.5,
+        "lat": 50.5,
+        "n_human": 9,
+        "n_nonhuman": 0,
+        "days_ago": 4525
+      },
+      {
+        "label": "Finland",
+        "lon": 25.7,
+        "lat": 64.0,
+        "n_human": 3,
+        "n_nonhuman": 1,
+        "days_ago": 4101
+      },
+      {
+        "label": "Bulgaria",
+        "lon": 25.5,
+        "lat": 42.7,
+        "n_human": 1,
+        "n_nonhuman": 0,
+        "days_ago": 5156
+      },
+      {
+        "label": "Cyprus",
+        "lon": 33.4,
+        "lat": 35.1,
+        "n_human": 1,
+        "n_nonhuman": 0,
+        "days_ago": 5612
+      },
+      {
+        "label": "Portugal",
+        "lon": -8.2,
+        "lat": 39.4,
+        "n_human": 6,
+        "n_nonhuman": 0,
+        "days_ago": 507
+      },
+      {
+        "label": "Iceland",
+        "lon": -18.9,
+        "lat": 64.9,
+        "n_human": 4,
+        "n_nonhuman": 0,
+        "days_ago": 3429
+      },
+      {
+        "label": "Japan",
+        "lon": 138.3,
+        "lat": 36.2,
+        "n_human": 5,
+        "n_nonhuman": 1,
+        "days_ago": 1968
+      },
+      {
+        "label": "Spain",
+        "lon": -3.7,
+        "lat": 40.4,
+        "n_human": 2,
+        "n_nonhuman": 10,
+        "days_ago": 1238
+      },
+      {
+        "label": "Russian Federation",
+        "lon": 105.3,
+        "lat": 61.5,
+        "n_human": 7,
+        "n_nonhuman": 0,
+        "days_ago": 228
+      },
+      {
+        "label": "Lithuania",
+        "lon": 23.9,
+        "lat": 55.2,
+        "n_human": 3,
+        "n_nonhuman": 0,
+        "days_ago": 2334
+      },
+      {
+        "label": "Canada",
+        "lon": -106.0,
+        "lat": 56.1,
+        "n_human": 0,
+        "n_nonhuman": 5,
+        "days_ago": 4890
+      },
+      {
+        "label": "Poland",
+        "lon": 19.4,
+        "lat": 52.1,
+        "n_human": 0,
+        "n_nonhuman": 1,
+        "days_ago": 4525
+      },
+      {
+        "label": "Norway",
+        "lon": 8.5,
+        "lat": 60.5,
+        "n_human": 0,
+        "n_nonhuman": 9,
+        "days_ago": 2320
+      },
+      {
+        "label": "Slovenia",
+        "lon": 14.9,
+        "lat": 46.1,
+        "n_human": 0,
+        "n_nonhuman": 2,
+        "days_ago": 2334
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT003223344.1",
+      "biosample": "SAMN60350006",
+      "asm_acc": "GCA_057706155.1",
+      "collection_date": "2026-05",
+      "target_creation_date": "2026-05-22"
+    },
+    "host_summary": [
+      {
+        "host": "not available",
+        "n": 50
+      },
+      {
+        "host": "food",
+        "n": 12
+      },
+      {
+        "host": "equine",
+        "n": 1
+      }
+    ],
+    "signals": {
+      "geographic_spread": {
+        "label": "multi-hemisphere",
+        "n_countries": 25,
+        "n_continents": 4,
+        "n_hemispheres": 2,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": true,
+        "evidence": "food_origin field",
+        "n_food_origin_mismatches": 1,
+        "human_countries": [
+          "Belgium",
+          "Bulgaria",
+          "Cyprus",
+          "Denmark",
+          "Finland",
+          "France",
+          "Germany",
+          "Iceland",
+          "Ireland",
+          "Italy",
+          "Japan",
+          "Lithuania",
+          "Netherlands",
+          "Portugal",
+          "Russian Federation",
+          "South Africa",
+          "Spain",
+          "Switzerland",
+          "United Kingdom",
+          "United States"
+        ],
+        "food_countries": [
+          "Canada",
+          "Denmark",
+          "Germany",
+          "Ireland",
+          "Netherlands",
+          "Not Provided",
+          "Poland",
+          "Slovenia",
+          "South Africa",
+          "Spain",
+          "Switzerland",
+          "United Kingdom",
+          "United States"
+        ]
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": true,
+        "n_bioprojects": 82,
+        "tier": "very strong"
+      },
+      "human_emergence": {
+        "flag": false,
+        "recent_ratio": 0.308,
+        "baseline_ratio": 0.748,
+        "delta": -0.441,
+        "n_recent_human": 4,
+        "n_recent_total": 13,
+        "n_baseline_total": 1057
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": false,
+        "recent_rate": 0.1833,
+        "baseline_rate": 0.3087,
+        "ratio": 0.59,
+        "n_recent": 11,
+        "n_baseline": 1165
+      },
+      "ifsac": {
+        "top": {
+          "category": "beef",
+          "n": 9
+        },
+        "categories": [
+          {
+            "category": "beef",
+            "n": 9
+          },
+          {
+            "category": "environmental-factory/production facility",
+            "n": 6
+          },
+          {
+            "category": "meat",
+            "n": 3
+          },
+          {
+            "category": "other animal",
+            "n": 3
+          },
+          {
+            "category": "multi-ingredient",
+            "n": 2
+          }
+        ],
+        "n_total_ifsac": 30
+      },
+      "clonal_complex": {
+        "cc": "CC6",
+        "label": "emerging outbreak lineage",
+        "tooltip": "CC6 has been associated with recent deli-meat outbreaks; classified as hypervirulent in recent literature.",
+        "has_notes": true
+      }
+    },
+    "mlst_alleles_dict": {
+      "abcZ": "3",
+      "bglA": "9",
+      "cat": "9",
+      "dapE": "3",
+      "dat": "3",
+      "ldh": "1",
+      "lhkA": "5"
+    },
+    "human_countries_attr": "Belgium,Bulgaria,Cyprus,Denmark,Finland,France,Germany,Iceland,Ireland,Italy,Japan,Lithuania,Netherlands,Portugal,Russian Federation,South Africa,Spain,Switzerland,United Kingdom,United States"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000264421.1",
+    "n_total": 2,
+    "n_human": 2,
+    "n_nonhuman": 0,
+    "n_food": 0,
+    "n_animal": 0,
+    "n_environment": 0,
+    "earliest_collection_date": "2026-04-01",
+    "latest_collection_date": "2026-05-01",
+    "earliest_target_creation_date": "2026-05-01",
+    "latest_target_creation_date": "2026-05-22",
+    "temporal_span_days": 30,
+    "histogram_max_year_count": 2,
+    "deposit_lag_median": 30,
+    "deposit_lag_mean": 25,
+    "new_humans_in_window": 2,
+    "new_humans_30d": 1,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "Serotype 1/2a",
+    "consensus_serovar_n": 2,
+    "consensus_serovar_total": 2,
+    "mlst_scheme": null,
+    "mlst_st": null,
+    "mlst_alleles": null,
+    "mlst_representative_pdt": null,
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "United Kingdom",
+        "n": 2
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "United Kingdom": [
+          {
+            "admin1": "United Kingdom",
+            "n": 2
+          }
+        ]
+      },
+      "unspecified": {}
+    },
+    "source_summary": [
+      {
+        "category": "Human",
+        "source": "human",
+        "n": 2
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003223331.1",
+      "PDT003194533.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003223331.1",
+        "biosample": "SAMN60349511",
+        "date_added": "2026-05-22",
+        "collection_date": "2026-05",
+        "geo": "United Kingdom: United Kingdom"
+      },
+      {
+        "pdt": "PDT003194533.1",
+        "biosample": "SAMN57595933",
+        "date_added": "2026-05-01",
+        "collection_date": "2026-04",
+        "geo": "United Kingdom: United Kingdom"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT003194533.1",
+      "biosample": "SAMN57595933",
+      "date": "2026-04-01",
+      "date_raw": "2026-04",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_human": {
+      "pdt": "PDT003194533.1",
+      "biosample": "SAMN57595933",
+      "date": "2026-04-01",
+      "date_raw": "2026-04",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": null,
+    "histogram": [
+      {
+        "year": 2026,
+        "n_human": 2,
+        "n_nonhuman": 0
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "United Kingdom",
+        "lon": -1.5,
+        "lat": 52.4,
+        "n_human": 2,
+        "n_nonhuman": 0,
+        "days_ago": 22
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT003223331.1",
+      "biosample": "SAMN60349511",
+      "asm_acc": "GCA_057706335.1",
+      "collection_date": "2026-05",
+      "target_creation_date": "2026-05-22"
+    },
+    "host_summary": [],
+    "signals": {
+      "geographic_spread": {
+        "label": null,
+        "n_countries": 1,
+        "n_continents": 1,
+        "n_hemispheres": 1,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": false,
+        "evidence": null,
+        "n_food_origin_mismatches": 0,
+        "human_countries": [
+          "United Kingdom"
+        ],
+        "food_countries": []
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": false,
+        "n_bioprojects": 1,
+        "tier": null
+      },
+      "human_emergence": {
+        "flag": false,
+        "n_recent_human": 2,
+        "n_recent_total": 2,
+        "n_baseline_total": 0,
+        "reason": "baseline_too_small"
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": false,
+        "recent_rate": 0.0,
+        "baseline_rate": 0.0,
+        "ratio": null,
+        "reason": "cluster_too_young"
+      },
+      "ifsac": {
+        "top": null,
+        "categories": []
+      },
+      "clonal_complex": {
+        "cc": null,
+        "label": null,
+        "tooltip": null,
+        "has_notes": false
+      }
+    },
+    "mlst_alleles_dict": {},
+    "human_countries_attr": "United Kingdom"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000261741.1",
+    "n_total": 2,
+    "n_human": 2,
+    "n_nonhuman": 0,
+    "n_food": 0,
+    "n_animal": 0,
+    "n_environment": 0,
+    "earliest_collection_date": "2026-04-01",
+    "latest_collection_date": "2026-04-01",
+    "earliest_target_creation_date": "2026-04-22",
+    "latest_target_creation_date": "2026-04-22",
+    "temporal_span_days": 0,
+    "histogram_max_year_count": 2,
+    "deposit_lag_median": 21,
+    "deposit_lag_mean": 21,
+    "new_humans_in_window": 2,
+    "new_humans_30d": 0,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "Serotype 4",
+    "consensus_serovar_n": 2,
+    "consensus_serovar_total": 2,
+    "mlst_scheme": null,
+    "mlst_st": null,
+    "mlst_alleles": null,
+    "mlst_representative_pdt": null,
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "United Kingdom",
+        "n": 2
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "United Kingdom": [
+          {
+            "admin1": "United Kingdom",
+            "n": 2
+          }
+        ]
+      },
+      "unspecified": {}
+    },
+    "source_summary": [
+      {
+        "category": "Human",
+        "source": "human",
+        "n": 2
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003184137.1",
+      "PDT003184128.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003184137.1",
+        "biosample": "SAMN57397362",
+        "date_added": "2026-04-22",
+        "collection_date": "2026-04",
+        "geo": "United Kingdom: United Kingdom"
+      },
+      {
+        "pdt": "PDT003184128.1",
+        "biosample": "SAMN57397305",
+        "date_added": "2026-04-22",
+        "collection_date": "2026-04",
+        "geo": "United Kingdom: United Kingdom"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT003184128.1",
+      "biosample": "SAMN57397305",
+      "date": "2026-04-01",
+      "date_raw": "2026-04",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_human": {
+      "pdt": "PDT003184128.1",
+      "biosample": "SAMN57397305",
+      "date": "2026-04-01",
+      "date_raw": "2026-04",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": null,
+    "histogram": [
+      {
+        "year": 2026,
+        "n_human": 2,
+        "n_nonhuman": 0
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "United Kingdom",
+        "lon": -1.5,
+        "lat": 52.4,
+        "n_human": 2,
+        "n_nonhuman": 0,
+        "days_ago": 52
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT003184137.1",
+      "biosample": "SAMN57397362",
+      "asm_acc": "GCA_056845615.1",
+      "collection_date": "2026-04",
+      "target_creation_date": "2026-04-22"
+    },
+    "host_summary": [],
+    "signals": {
+      "geographic_spread": {
+        "label": null,
+        "n_countries": 1,
+        "n_continents": 1,
+        "n_hemispheres": 1,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": false,
+        "evidence": null,
+        "n_food_origin_mismatches": 0,
+        "human_countries": [
+          "United Kingdom"
+        ],
+        "food_countries": []
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": false,
+        "n_bioprojects": 1,
+        "tier": null
+      },
+      "human_emergence": {
+        "flag": false,
+        "n_recent_human": 2,
+        "n_recent_total": 2,
+        "n_baseline_total": 0,
+        "reason": "baseline_too_small"
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": false,
+        "recent_rate": 0.0,
+        "baseline_rate": 0.0,
+        "ratio": null,
+        "reason": "cluster_too_young"
+      },
+      "ifsac": {
+        "top": null,
+        "categories": []
+      },
+      "clonal_complex": {
+        "cc": null,
+        "label": null,
+        "tooltip": null,
+        "has_notes": false
+      }
+    },
+    "mlst_alleles_dict": {},
+    "human_countries_attr": "United Kingdom"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000179196.4",
+    "n_total": 6,
+    "n_human": 2,
+    "n_nonhuman": 4,
+    "n_food": 1,
+    "n_animal": 0,
+    "n_environment": 2,
+    "earliest_collection_date": "2015-06-22",
+    "latest_collection_date": "2026-05-01",
+    "earliest_target_creation_date": "2021-04-02",
+    "latest_target_creation_date": "2026-05-23",
+    "temporal_span_days": 3966,
+    "histogram_max_year_count": 1,
+    "deposit_lag_median": 201,
+    "deposit_lag_mean": 802,
+    "new_humans_in_window": 1,
+    "new_humans_30d": 1,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "Serotype 4",
+    "consensus_serovar_n": 3,
+    "consensus_serovar_total": 3,
+    "mlst_scheme": "lmonocytogenes",
+    "mlst_st": "ST54",
+    "mlst_alleles": "{\"abcZ\": \"1\", \"bglA\": \"1\", \"cat\": \"12\", \"dapE\": \"17\", \"dat\": \"2\", \"ldh\": \"1\", \"lhkA\": \"3\"}",
+    "mlst_representative_pdt": "PDT001828456.1",
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "United Kingdom",
+        "n": 3
+      },
+      {
+        "country": "Ireland",
+        "n": 2
+      },
+      {
+        "country": "Netherlands",
+        "n": 1
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "United Kingdom": [
+          {
+            "admin1": "United Kingdom",
+            "n": 3
+          }
+        ]
+      },
+      "unspecified": {
+        "Ireland": 2,
+        "Netherlands": 1
+      }
+    },
+    "source_summary": [
+      {
+        "category": "Human",
+        "source": "human",
+        "n": 2
+      },
+      {
+        "category": "Unknown",
+        "source": "(unspecified)",
+        "n": 1
+      },
+      {
+        "category": "Environment",
+        "source": "floor at door of fridge",
+        "n": 1
+      },
+      {
+        "category": "Food",
+        "source": "beef",
+        "n": 1
+      },
+      {
+        "category": "Environment",
+        "source": "environmental",
+        "n": 1
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003224101.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003224101.1",
+        "biosample": "SAMN60371029",
+        "date_added": "2026-05-23",
+        "collection_date": "2026-05",
+        "geo": "United Kingdom: United Kingdom"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT001000343.1",
+      "biosample": "SAMN17767924",
+      "date": "2015-06-22",
+      "date_raw": "2015-06-22",
+      "geo": "Ireland",
+      "geo_country": "Ireland",
+      "geo_admin1": null,
+      "source": "Floor at Door of fridge",
+      "source_category": "Environment"
+    },
+    "oldest_human": {
+      "pdt": "PDT002833225.1",
+      "biosample": "SAMN49918721",
+      "date": "2025-07-01",
+      "date_raw": "2025-07",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": {
+      "pdt": "PDT001000343.1",
+      "biosample": "SAMN17767924",
+      "date": "2015-06-22",
+      "date_raw": "2015-06-22",
+      "geo": "Ireland",
+      "geo_country": "Ireland",
+      "geo_admin1": null,
+      "source": "Floor at Door of fridge",
+      "source_category": "Environment"
+    },
+    "histogram": [
+      {
+        "year": 2015,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2019,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2023,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2025,
+        "n_human": 1,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2026,
+        "n_human": 1,
+        "n_nonhuman": 0
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "United Kingdom",
+        "lon": -1.5,
+        "lat": 52.4,
+        "n_human": 2,
+        "n_nonhuman": 1,
+        "days_ago": 22
+      },
+      {
+        "label": "Ireland",
+        "lon": -7.7,
+        "lat": 53.4,
+        "n_human": 0,
+        "n_nonhuman": 1,
+        "days_ago": 3988
+      },
+      {
+        "label": "Netherlands",
+        "lon": 5.3,
+        "lat": 52.1,
+        "n_human": 0,
+        "n_nonhuman": 1,
+        "days_ago": 2699
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT002833225.1",
+      "biosample": "SAMN49918721",
+      "asm_acc": "GCA_051315305.1",
+      "collection_date": "2025-07",
+      "target_creation_date": "2025-07-12"
+    },
+    "host_summary": [],
+    "signals": {
+      "geographic_spread": {
+        "label": "multi-country",
+        "n_countries": 3,
+        "n_continents": 1,
+        "n_hemispheres": 1,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": true,
+        "evidence": "country mismatch between human and food isolates",
+        "n_food_origin_mismatches": 0,
+        "human_countries": [
+          "United Kingdom"
+        ],
+        "food_countries": [
+          "Netherlands"
+        ]
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": false,
+        "n_bioprojects": 4,
+        "tier": null
+      },
+      "human_emergence": {
+        "flag": false,
+        "n_recent_human": 2,
+        "n_recent_total": 2,
+        "n_baseline_total": 3,
+        "reason": "baseline_too_small"
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": false,
+        "recent_rate": 0.0167,
+        "baseline_rate": 0.0028,
+        "ratio": 6.06,
+        "n_recent": 1,
+        "n_baseline": 5
+      },
+      "ifsac": {
+        "top": null,
+        "categories": []
+      },
+      "clonal_complex": {
+        "cc": "CC54",
+        "label": null,
+        "tooltip": null,
+        "has_notes": false
+      }
+    },
+    "mlst_alleles_dict": {
+      "abcZ": "1",
+      "bglA": "1",
+      "cat": "12",
+      "dapE": "17",
+      "dat": "2",
+      "ldh": "1",
+      "lhkA": "3"
+    },
+    "human_countries_attr": "United Kingdom"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000187517.3",
+    "n_total": 4,
+    "n_human": 4,
+    "n_nonhuman": 0,
+    "n_food": 0,
+    "n_animal": 0,
+    "n_environment": 0,
+    "earliest_collection_date": "2019-06-01",
+    "latest_collection_date": "2026-05-01",
+    "earliest_target_creation_date": "2019-06-26",
+    "latest_target_creation_date": "2026-05-23",
+    "temporal_span_days": 2526,
+    "histogram_max_year_count": 2,
+    "deposit_lag_median": 25,
+    "deposit_lag_mean": 23,
+    "new_humans_in_window": 1,
+    "new_humans_30d": 1,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "Serotype 4",
+    "consensus_serovar_n": 3,
+    "consensus_serovar_total": 4,
+    "mlst_scheme": "lmonocytogenes",
+    "mlst_st": "ST4",
+    "mlst_alleles": "{\"abcZ\": \"1\", \"bglA\": \"2\", \"cat\": \"12\", \"dapE\": \"3\", \"dat\": \"2\", \"ldh\": \"5\", \"lhkA\": \"3\"}",
+    "mlst_representative_pdt": "PDT000532529.1",
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "United Kingdom",
+        "n": 4
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "United Kingdom": [
+          {
+            "admin1": "United Kingdom",
+            "n": 4
+          }
+        ]
+      },
+      "unspecified": {}
+    },
+    "source_summary": [
+      {
+        "category": "Human",
+        "source": "human",
+        "n": 4
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003224102.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003224102.1",
+        "biosample": "SAMN60371028",
+        "date_added": "2026-05-23",
+        "collection_date": "2026-05",
+        "geo": "United Kingdom: United Kingdom"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT000532529.1",
+      "biosample": "SAMN12137343",
+      "date": "2019-06-01",
+      "date_raw": "2019-06",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_human": {
+      "pdt": "PDT000532529.1",
+      "biosample": "SAMN12137343",
+      "date": "2019-06-01",
+      "date_raw": "2019-06",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": null,
+    "histogram": [
+      {
+        "year": 2019,
+        "n_human": 1,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2024,
+        "n_human": 2,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2026,
+        "n_human": 1,
+        "n_nonhuman": 0
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "United Kingdom",
+        "lon": -1.5,
+        "lat": 52.4,
+        "n_human": 4,
+        "n_nonhuman": 0,
+        "days_ago": 22
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT002255357.1",
+      "biosample": "SAMN42498824",
+      "asm_acc": "GCA_040721975.1",
+      "collection_date": "2024-07",
+      "target_creation_date": "2024-07-16"
+    },
+    "host_summary": [],
+    "signals": {
+      "geographic_spread": {
+        "label": null,
+        "n_countries": 1,
+        "n_continents": 1,
+        "n_hemispheres": 1,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": false,
+        "evidence": null,
+        "n_food_origin_mismatches": 0,
+        "human_countries": [
+          "United Kingdom"
+        ],
+        "food_countries": []
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": false,
+        "n_bioprojects": 1,
+        "tier": null
+      },
+      "human_emergence": {
+        "flag": false,
+        "n_recent_human": 1,
+        "n_recent_total": 1,
+        "n_baseline_total": 3,
+        "reason": "baseline_too_small"
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": false,
+        "recent_rate": 0.0167,
+        "baseline_rate": 0.0012,
+        "ratio": 13.68,
+        "n_recent": 1,
+        "n_baseline": 3
+      },
+      "ifsac": {
+        "top": null,
+        "categories": []
+      },
+      "clonal_complex": {
+        "cc": "CC4",
+        "label": "maternal-fetal lineage",
+        "tooltip": "CC4 (the 'Listeria epidemica' lineage) shows strong association with maternal-fetal disease and severe outcomes.",
+        "has_notes": true
+      }
+    },
+    "mlst_alleles_dict": {
+      "abcZ": "1",
+      "bglA": "2",
+      "cat": "12",
+      "dapE": "3",
+      "dat": "2",
+      "ldh": "5",
+      "lhkA": "3"
+    },
+    "human_countries_attr": "United Kingdom"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000024399.27",
+    "n_total": 44,
+    "n_human": 17,
+    "n_nonhuman": 27,
+    "n_food": 5,
+    "n_animal": 0,
+    "n_environment": 22,
+    "earliest_collection_date": "2007-06-01",
+    "latest_collection_date": "2026-05-01",
+    "earliest_target_creation_date": "2016-10-25",
+    "latest_target_creation_date": "2026-05-22",
+    "temporal_span_days": 6909,
+    "histogram_max_year_count": 10,
+    "deposit_lag_median": 43,
+    "deposit_lag_mean": 960,
+    "new_humans_in_window": 1,
+    "new_humans_30d": 0,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "Serotype 4",
+    "consensus_serovar_n": 27,
+    "consensus_serovar_total": 41,
+    "mlst_scheme": "lmonocytogenes",
+    "mlst_st": "ST2",
+    "mlst_alleles": "{\"abcZ\": \"1\", \"bglA\": \"1\", \"cat\": \"11\", \"dapE\": \"11\", \"dat\": \"2\", \"ldh\": \"1\", \"lhkA\": \"5\"}",
+    "mlst_representative_pdt": "PDT000153964.3",
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "United Kingdom",
+        "n": 43
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "United Kingdom": [
+          {
+            "admin1": "United Kingdom",
+            "n": 37
+          },
+          {
+            "admin1": "Midlands and East of England",
+            "n": 2
+          },
+          {
+            "admin1": "South of England",
+            "n": 1
+          }
+        ]
+      },
+      "unspecified": {
+        "United Kingdom": 3
+      }
+    },
+    "source_summary": [
+      {
+        "category": "Environment",
+        "source": "environmental",
+        "n": 22
+      },
+      {
+        "category": "Human",
+        "source": "human",
+        "n": 17
+      },
+      {
+        "category": "Food",
+        "source": "food-meat",
+        "n": 3
+      },
+      {
+        "category": "Food",
+        "source": "food",
+        "n": 2
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003177213.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003177213.1",
+        "biosample": "SAMN57248685",
+        "date_added": "2026-04-14",
+        "collection_date": "2026-04",
+        "geo": "United Kingdom: United Kingdom"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT001178315.1",
+      "biosample": "SAMN23284576",
+      "date": "2007-06-01",
+      "date_raw": "2007-06",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_human": {
+      "pdt": "PDT001178315.1",
+      "biosample": "SAMN23284576",
+      "date": "2007-06-01",
+      "date_raw": "2007-06",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": {
+      "pdt": "PDT002493283.1",
+      "biosample": "SAMN28229499",
+      "date": "2012-01-01",
+      "date_raw": "2012",
+      "geo": "United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": null,
+      "source": "Food-Meat",
+      "source_category": "Food"
+    },
+    "histogram": [
+      {
+        "year": 2007,
+        "n_human": 2,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2009,
+        "n_human": 2,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2010,
+        "n_human": 1,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2012,
+        "n_human": 0,
+        "n_nonhuman": 3
+      },
+      {
+        "year": 2014,
+        "n_human": 3,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2016,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2018,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2019,
+        "n_human": 3,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2020,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2021,
+        "n_human": 2,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2022,
+        "n_human": 1,
+        "n_nonhuman": 5
+      },
+      {
+        "year": 2024,
+        "n_human": 1,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2025,
+        "n_human": 1,
+        "n_nonhuman": 7
+      },
+      {
+        "year": 2026,
+        "n_human": 1,
+        "n_nonhuman": 9
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "United Kingdom",
+        "lon": -1.5,
+        "lat": 52.4,
+        "n_human": 16,
+        "n_nonhuman": 27,
+        "days_ago": 22
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT003212881.1",
+      "biosample": "SAMN59786399",
+      "asm_acc": "GCA_057496035.1",
+      "collection_date": "2026-05",
+      "target_creation_date": "2026-05-14"
+    },
+    "host_summary": [
+      {
+        "host": "not available",
+        "n": 2
+      }
+    ],
+    "signals": {
+      "geographic_spread": {
+        "label": null,
+        "n_countries": 1,
+        "n_continents": 1,
+        "n_hemispheres": 1,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": false,
+        "evidence": null,
+        "n_food_origin_mismatches": 0,
+        "human_countries": [
+          "United Kingdom"
+        ],
+        "food_countries": [
+          "United Kingdom"
+        ]
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": false,
+        "n_bioprojects": 3,
+        "tier": null
+      },
+      "human_emergence": {
+        "flag": false,
+        "recent_ratio": 0.1,
+        "baseline_ratio": 0.471,
+        "delta": -0.371,
+        "n_recent_human": 1,
+        "n_recent_total": 10,
+        "n_baseline_total": 34
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": true,
+        "recent_rate": 0.1,
+        "baseline_rate": 0.0111,
+        "ratio": 9.04,
+        "n_recent": 6,
+        "n_baseline": 38
+      },
+      "ifsac": {
+        "top": null,
+        "categories": []
+      },
+      "clonal_complex": {
+        "cc": "CC2",
+        "label": "outbreak-associated lineage",
+        "tooltip": "CC2 has appeared in multiple large multistate outbreaks; clinically common.",
+        "has_notes": true
+      }
+    },
+    "mlst_alleles_dict": {
+      "abcZ": "1",
+      "bglA": "1",
+      "cat": "11",
+      "dapE": "11",
+      "dat": "2",
+      "ldh": "1",
+      "lhkA": "5"
+    },
+    "human_countries_attr": "United Kingdom"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000025350.16",
+    "n_total": 18,
+    "n_human": 13,
+    "n_nonhuman": 5,
+    "n_food": 3,
+    "n_animal": 0,
+    "n_environment": 0,
+    "earliest_collection_date": "2014-11-01",
+    "latest_collection_date": "2026-05-01",
+    "earliest_target_creation_date": "2016-10-25",
+    "latest_target_creation_date": "2026-05-16",
+    "temporal_span_days": 4199,
+    "histogram_max_year_count": 3,
+    "deposit_lag_median": 38,
+    "deposit_lag_mean": 489,
+    "new_humans_in_window": 1,
+    "new_humans_30d": 1,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "Serotype 4",
+    "consensus_serovar_n": 9,
+    "consensus_serovar_total": 16,
+    "mlst_scheme": "lmonocytogenes",
+    "mlst_st": "ST220",
+    "mlst_alleles": "{\"abcZ\": \"1\", \"bglA\": \"3\", \"cat\": \"7\", \"dapE\": \"2\", \"dat\": \"4\", \"ldh\": \"1\", \"lhkA\": \"2\"}",
+    "mlst_representative_pdt": "PDT002091552.1",
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "United Kingdom",
+        "n": 16
+      },
+      {
+        "country": "France",
+        "n": 1
+      },
+      {
+        "country": "Germany",
+        "n": 1
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "United Kingdom": [
+          {
+            "admin1": "United Kingdom",
+            "n": 13
+          },
+          {
+            "admin1": "London",
+            "n": 1
+          },
+          {
+            "admin1": "North of England",
+            "n": 1
+          }
+        ]
+      },
+      "unspecified": {
+        "France": 1,
+        "Germany": 1,
+        "United Kingdom": 1
+      }
+    },
+    "source_summary": [
+      {
+        "category": "Human",
+        "source": "human",
+        "n": 12
+      },
+      {
+        "category": "Food",
+        "source": "food",
+        "n": 2
+      },
+      {
+        "category": "Unknown",
+        "source": "digestate",
+        "n": 1
+      },
+      {
+        "category": "Human",
+        "source": "human listeriosis",
+        "n": 1
+      },
+      {
+        "category": "Food",
+        "source": "retail meat",
+        "n": 1
+      },
+      {
+        "category": "Unknown",
+        "source": "other",
+        "n": 1
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003216153.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003216153.1",
+        "biosample": "SAMN60161186",
+        "date_added": "2026-05-16",
+        "collection_date": "2026-05",
+        "geo": "United Kingdom: United Kingdom"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT000153923.3",
+      "biosample": "SAMN05615342",
+      "date": "2014-11-01",
+      "date_raw": "2014-11",
+      "geo": "United Kingdom: London",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "London",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_human": {
+      "pdt": "PDT000153923.3",
+      "biosample": "SAMN05615342",
+      "date": "2014-11-01",
+      "date_raw": "2014-11",
+      "geo": "United Kingdom: London",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "London",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": {
+      "pdt": "PDT000470380.1",
+      "biosample": "SAMN11030994",
+      "date": "2015-11-01",
+      "date_raw": "2015-11",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "other",
+      "source_category": "Unknown"
+    },
+    "histogram": [
+      {
+        "year": 2014,
+        "n_human": 2,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2015,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2018,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2019,
+        "n_human": 1,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2020,
+        "n_human": 3,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2022,
+        "n_human": 3,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2023,
+        "n_human": 1,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2025,
+        "n_human": 2,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2026,
+        "n_human": 1,
+        "n_nonhuman": 0
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "France",
+        "lon": 2.2,
+        "lat": 46.6,
+        "n_human": 0,
+        "n_nonhuman": 1,
+        "days_ago": 3064
+      },
+      {
+        "label": "United Kingdom",
+        "lon": -1.5,
+        "lat": 52.4,
+        "n_human": 12,
+        "n_nonhuman": 3,
+        "days_ago": 22
+      },
+      {
+        "label": "Germany",
+        "lon": 10.4,
+        "lat": 51.2,
+        "n_human": 1,
+        "n_nonhuman": 0,
+        "days_ago": 2334
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT003216153.1",
+      "biosample": "SAMN60161186",
+      "asm_acc": "GCA_057594795.1",
+      "collection_date": "2026-05",
+      "target_creation_date": "2026-05-16"
+    },
+    "host_summary": [],
+    "signals": {
+      "geographic_spread": {
+        "label": "multi-country",
+        "n_countries": 3,
+        "n_continents": 1,
+        "n_hemispheres": 1,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": true,
+        "evidence": "country mismatch between human and food isolates",
+        "n_food_origin_mismatches": 0,
+        "human_countries": [
+          "Germany",
+          "United Kingdom"
+        ],
+        "food_countries": [
+          "United Kingdom"
+        ]
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": false,
+        "n_bioprojects": 4,
+        "tier": null
+      },
+      "human_emergence": {
+        "flag": false,
+        "recent_ratio": 0.667,
+        "baseline_ratio": 0.786,
+        "delta": -0.119,
+        "n_recent_human": 2,
+        "n_recent_total": 3,
+        "n_baseline_total": 14
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": false,
+        "recent_rate": 0.0167,
+        "baseline_rate": 0.0049,
+        "ratio": 3.37,
+        "n_recent": 1,
+        "n_baseline": 17
+      },
+      "ifsac": {
+        "top": {
+          "category": "meat",
+          "n": 1
+        },
+        "categories": [
+          {
+            "category": "meat",
+            "n": 1
+          }
+        ],
+        "n_total_ifsac": 1
+      },
+      "clonal_complex": {
+        "cc": null,
+        "label": null,
+        "tooltip": null,
+        "has_notes": false
+      }
+    },
+    "mlst_alleles_dict": {
+      "abcZ": "1",
+      "bglA": "3",
+      "cat": "7",
+      "dapE": "2",
+      "dat": "4",
+      "ldh": "1",
+      "lhkA": "2"
+    },
+    "human_countries_attr": "Germany,United Kingdom"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000003173.119",
+    "n_total": 148,
+    "n_human": 119,
+    "n_nonhuman": 29,
+    "n_food": 14,
+    "n_animal": 0,
+    "n_environment": 12,
+    "earliest_collection_date": "2003-12-02",
+    "latest_collection_date": "2026-05-01",
+    "earliest_target_creation_date": "2013-11-19",
+    "latest_target_creation_date": "2026-05-15",
+    "temporal_span_days": 8186,
+    "histogram_max_year_count": 22,
+    "deposit_lag_median": 48,
+    "deposit_lag_mean": 564,
+    "new_humans_in_window": 1,
+    "new_humans_30d": 1,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "not typed",
+    "consensus_serovar_n": 16,
+    "consensus_serovar_total": 28,
+    "mlst_scheme": "lmonocytogenes",
+    "mlst_st": "ST554",
+    "mlst_alleles": "{\"abcZ\": \"2\", \"bglA\": \"1\", \"cat\": \"9\", \"dapE\": \"1\", \"dat\": \"3\", \"ldh\": \"5\", \"lhkA\": \"5\"}",
+    "mlst_representative_pdt": "PDT002944956.1",
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "USA",
+        "n": 140
+      },
+      {
+        "country": "Sweden",
+        "n": 1
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "USA": [
+          {
+            "admin1": "NY",
+            "n": 11
+          },
+          {
+            "admin1": "CT",
+            "n": 3
+          },
+          {
+            "admin1": "RI",
+            "n": 1
+          },
+          {
+            "admin1": "WA",
+            "n": 1
+          },
+          {
+            "admin1": "NJ",
+            "n": 1
+          }
+        ]
+      },
+      "unspecified": {
+        "USA": 123,
+        "Sweden": 1
+      }
+    },
+    "source_summary": [
+      {
+        "category": "Human",
+        "source": "(unspecified)",
+        "n": 79
+      },
+      {
+        "category": "Human",
+        "source": "blood",
+        "n": 32
+      },
+      {
+        "category": "Food",
+        "source": "raw pet dog food",
+        "n": 7
+      },
+      {
+        "category": "Human",
+        "source": "csf",
+        "n": 5
+      },
+      {
+        "category": "Environment",
+        "source": "wastewater influent",
+        "n": 5
+      },
+      {
+        "category": "Human",
+        "source": "amniotic fluid",
+        "n": 2
+      },
+      {
+        "category": "Food",
+        "source": "pasteurized cow milk cheese",
+        "n": 2
+      },
+      {
+        "category": "Human",
+        "source": "body fluid",
+        "n": 1
+      },
+      {
+        "category": "Unknown",
+        "source": "whole red cabbage",
+        "n": 1
+      },
+      {
+        "category": "Food",
+        "source": "raw bovine milk",
+        "n": 1
+      },
+      {
+        "category": "Food",
+        "source": "retail raw cow milk",
+        "n": 1
+      },
+      {
+        "category": "Unknown",
+        "source": "green scrubby",
+        "n": 1
+      },
+      {
+        "category": "Environment",
+        "source": "environmental swab sponge jetter cup",
+        "n": 1
+      },
+      {
+        "category": "Environment",
+        "source": "environmental swab sponge new plastic bucket interior",
+        "n": 1
+      },
+      {
+        "category": "Environment",
+        "source": "environmental swab sponge parlor drain",
+        "n": 1
+      },
+      {
+        "category": "Unknown",
+        "source": "bucket hook jetter cup shield",
+        "n": 1
+      },
+      {
+        "category": "Environment",
+        "source": "holding area standing water",
+        "n": 1
+      },
+      {
+        "category": "Environment",
+        "source": "water sediment",
+        "n": 1
+      },
+      {
+        "category": "Environment",
+        "source": "water",
+        "n": 1
+      },
+      {
+        "category": "Food",
+        "source": "milk",
+        "n": 1
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003215855.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003215855.1",
+        "biosample": "SAMN60159040",
+        "date_added": "2026-05-15",
+        "collection_date": "2026-05-01",
+        "geo": "USA"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT000102630.3",
+      "biosample": "SAMN03354307",
+      "date": "2003-12-02",
+      "date_raw": "2003-12-02",
+      "geo": "USA:CT",
+      "geo_country": "USA",
+      "geo_admin1": "CT",
+      "source": "blood",
+      "source_category": "Human"
+    },
+    "oldest_human": {
+      "pdt": "PDT000102630.3",
+      "biosample": "SAMN03354307",
+      "date": "2003-12-02",
+      "date_raw": "2003-12-02",
+      "geo": "USA:CT",
+      "geo_country": "USA",
+      "geo_admin1": "CT",
+      "source": "blood",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": {
+      "pdt": "PDT000689507.1",
+      "biosample": "SAMN14163177",
+      "date": "2016-03-08",
+      "date_raw": "2016-03-08",
+      "geo": "USA",
+      "geo_country": "USA",
+      "geo_admin1": null,
+      "source": "water sediment",
+      "source_category": "Environment"
+    },
+    "histogram": [
+      {
+        "year": 2003,
+        "n_human": 1,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2011,
+        "n_human": 4,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2013,
+        "n_human": 8,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2014,
+        "n_human": 5,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2015,
+        "n_human": 2,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2016,
+        "n_human": 5,
+        "n_nonhuman": 2
+      },
+      {
+        "year": 2017,
+        "n_human": 7,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2018,
+        "n_human": 11,
+        "n_nonhuman": 11
+      },
+      {
+        "year": 2019,
+        "n_human": 7,
+        "n_nonhuman": 7
+      },
+      {
+        "year": 2020,
+        "n_human": 7,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2021,
+        "n_human": 12,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2022,
+        "n_human": 9,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2023,
+        "n_human": 8,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2024,
+        "n_human": 6,
+        "n_nonhuman": 2
+      },
+      {
+        "year": 2025,
+        "n_human": 14,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2026,
+        "n_human": 4,
+        "n_nonhuman": 5
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "United States",
+        "lon": -98.5,
+        "lat": 39.8,
+        "n_human": 106,
+        "n_nonhuman": 28,
+        "days_ago": 22
+      },
+      {
+        "label": "Sweden",
+        "lon": 15.3,
+        "lat": 62.0,
+        "n_human": 1,
+        "n_nonhuman": 0,
+        "days_ago": 1695
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT003215855.1",
+      "biosample": "SAMN60159040",
+      "asm_acc": "GCA_057577585.1",
+      "collection_date": "2026-05-01",
+      "target_creation_date": "2026-05-15"
+    },
+    "host_summary": [],
+    "signals": {
+      "geographic_spread": {
+        "label": "multi-continent",
+        "n_countries": 2,
+        "n_continents": 2,
+        "n_hemispheres": 1,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": true,
+        "evidence": "food_origin field",
+        "n_food_origin_mismatches": 20,
+        "human_countries": [
+          "Sweden",
+          "United States"
+        ],
+        "food_countries": [
+          "United States"
+        ]
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": true,
+        "n_bioprojects": 8,
+        "tier": "strong"
+      },
+      "human_emergence": {
+        "flag": false,
+        "recent_ratio": 0.444,
+        "baseline_ratio": 0.815,
+        "delta": -0.371,
+        "n_recent_human": 4,
+        "n_recent_total": 9,
+        "n_baseline_total": 130
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": true,
+        "recent_rate": 0.0833,
+        "baseline_rate": 0.0317,
+        "ratio": 2.63,
+        "n_recent": 5,
+        "n_baseline": 143
+      },
+      "ifsac": {
+        "top": {
+          "category": "animal feed",
+          "n": 7
+        },
+        "categories": [
+          {
+            "category": "animal feed",
+            "n": 7
+          },
+          {
+            "category": "dairy",
+            "n": 3
+          },
+          {
+            "category": "environmental",
+            "n": 3
+          },
+          {
+            "category": "environmental-water",
+            "n": 3
+          },
+          {
+            "category": "environmental-factory/production facility",
+            "n": 2
+          }
+        ],
+        "n_total_ifsac": 18
+      },
+      "clonal_complex": {
+        "cc": null,
+        "label": null,
+        "tooltip": null,
+        "has_notes": false
+      }
+    },
+    "mlst_alleles_dict": {
+      "abcZ": "2",
+      "bglA": "1",
+      "cat": "9",
+      "dapE": "1",
+      "dat": "3",
+      "ldh": "5",
+      "lhkA": "5"
+    },
+    "human_countries_attr": "Sweden,United States"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000024437.47",
+    "n_total": 79,
+    "n_human": 24,
+    "n_nonhuman": 55,
+    "n_food": 35,
+    "n_animal": 0,
+    "n_environment": 17,
+    "earliest_collection_date": "2003-01-01",
+    "latest_collection_date": "2026-04-01",
+    "earliest_target_creation_date": "2016-05-13",
+    "latest_target_creation_date": "2026-05-14",
+    "temporal_span_days": 8491,
+    "histogram_max_year_count": 12,
+    "deposit_lag_median": 968,
+    "deposit_lag_mean": 1647,
+    "new_humans_in_window": 1,
+    "new_humans_30d": 0,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "1/2a",
+    "consensus_serovar_n": 24,
+    "consensus_serovar_total": 50,
+    "mlst_scheme": "lmonocytogenes",
+    "mlst_st": "ST431",
+    "mlst_alleles": "{\"abcZ\": \"7\", \"bglA\": \"15\", \"cat\": \"15\", \"dapE\": \"78\", \"dat\": \"6\", \"ldh\": \"14\", \"lhkA\": \"9\"}",
+    "mlst_representative_pdt": "PDT000193754.1",
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "United Kingdom",
+        "n": 44
+      },
+      {
+        "country": "Ireland",
+        "n": 7
+      },
+      {
+        "country": "Spain",
+        "n": 5
+      },
+      {
+        "country": "Netherlands",
+        "n": 5
+      },
+      {
+        "country": "USA",
+        "n": 3
+      },
+      {
+        "country": "Germany",
+        "n": 2
+      },
+      {
+        "country": "France",
+        "n": 1
+      },
+      {
+        "country": "Costa Rica",
+        "n": 1
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "United Kingdom": [
+          {
+            "admin1": "United Kingdom",
+            "n": 42
+          }
+        ],
+        "USA": [
+          {
+            "admin1": "NJ",
+            "n": 1
+          }
+        ]
+      },
+      "unspecified": {
+        "Ireland": 7,
+        "Germany": 2,
+        "Spain": 5,
+        "USA": 2,
+        "France": 1,
+        "Netherlands": 5,
+        "United Kingdom": 2,
+        "Costa Rica": 1
+      }
+    },
+    "source_summary": [
+      {
+        "category": "Food",
+        "source": "food",
+        "n": 22
+      },
+      {
+        "category": "Human",
+        "source": "human",
+        "n": 14
+      },
+      {
+        "category": "Environment",
+        "source": "environmental",
+        "n": 11
+      },
+      {
+        "category": "Food",
+        "source": "food products",
+        "n": 6
+      },
+      {
+        "category": "Human",
+        "source": "not provided",
+        "n": 5
+      },
+      {
+        "category": "Food",
+        "source": "chicken",
+        "n": 5
+      },
+      {
+        "category": "Environment",
+        "source": "food processing environment",
+        "n": 3
+      },
+      {
+        "category": "Unknown",
+        "source": "(unspecified)",
+        "n": 2
+      },
+      {
+        "category": "Human",
+        "source": "human listeriosis",
+        "n": 2
+      },
+      {
+        "category": "Food",
+        "source": "smoked salmon",
+        "n": 2
+      },
+      {
+        "category": "Environment",
+        "source": "environmental swab_1",
+        "n": 2
+      },
+      {
+        "category": "Human",
+        "source": "blood",
+        "n": 1
+      },
+      {
+        "category": "Human",
+        "source": "cerebrospinal fluid",
+        "n": 1
+      },
+      {
+        "category": "Human",
+        "source": "(unspecified)",
+        "n": 1
+      },
+      {
+        "category": "Environment",
+        "source": "seafood factory fbo7",
+        "n": 1
+      },
+      {
+        "category": "Unknown",
+        "source": "rte product",
+        "n": 1
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003177209.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003177209.1",
+        "biosample": "SAMN57248624",
+        "date_added": "2026-04-14",
+        "collection_date": "2026-04",
+        "geo": "United Kingdom: United Kingdom"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT000423111.2",
+      "biosample": "SAMEA4475771",
+      "date": "2003-01-01",
+      "date_raw": "2003",
+      "geo": "France",
+      "geo_country": "France",
+      "geo_admin1": null,
+      "source": "food",
+      "source_category": "Food"
+    },
+    "oldest_human": {
+      "pdt": "PDT003073052.1",
+      "biosample": "SAMEA120272543",
+      "date": "2013-01-01",
+      "date_raw": "2013",
+      "geo": "Spain",
+      "geo_country": "Spain",
+      "geo_admin1": null,
+      "source": "not provided",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": {
+      "pdt": "PDT000423111.2",
+      "biosample": "SAMEA4475771",
+      "date": "2003-01-01",
+      "date_raw": "2003",
+      "geo": "France",
+      "geo_country": "France",
+      "geo_admin1": null,
+      "source": "food",
+      "source_category": "Food"
+    },
+    "histogram": [
+      {
+        "year": 2003,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2004,
+        "n_human": 0,
+        "n_nonhuman": 2
+      },
+      {
+        "year": 2008,
+        "n_human": 0,
+        "n_nonhuman": 2
+      },
+      {
+        "year": 2009,
+        "n_human": 0,
+        "n_nonhuman": 6
+      },
+      {
+        "year": 2011,
+        "n_human": 0,
+        "n_nonhuman": 3
+      },
+      {
+        "year": 2013,
+        "n_human": 2,
+        "n_nonhuman": 10
+      },
+      {
+        "year": 2015,
+        "n_human": 3,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2016,
+        "n_human": 3,
+        "n_nonhuman": 4
+      },
+      {
+        "year": 2017,
+        "n_human": 0,
+        "n_nonhuman": 3
+      },
+      {
+        "year": 2018,
+        "n_human": 2,
+        "n_nonhuman": 6
+      },
+      {
+        "year": 2019,
+        "n_human": 2,
+        "n_nonhuman": 8
+      },
+      {
+        "year": 2021,
+        "n_human": 4,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2022,
+        "n_human": 2,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2023,
+        "n_human": 2,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2024,
+        "n_human": 1,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2025,
+        "n_human": 0,
+        "n_nonhuman": 3
+      },
+      {
+        "year": 2026,
+        "n_human": 1,
+        "n_nonhuman": 3
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "Ireland",
+        "lon": -7.7,
+        "lat": 53.4,
+        "n_human": 3,
+        "n_nonhuman": 2,
+        "days_ago": 4160
+      },
+      {
+        "label": "United Kingdom",
+        "lon": -1.5,
+        "lat": 52.4,
+        "n_human": 12,
+        "n_nonhuman": 32,
+        "days_ago": 52
+      },
+      {
+        "label": "Germany",
+        "lon": 10.4,
+        "lat": 51.2,
+        "n_human": 2,
+        "n_nonhuman": 0,
+        "days_ago": 3064
+      },
+      {
+        "label": "Spain",
+        "lon": -3.7,
+        "lat": 40.4,
+        "n_human": 5,
+        "n_nonhuman": 0,
+        "days_ago": 1603
+      },
+      {
+        "label": "United States",
+        "lon": -98.5,
+        "lat": 39.8,
+        "n_human": 0,
+        "n_nonhuman": 3,
+        "days_ago": 142
+      },
+      {
+        "label": "France",
+        "lon": 2.2,
+        "lat": 46.6,
+        "n_human": 0,
+        "n_nonhuman": 1,
+        "days_ago": 8543
+      },
+      {
+        "label": "Netherlands",
+        "lon": 5.3,
+        "lat": 52.1,
+        "n_human": 0,
+        "n_nonhuman": 5,
+        "days_ago": 2821
+      },
+      {
+        "label": "Costa Rica",
+        "lon": -83.8,
+        "lat": 9.9,
+        "n_human": 0,
+        "n_nonhuman": 1,
+        "days_ago": 873
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT003177209.1",
+      "biosample": "SAMN57248624",
+      "asm_acc": "GCA_056716135.1",
+      "collection_date": "2026-04",
+      "target_creation_date": "2026-04-14"
+    },
+    "host_summary": [
+      {
+        "host": "not available",
+        "n": 19
+      }
+    ],
+    "signals": {
+      "geographic_spread": {
+        "label": "multi-continent",
+        "n_countries": 8,
+        "n_continents": 2,
+        "n_hemispheres": 1,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": true,
+        "evidence": "food_origin field",
+        "n_food_origin_mismatches": 2,
+        "human_countries": [
+          "Germany",
+          "Ireland",
+          "Spain",
+          "United Kingdom"
+        ],
+        "food_countries": [
+          "Costa Rica",
+          "France",
+          "Netherlands",
+          "United Kingdom",
+          "United States"
+        ]
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": true,
+        "n_bioprojects": 15,
+        "tier": "very strong"
+      },
+      "human_emergence": {
+        "flag": false,
+        "recent_ratio": 0.143,
+        "baseline_ratio": 0.309,
+        "delta": -0.166,
+        "n_recent_human": 1,
+        "n_recent_total": 7,
+        "n_baseline_total": 68
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": true,
+        "recent_rate": 0.0667,
+        "baseline_rate": 0.0208,
+        "ratio": 3.2,
+        "n_recent": 4,
+        "n_baseline": 75
+      },
+      "ifsac": {
+        "top": {
+          "category": "fish",
+          "n": 2
+        },
+        "categories": [
+          {
+            "category": "fish",
+            "n": 2
+          }
+        ],
+        "n_total_ifsac": 2
+      },
+      "clonal_complex": {
+        "cc": null,
+        "label": null,
+        "tooltip": null,
+        "has_notes": false
+      }
+    },
+    "mlst_alleles_dict": {
+      "abcZ": "7",
+      "bglA": "15",
+      "cat": "15",
+      "dapE": "78",
+      "dat": "6",
+      "ldh": "14",
+      "lhkA": "9"
+    },
+    "human_countries_attr": "Germany,Ireland,Spain,United Kingdom"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000032941.247",
+    "n_total": 736,
+    "n_human": 248,
+    "n_nonhuman": 488,
+    "n_food": 262,
+    "n_animal": 6,
+    "n_environment": 120,
+    "earliest_collection_date": "2004-01-01",
+    "latest_collection_date": "2026-04-01",
+    "earliest_target_creation_date": "2013-11-19",
+    "latest_target_creation_date": "2026-05-14",
+    "temporal_span_days": 8126,
+    "histogram_max_year_count": 94,
+    "deposit_lag_median": 872,
+    "deposit_lag_mean": 1277,
+    "new_humans_in_window": 1,
+    "new_humans_30d": 0,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "1/2a",
+    "consensus_serovar_n": 135,
+    "consensus_serovar_total": 271,
+    "mlst_scheme": "lmonocytogenes",
+    "mlst_st": "ST37",
+    "mlst_alleles": "{\"abcZ\": \"5\", \"bglA\": \"7\", \"cat\": \"3\", \"dapE\": \"5\", \"dat\": \"1\", \"ldh\": \"8\", \"lhkA\": \"6\"}",
+    "mlst_representative_pdt": "PDT001709696.2",
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "United Kingdom",
+        "n": 216
+      },
+      {
+        "country": "Germany",
+        "n": 58
+      },
+      {
+        "country": "Norway",
+        "n": 45
+      },
+      {
+        "country": "Russia",
+        "n": 41
+      },
+      {
+        "country": "Finland",
+        "n": 38
+      },
+      {
+        "country": "USA",
+        "n": 38
+      },
+      {
+        "country": "Italy",
+        "n": 34
+      },
+      {
+        "country": "Netherlands",
+        "n": 30
+      },
+      {
+        "country": "Not Provided",
+        "n": 29
+      },
+      {
+        "country": "Latvia",
+        "n": 25
+      },
+      {
+        "country": "Spain",
+        "n": 24
+      },
+      {
+        "country": "Belgium",
+        "n": 16
+      },
+      {
+        "country": "France",
+        "n": 15
+      },
+      {
+        "country": "Ireland",
+        "n": 11
+      },
+      {
+        "country": "Portugal",
+        "n": 7
+      },
+      {
+        "country": "Denmark",
+        "n": 7
+      },
+      {
+        "country": "Switzerland",
+        "n": 6
+      },
+      {
+        "country": "Slovenia",
+        "n": 6
+      },
+      {
+        "country": "Austria",
+        "n": 5
+      },
+      {
+        "country": "Sweden",
+        "n": 3
+      },
+      {
+        "country": "not collected",
+        "n": 2
+      },
+      {
+        "country": "New Zealand",
+        "n": 2
+      },
+      {
+        "country": "Montenegro",
+        "n": 2
+      },
+      {
+        "country": "Israel",
+        "n": 1
+      },
+      {
+        "country": "Lithuania",
+        "n": 1
+      },
+      {
+        "country": "Australia",
+        "n": 1
+      },
+      {
+        "country": "Canada",
+        "n": 1
+      },
+      {
+        "country": "Chile",
+        "n": 1
+      },
+      {
+        "country": "Costa Rica",
+        "n": 1
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "United Kingdom": [
+          {
+            "admin1": "United Kingdom",
+            "n": 195
+          },
+          {
+            "admin1": "None",
+            "n": 4
+          },
+          {
+            "admin1": "London",
+            "n": 3
+          },
+          {
+            "admin1": "Midlands and East of England",
+            "n": 2
+          },
+          {
+            "admin1": "South of England",
+            "n": 2
+          },
+          {
+            "admin1": "Scotland",
+            "n": 1
+          }
+        ],
+        "Russia": [
+          {
+            "admin1": "Moscow",
+            "n": 16
+          },
+          {
+            "admin1": "Vologda",
+            "n": 10
+          },
+          {
+            "admin1": "Lipetsk",
+            "n": 5
+          },
+          {
+            "admin1": "Izhevsk",
+            "n": 2
+          },
+          {
+            "admin1": "Sahalin",
+            "n": 1
+          },
+          {
+            "admin1": "Novosibirsk",
+            "n": 1
+          },
+          {
+            "admin1": "Krasnodar",
+            "n": 1
+          },
+          {
+            "admin1": "Irkutsk",
+            "n": 1
+          },
+          {
+            "admin1": "Kemerovsk",
+            "n": 1
+          },
+          {
+            "admin1": "Rostov reg.",
+            "n": 1
+          },
+          {
+            "admin1": "Veliky Ustyug",
+            "n": 1
+          },
+          {
+            "admin1": "Moscow region",
+            "n": 1
+          }
+        ],
+        "USA": [
+          {
+            "admin1": "MN",
+            "n": 5
+          },
+          {
+            "admin1": "CA",
+            "n": 2
+          },
+          {
+            "admin1": "WA",
+            "n": 1
+          },
+          {
+            "admin1": "IL",
+            "n": 1
+          }
+        ],
+        "Australia": [
+          {
+            "admin1": "Victoria",
+            "n": 1
+          }
+        ],
+        "Finland": [
+          {
+            "admin1": "Helsinki",
+            "n": 2
+          }
+        ],
+        "Switzerland": [
+          {
+            "admin1": "Zurich",
+            "n": 1
+          }
+        ],
+        "Norway": [
+          {
+            "admin1": "coast of Mid Norway",
+            "n": 15
+          },
+          {
+            "admin1": "Viken",
+            "n": 7
+          }
+        ],
+        "Spain": [
+          {
+            "admin1": "Castilla y Leon",
+            "n": 3
+          }
+        ]
+      },
+      "unspecified": {
+        "Latvia": 25,
+        "Spain": 21,
+        "Netherlands": 30,
+        "Finland": 36,
+        "France": 15,
+        "Portugal": 7,
+        "USA": 29,
+        "Ireland": 11,
+        "Denmark": 7,
+        "Italy": 34,
+        "Switzerland": 5,
+        "Belgium": 16,
+        "Sweden": 3,
+        "Norway": 23,
+        "not collected": 2,
+        "Germany": 58,
+        "New Zealand": 2,
+        "Israel": 1,
+        "Lithuania": 1,
+        "United Kingdom": 9,
+        "Austria": 5,
+        "Not Provided": 29,
+        "Canada": 1,
+        "Chile": 1,
+        "Montenegro": 2,
+        "Slovenia": 6,
+        "Costa Rica": 1
+      }
+    },
+    "source_summary": [
+      {
+        "category": "Food",
+        "source": "food",
+        "n": 155
+      },
+      {
+        "category": "Human",
+        "source": "human",
+        "n": 94
+      },
+      {
+        "category": "Unknown",
+        "source": "(unspecified)",
+        "n": 64
+      },
+      {
+        "category": "Human",
+        "source": "(unspecified)",
+        "n": 55
+      },
+      {
+        "category": "Human",
+        "source": "human listeriosis",
+        "n": 42
+      },
+      {
+        "category": "Environment",
+        "source": "environmental",
+        "n": 28
+      },
+      {
+        "category": "Human",
+        "source": "blood",
+        "n": 21
+      },
+      {
+        "category": "Environment",
+        "source": "food processing environment",
+        "n": 20
+      },
+      {
+        "category": "Food",
+        "source": "chicken",
+        "n": 20
+      },
+      {
+        "category": "Environment",
+        "source": "salmon processing equipment",
+        "n": 15
+      },
+      {
+        "category": "Food",
+        "source": "food products",
+        "n": 14
+      },
+      {
+        "category": "Food",
+        "source": "dairy barn",
+        "n": 14
+      },
+      {
+        "category": "Human",
+        "source": "not provided",
+        "n": 11
+      },
+      {
+        "category": "Environment",
+        "source": "urban or natural environment",
+        "n": 8
+      },
+      {
+        "category": "Human",
+        "source": "pig feces",
+        "n": 7
+      },
+      {
+        "category": "Food",
+        "source": "milk filter",
+        "n": 7
+      },
+      {
+        "category": "Food",
+        "source": "pork",
+        "n": 6
+      },
+      {
+        "category": "Environment",
+        "source": "river",
+        "n": 6
+      },
+      {
+        "category": "Food",
+        "source": "milk",
+        "n": 5
+      },
+      {
+        "category": "Unknown",
+        "source": "silage",
+        "n": 5
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003207391.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003207391.1",
+        "biosample": "SAMN59684846",
+        "date_added": "2026-05-10",
+        "collection_date": "2026-04",
+        "geo": "United Kingdom: United Kingdom"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT000781891.1",
+      "biosample": "SAMN15368447",
+      "date": "2004-01-01",
+      "date_raw": "2004",
+      "geo": "Finland:Helsinki",
+      "geo_country": "Finland",
+      "geo_admin1": "Helsinki",
+      "source": "meat",
+      "source_category": "Food"
+    },
+    "oldest_human": {
+      "pdt": "PDT002989274.1",
+      "biosample": "SAMEA117844832",
+      "date": "2008-01-01",
+      "date_raw": "2008",
+      "geo": "France",
+      "geo_country": "France",
+      "geo_admin1": null,
+      "source": "Pig feces",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": {
+      "pdt": "PDT000781891.1",
+      "biosample": "SAMN15368447",
+      "date": "2004-01-01",
+      "date_raw": "2004",
+      "geo": "Finland:Helsinki",
+      "geo_country": "Finland",
+      "geo_admin1": "Helsinki",
+      "source": "meat",
+      "source_category": "Food"
+    },
+    "histogram": [
+      {
+        "year": 2004,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2008,
+        "n_human": 7,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2009,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2010,
+        "n_human": 5,
+        "n_nonhuman": 5
+      },
+      {
+        "year": 2011,
+        "n_human": 16,
+        "n_nonhuman": 20
+      },
+      {
+        "year": 2012,
+        "n_human": 4,
+        "n_nonhuman": 12
+      },
+      {
+        "year": 2013,
+        "n_human": 14,
+        "n_nonhuman": 24
+      },
+      {
+        "year": 2014,
+        "n_human": 20,
+        "n_nonhuman": 16
+      },
+      {
+        "year": 2015,
+        "n_human": 15,
+        "n_nonhuman": 20
+      },
+      {
+        "year": 2016,
+        "n_human": 6,
+        "n_nonhuman": 73
+      },
+      {
+        "year": 2017,
+        "n_human": 12,
+        "n_nonhuman": 21
+      },
+      {
+        "year": 2018,
+        "n_human": 13,
+        "n_nonhuman": 15
+      },
+      {
+        "year": 2019,
+        "n_human": 33,
+        "n_nonhuman": 61
+      },
+      {
+        "year": 2020,
+        "n_human": 19,
+        "n_nonhuman": 58
+      },
+      {
+        "year": 2021,
+        "n_human": 23,
+        "n_nonhuman": 28
+      },
+      {
+        "year": 2022,
+        "n_human": 14,
+        "n_nonhuman": 31
+      },
+      {
+        "year": 2023,
+        "n_human": 15,
+        "n_nonhuman": 28
+      },
+      {
+        "year": 2024,
+        "n_human": 11,
+        "n_nonhuman": 13
+      },
+      {
+        "year": 2025,
+        "n_human": 11,
+        "n_nonhuman": 7
+      },
+      {
+        "year": 2026,
+        "n_human": 6,
+        "n_nonhuman": 2
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "Latvia",
+        "lon": 24.6,
+        "lat": 56.9,
+        "n_human": 1,
+        "n_nonhuman": 24,
+        "days_ago": 2258
+      },
+      {
+        "label": "Spain",
+        "lon": -3.7,
+        "lat": 40.4,
+        "n_human": 5,
+        "n_nonhuman": 19,
+        "days_ago": 1238
+      },
+      {
+        "label": "Netherlands",
+        "lon": 5.3,
+        "lat": 52.1,
+        "n_human": 16,
+        "n_nonhuman": 14,
+        "days_ago": 2213
+      },
+      {
+        "label": "Finland",
+        "lon": 25.7,
+        "lat": 64.0,
+        "n_human": 3,
+        "n_nonhuman": 35,
+        "days_ago": 1603
+      },
+      {
+        "label": "France",
+        "lon": 2.2,
+        "lat": 46.6,
+        "n_human": 7,
+        "n_nonhuman": 8,
+        "days_ago": 1603
+      },
+      {
+        "label": "Portugal",
+        "lon": -8.2,
+        "lat": 39.4,
+        "n_human": 5,
+        "n_nonhuman": 2,
+        "days_ago": 142
+      },
+      {
+        "label": "United States",
+        "lon": -98.5,
+        "lat": 39.8,
+        "n_human": 25,
+        "n_nonhuman": 13,
+        "days_ago": 142
+      },
+      {
+        "label": "Ireland",
+        "lon": -7.7,
+        "lat": 53.4,
+        "n_human": 5,
+        "n_nonhuman": 5,
+        "days_ago": 3826
+      },
+      {
+        "label": "Denmark",
+        "lon": 10.0,
+        "lat": 56.0,
+        "n_human": 7,
+        "n_nonhuman": 0,
+        "days_ago": 4160
+      },
+      {
+        "label": "United Kingdom",
+        "lon": -1.5,
+        "lat": 52.4,
+        "n_human": 75,
+        "n_nonhuman": 138,
+        "days_ago": 52
+      },
+      {
+        "label": "Italy",
+        "lon": 12.5,
+        "lat": 42.8,
+        "n_human": 5,
+        "n_nonhuman": 29,
+        "days_ago": 1275
+      },
+      {
+        "label": "Switzerland",
+        "lon": 8.2,
+        "lat": 46.8,
+        "n_human": 5,
+        "n_nonhuman": 1,
+        "days_ago": 873
+      },
+      {
+        "label": "Belgium",
+        "lon": 4.5,
+        "lat": 50.5,
+        "n_human": 16,
+        "n_nonhuman": 0,
+        "days_ago": 4525
+      },
+      {
+        "label": "Sweden",
+        "lon": 15.3,
+        "lat": 62.0,
+        "n_human": 1,
+        "n_nonhuman": 2,
+        "days_ago": 1023
+      },
+      {
+        "label": "Norway",
+        "lon": 8.5,
+        "lat": 60.5,
+        "n_human": 2,
+        "n_nonhuman": 43,
+        "days_ago": 2194
+      },
+      {
+        "label": "Germany",
+        "lon": 10.4,
+        "lat": 51.2,
+        "n_human": 42,
+        "n_nonhuman": 16,
+        "days_ago": 1603
+      },
+      {
+        "label": "New Zealand",
+        "lon": 172.2,
+        "lat": -41.3,
+        "n_human": 2,
+        "n_nonhuman": 0,
+        "days_ago": 3429
+      },
+      {
+        "label": "Russian Federation",
+        "lon": 105.3,
+        "lat": 61.5,
+        "n_human": 17,
+        "n_nonhuman": 24,
+        "days_ago": 276
+      },
+      {
+        "label": "Israel",
+        "lon": 35.0,
+        "lat": 31.0,
+        "n_human": 1,
+        "n_nonhuman": 0,
+        "days_ago": 3026
+      },
+      {
+        "label": "Lithuania",
+        "lon": 23.9,
+        "lat": 55.2,
+        "n_human": 1,
+        "n_nonhuman": 0,
+        "days_ago": 1968
+      },
+      {
+        "label": "Australia",
+        "lon": 133.8,
+        "lat": -25.3,
+        "n_human": 1,
+        "n_nonhuman": 0,
+        "days_ago": 491
+      },
+      {
+        "label": "Austria",
+        "lon": 14.6,
+        "lat": 47.6,
+        "n_human": 0,
+        "n_nonhuman": 5,
+        "days_ago": 1603
+      },
+      {
+        "label": "Canada",
+        "lon": -106.0,
+        "lat": 56.1,
+        "n_human": 0,
+        "n_nonhuman": 1,
+        "days_ago": 5256
+      },
+      {
+        "label": "Chile",
+        "lon": -71.5,
+        "lat": -35.7,
+        "n_human": 0,
+        "n_nonhuman": 1,
+        "days_ago": 2552
+      },
+      {
+        "label": "Montenegro",
+        "lon": 19.4,
+        "lat": 42.7,
+        "n_human": 0,
+        "n_nonhuman": 2,
+        "days_ago": 2334
+      },
+      {
+        "label": "Slovenia",
+        "lon": 14.9,
+        "lat": 46.1,
+        "n_human": 0,
+        "n_nonhuman": 6,
+        "days_ago": 2334
+      },
+      {
+        "label": "Costa Rica",
+        "lon": -83.8,
+        "lat": 9.9,
+        "n_human": 0,
+        "n_nonhuman": 1,
+        "days_ago": 873
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT003214022.1",
+      "biosample": "SAMN60143146",
+      "asm_acc": "GCA_057555285.1",
+      "collection_date": "2024",
+      "target_creation_date": "2026-05-14"
+    },
+    "host_summary": [
+      {
+        "host": "not available",
+        "n": 74
+      },
+      {
+        "host": "bos taurus",
+        "n": 14
+      },
+      {
+        "host": "cow",
+        "n": 13
+      },
+      {
+        "host": "dairy cattle",
+        "n": 2
+      },
+      {
+        "host": "food",
+        "n": 2
+      },
+      {
+        "host": "cattle",
+        "n": 1
+      },
+      {
+        "host": "fish",
+        "n": 1
+      }
+    ],
+    "signals": {
+      "geographic_spread": {
+        "label": "multi-hemisphere",
+        "n_countries": 29,
+        "n_continents": 5,
+        "n_hemispheres": 2,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": true,
+        "evidence": "food_origin field",
+        "n_food_origin_mismatches": 7,
+        "human_countries": [
+          "Australia",
+          "Belgium",
+          "Denmark",
+          "Finland",
+          "France",
+          "Germany",
+          "Ireland",
+          "Israel",
+          "Italy",
+          "Latvia",
+          "Lithuania",
+          "Netherlands",
+          "New Zealand",
+          "Norway",
+          "Portugal",
+          "Russian Federation",
+          "Spain",
+          "Sweden",
+          "Switzerland",
+          "United Kingdom",
+          "United States",
+          "not collected"
+        ],
+        "food_countries": [
+          "Austria",
+          "Canada",
+          "Costa Rica",
+          "Finland",
+          "Germany",
+          "Ireland",
+          "Italy",
+          "Montenegro",
+          "Netherlands",
+          "Norway",
+          "Not Provided",
+          "Portugal",
+          "Russian Federation",
+          "Slovenia",
+          "Spain",
+          "Sweden",
+          "United Kingdom",
+          "United States"
+        ]
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": true,
+        "n_bioprojects": 90,
+        "tier": "very strong"
+      },
+      "human_emergence": {
+        "flag": true,
+        "recent_ratio": 0.562,
+        "baseline_ratio": 0.354,
+        "delta": 0.209,
+        "n_recent_human": 9,
+        "n_recent_total": 16,
+        "n_baseline_total": 664
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": false,
+        "recent_rate": 0.2,
+        "baseline_rate": 0.1606,
+        "ratio": 1.25,
+        "n_recent": 12,
+        "n_baseline": 724
+      },
+      "ifsac": {
+        "top": {
+          "category": "chicken",
+          "n": 12
+        },
+        "categories": [
+          {
+            "category": "chicken",
+            "n": 12
+          },
+          {
+            "category": "beef",
+            "n": 5
+          },
+          {
+            "category": "pork",
+            "n": 5
+          },
+          {
+            "category": "meat",
+            "n": 4
+          },
+          {
+            "category": "fish",
+            "n": 4
+          }
+        ],
+        "n_total_ifsac": 39
+      },
+      "clonal_complex": {
+        "cc": "CC37",
+        "label": null,
+        "tooltip": null,
+        "has_notes": false
+      }
+    },
+    "mlst_alleles_dict": {
+      "abcZ": "5",
+      "bglA": "7",
+      "cat": "3",
+      "dapE": "5",
+      "dat": "1",
+      "ldh": "8",
+      "lhkA": "6"
+    },
+    "human_countries_attr": "Australia,Belgium,Denmark,Finland,France,Germany,Ireland,Israel,Italy,Latvia,Lithuania,Netherlands,New Zealand,Norway,Portugal,Russian Federation,Spain,Sweden,Switzerland,United Kingdom,United States,not collected"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000120825.7",
+    "n_total": 8,
+    "n_human": 8,
+    "n_nonhuman": 0,
+    "n_food": 0,
+    "n_animal": 0,
+    "n_environment": 0,
+    "earliest_collection_date": "2022-09-01",
+    "latest_collection_date": "2026-04-01",
+    "earliest_target_creation_date": "2022-10-14",
+    "latest_target_creation_date": "2026-05-10",
+    "temporal_span_days": 1308,
+    "histogram_max_year_count": 3,
+    "deposit_lag_median": 39,
+    "deposit_lag_mean": 76,
+    "new_humans_in_window": 1,
+    "new_humans_30d": 0,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "Serotype 1/2c",
+    "consensus_serovar_n": 6,
+    "consensus_serovar_total": 8,
+    "mlst_scheme": "lmonocytogenes",
+    "mlst_st": "ST9",
+    "mlst_alleles": "{\"abcZ\": \"6\", \"bglA\": \"5\", \"cat\": \"6\", \"dapE\": \"4\", \"dat\": \"1\", \"ldh\": \"4\", \"lhkA\": \"1\"}",
+    "mlst_representative_pdt": "PDT001454399.1",
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "United Kingdom",
+        "n": 8
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "United Kingdom": [
+          {
+            "admin1": "United Kingdom",
+            "n": 8
+          }
+        ]
+      },
+      "unspecified": {}
+    },
+    "source_summary": [
+      {
+        "category": "Human",
+        "source": "human",
+        "n": 8
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003207383.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003207383.1",
+        "biosample": "SAMN59684843",
+        "date_added": "2026-05-10",
+        "collection_date": "2026-04",
+        "geo": "United Kingdom: United Kingdom"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT001454309.1",
+      "biosample": "SAMN31131772",
+      "date": "2022-09-01",
+      "date_raw": "2022-09",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_human": {
+      "pdt": "PDT001454309.1",
+      "biosample": "SAMN31131772",
+      "date": "2022-09-01",
+      "date_raw": "2022-09",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": null,
+    "histogram": [
+      {
+        "year": 2022,
+        "n_human": 3,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2023,
+        "n_human": 1,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2025,
+        "n_human": 3,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2026,
+        "n_human": 1,
+        "n_nonhuman": 0
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "United Kingdom",
+        "lon": -1.5,
+        "lat": 52.4,
+        "n_human": 8,
+        "n_nonhuman": 0,
+        "days_ago": 52
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT003207383.1",
+      "biosample": "SAMN59684843",
+      "asm_acc": "GCA_057371925.1",
+      "collection_date": "2026-04",
+      "target_creation_date": "2026-05-10"
+    },
+    "host_summary": [],
+    "signals": {
+      "geographic_spread": {
+        "label": null,
+        "n_countries": 1,
+        "n_continents": 1,
+        "n_hemispheres": 1,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": false,
+        "evidence": null,
+        "n_food_origin_mismatches": 0,
+        "human_countries": [
+          "United Kingdom"
+        ],
+        "food_countries": []
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": false,
+        "n_bioprojects": 1,
+        "tier": null
+      },
+      "human_emergence": {
+        "flag": false,
+        "n_recent_human": 4,
+        "n_recent_total": 4,
+        "n_baseline_total": 4,
+        "reason": "baseline_too_small"
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": false,
+        "recent_rate": 0.0167,
+        "baseline_rate": 0.0056,
+        "ratio": 2.99,
+        "n_recent": 1,
+        "n_baseline": 7
+      },
+      "ifsac": {
+        "top": null,
+        "categories": []
+      },
+      "clonal_complex": {
+        "cc": "CC9",
+        "label": "food-common, lower-virulence",
+        "tooltip": "CC9 is frequently isolated from food and food-processing environments but appears less often than expected in clinical cases.",
+        "has_notes": true
+      }
+    },
+    "mlst_alleles_dict": {
+      "abcZ": "6",
+      "bglA": "5",
+      "cat": "6",
+      "dapE": "4",
+      "dat": "1",
+      "ldh": "4",
+      "lhkA": "1"
+    },
+    "human_countries_attr": "United Kingdom"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000099002.9",
+    "n_total": 14,
+    "n_human": 13,
+    "n_nonhuman": 1,
+    "n_food": 0,
+    "n_animal": 0,
+    "n_environment": 1,
+    "earliest_collection_date": "2019-01-01",
+    "latest_collection_date": "2026-03-29",
+    "earliest_target_creation_date": "2019-01-23",
+    "latest_target_creation_date": "2026-04-27",
+    "temporal_span_days": 2644,
+    "histogram_max_year_count": 4,
+    "deposit_lag_median": 92,
+    "deposit_lag_mean": 105,
+    "new_humans_in_window": 1,
+    "new_humans_30d": 0,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "SEROTYPE_WGS",
+    "consensus_serovar_n": 1,
+    "consensus_serovar_total": 2,
+    "mlst_scheme": "lmonocytogenes",
+    "mlst_st": "ST1",
+    "mlst_alleles": "{\"abcZ\": \"3\", \"bglA\": \"1\", \"cat\": \"1\", \"dapE\": \"1\", \"dat\": \"3\", \"ldh\": \"1\", \"lhkA\": \"3\"}",
+    "mlst_representative_pdt": "PDT000784637.1",
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "USA",
+        "n": 14
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "USA": [
+          {
+            "admin1": "WI",
+            "n": 1
+          }
+        ]
+      },
+      "unspecified": {
+        "USA": 13
+      }
+    },
+    "source_summary": [
+      {
+        "category": "Human",
+        "source": "(unspecified)",
+        "n": 13
+      },
+      {
+        "category": "Environment",
+        "source": "environmental isolate",
+        "n": 1
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003171623.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003171623.1",
+        "biosample": "SAMN57185976",
+        "date_added": "2026-04-09",
+        "collection_date": "2026-03-29",
+        "geo": "USA"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT000448323.1",
+      "biosample": "SAMN10792165",
+      "date": "2019-01-01",
+      "date_raw": "2019-01",
+      "geo": "USA",
+      "geo_country": "USA",
+      "geo_admin1": null,
+      "source": null,
+      "source_category": "Human"
+    },
+    "oldest_human": {
+      "pdt": "PDT000448323.1",
+      "biosample": "SAMN10792165",
+      "date": "2019-01-01",
+      "date_raw": "2019-01",
+      "geo": "USA",
+      "geo_country": "USA",
+      "geo_admin1": null,
+      "source": null,
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": {
+      "pdt": "PDT000784637.1",
+      "biosample": "SAMN15491914",
+      "date": "2020-06-01",
+      "date_raw": "2020-06",
+      "geo": "USA:WI",
+      "geo_country": "USA",
+      "geo_admin1": "WI",
+      "source": "ENVIRONMENTAL ISOLATE",
+      "source_category": "Environment"
+    },
+    "histogram": [
+      {
+        "year": 2019,
+        "n_human": 1,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2020,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2021,
+        "n_human": 2,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2022,
+        "n_human": 2,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2025,
+        "n_human": 4,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2026,
+        "n_human": 4,
+        "n_nonhuman": 0
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "United States",
+        "lon": -98.5,
+        "lat": 39.8,
+        "n_human": 13,
+        "n_nonhuman": 1,
+        "days_ago": 55
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT003190833.1",
+      "biosample": "SAMN57505806",
+      "asm_acc": "GCA_056919715.1",
+      "collection_date": "2026",
+      "target_creation_date": "2026-04-27"
+    },
+    "host_summary": [],
+    "signals": {
+      "geographic_spread": {
+        "label": null,
+        "n_countries": 1,
+        "n_continents": 1,
+        "n_hemispheres": 1,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": false,
+        "evidence": null,
+        "n_food_origin_mismatches": 0,
+        "human_countries": [
+          "United States"
+        ],
+        "food_countries": []
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": false,
+        "n_bioprojects": 1,
+        "tier": null
+      },
+      "human_emergence": {
+        "flag": false,
+        "recent_ratio": 1.0,
+        "baseline_ratio": 0.9,
+        "delta": 0.1,
+        "n_recent_human": 4,
+        "n_recent_total": 4,
+        "n_baseline_total": 10
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": true,
+        "recent_rate": 0.0667,
+        "baseline_rate": 0.0038,
+        "ratio": 17.45,
+        "n_recent": 4,
+        "n_baseline": 10
+      },
+      "ifsac": {
+        "top": null,
+        "categories": []
+      },
+      "clonal_complex": {
+        "cc": "CC1",
+        "label": "hypervirulent lineage",
+        "tooltip": "CC1 isolates historically over-represented in invasive listeriosis cases and associated with dairy-related outbreaks.",
+        "has_notes": true
+      }
+    },
+    "mlst_alleles_dict": {
+      "abcZ": "3",
+      "bglA": "1",
+      "cat": "1",
+      "dapE": "1",
+      "dat": "3",
+      "ldh": "1",
+      "lhkA": "3"
+    },
+    "human_countries_attr": "United States"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000024900.181",
+    "n_total": 680,
+    "n_human": 74,
+    "n_nonhuman": 606,
+    "n_food": 371,
+    "n_animal": 0,
+    "n_environment": 110,
+    "earliest_collection_date": "1995-01-01",
+    "latest_collection_date": "2026-04-01",
+    "earliest_target_creation_date": "2015-03-06",
+    "latest_target_creation_date": "2026-04-18",
+    "temporal_span_days": 11413,
+    "histogram_max_year_count": 63,
+    "deposit_lag_median": 1357,
+    "deposit_lag_mean": 1870,
+    "new_humans_in_window": 1,
+    "new_humans_30d": 0,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "1/2a",
+    "consensus_serovar_n": 119,
+    "consensus_serovar_total": 181,
+    "mlst_scheme": "lmonocytogenes",
+    "mlst_st": "ST204",
+    "mlst_alleles": "{\"abcZ\": \"5\", \"bglA\": \"7\", \"cat\": \"6\", \"dapE\": \"4\", \"dat\": \"5\", \"ldh\": \"4\", \"lhkA\": \"1\"}",
+    "mlst_representative_pdt": "PDT002366728.1",
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "United Kingdom",
+        "n": 168
+      },
+      {
+        "country": "USA",
+        "n": 63
+      },
+      {
+        "country": "Canada",
+        "n": 57
+      },
+      {
+        "country": "South Africa",
+        "n": 57
+      },
+      {
+        "country": "Australia",
+        "n": 41
+      },
+      {
+        "country": "Netherlands",
+        "n": 38
+      },
+      {
+        "country": "Not Provided",
+        "n": 32
+      },
+      {
+        "country": "France",
+        "n": 27
+      },
+      {
+        "country": "Switzerland",
+        "n": 21
+      },
+      {
+        "country": "Germany",
+        "n": 14
+      },
+      {
+        "country": "Austria",
+        "n": 11
+      },
+      {
+        "country": "New Zealand",
+        "n": 9
+      },
+      {
+        "country": "Italy",
+        "n": 9
+      },
+      {
+        "country": "Denmark",
+        "n": 8
+      },
+      {
+        "country": "Spain",
+        "n": 8
+      },
+      {
+        "country": "China",
+        "n": 8
+      },
+      {
+        "country": "Belgium",
+        "n": 4
+      },
+      {
+        "country": "Russia",
+        "n": 4
+      },
+      {
+        "country": "Ireland",
+        "n": 3
+      },
+      {
+        "country": "Chile",
+        "n": 3
+      },
+      {
+        "country": "Czech Republic",
+        "n": 2
+      },
+      {
+        "country": "Sweden",
+        "n": 1
+      },
+      {
+        "country": "not collected",
+        "n": 1
+      },
+      {
+        "country": "Slovenia",
+        "n": 1
+      },
+      {
+        "country": "Japan",
+        "n": 1
+      },
+      {
+        "country": "Portugal",
+        "n": 1
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "Switzerland": [
+          {
+            "admin1": "Zurich",
+            "n": 7
+          }
+        ],
+        "United Kingdom": [
+          {
+            "admin1": "United Kingdom",
+            "n": 155
+          },
+          {
+            "admin1": "Midlands and East of England",
+            "n": 5
+          },
+          {
+            "admin1": "North of England",
+            "n": 2
+          },
+          {
+            "admin1": "Northern Ireland",
+            "n": 1
+          }
+        ],
+        "Australia": [
+          {
+            "admin1": "Victoria",
+            "n": 2
+          }
+        ],
+        "Russia": [
+          {
+            "admin1": "Moscow",
+            "n": 2
+          },
+          {
+            "admin1": "Krasnoyarsk",
+            "n": 1
+          },
+          {
+            "admin1": "Sokol",
+            "n": 1
+          }
+        ],
+        "USA": [
+          {
+            "admin1": "NY",
+            "n": 6
+          },
+          {
+            "admin1": "IA",
+            "n": 3
+          },
+          {
+            "admin1": "FL",
+            "n": 3
+          },
+          {
+            "admin1": "CA",
+            "n": 2
+          },
+          {
+            "admin1": "MI",
+            "n": 2
+          },
+          {
+            "admin1": "GA",
+            "n": 1
+          },
+          {
+            "admin1": "IL",
+            "n": 1
+          },
+          {
+            "admin1": "NJ",
+            "n": 1
+          },
+          {
+            "admin1": "WA",
+            "n": 1
+          }
+        ],
+        "Canada": [
+          {
+            "admin1": "Alberta",
+            "n": 1
+          },
+          {
+            "admin1": "British Columbia",
+            "n": 1
+          }
+        ],
+        "South Africa": [
+          {
+            "admin1": "Mpumalanga",
+            "n": 17
+          },
+          {
+            "admin1": "Gauteng",
+            "n": 11
+          },
+          {
+            "admin1": "North West",
+            "n": 4
+          },
+          {
+            "admin1": "Free State",
+            "n": 2
+          },
+          {
+            "admin1": "North-West",
+            "n": 2
+          },
+          {
+            "admin1": "Eastern Cape",
+            "n": 1
+          },
+          {
+            "admin1": "Kwazulu Natal",
+            "n": 1
+          },
+          {
+            "admin1": "Limpopo",
+            "n": 1
+          }
+        ],
+        "China": [
+          {
+            "admin1": "Beitun",
+            "n": 1
+          }
+        ],
+        "Austria": [
+          {
+            "admin1": "Vienna",
+            "n": 1
+          }
+        ]
+      },
+      "unspecified": {
+        "Australia": 39,
+        "Denmark": 8,
+        "Switzerland": 14,
+        "France": 27,
+        "Netherlands": 38,
+        "USA": 43,
+        "Ireland": 3,
+        "Belgium": 4,
+        "Sweden": 1,
+        "Austria": 10,
+        "Spain": 8,
+        "Germany": 14,
+        "New Zealand": 9,
+        "not collected": 1,
+        "Italy": 9,
+        "Canada": 55,
+        "South Africa": 18,
+        "Not Provided": 32,
+        "Chile": 3,
+        "China": 7,
+        "United Kingdom": 5,
+        "Czech Republic": 2,
+        "Slovenia": 1,
+        "Japan": 1,
+        "Portugal": 1
+      }
+    },
+    "source_summary": [
+      {
+        "category": "Food",
+        "source": "food",
+        "n": 211
+      },
+      {
+        "category": "Unknown",
+        "source": "(unspecified)",
+        "n": 47
+      },
+      {
+        "category": "Human",
+        "source": "human",
+        "n": 30
+      },
+      {
+        "category": "Food",
+        "source": "chicken",
+        "n": 25
+      },
+      {
+        "category": "Human",
+        "source": "(unspecified)",
+        "n": 19
+      },
+      {
+        "category": "Environment",
+        "source": "environmental",
+        "n": 17
+      },
+      {
+        "category": "Food",
+        "source": "beef- food",
+        "n": 17
+      },
+      {
+        "category": "Environment",
+        "source": "environmental swab",
+        "n": 16
+      },
+      {
+        "category": "Food",
+        "source": "food products",
+        "n": 16
+      },
+      {
+        "category": "Food",
+        "source": "smoked salmon",
+        "n": 15
+      },
+      {
+        "category": "Environment",
+        "source": "environmental sponge",
+        "n": 13
+      },
+      {
+        "category": "Environment",
+        "source": "environment",
+        "n": 11
+      },
+      {
+        "category": "Food",
+        "source": "pork",
+        "n": 10
+      },
+      {
+        "category": "Unknown",
+        "source": "retailer",
+        "n": 10
+      },
+      {
+        "category": "Food",
+        "source": "beef meat",
+        "n": 10
+      },
+      {
+        "category": "Human",
+        "source": "human listeriosis",
+        "n": 9
+      },
+      {
+        "category": "Environment",
+        "source": "environmental swab sponge",
+        "n": 9
+      },
+      {
+        "category": "Unknown",
+        "source": "other",
+        "n": 9
+      },
+      {
+        "category": "Food",
+        "source": "beef",
+        "n": 8
+      },
+      {
+        "category": "Environment",
+        "source": "production environment",
+        "n": 8
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003180711.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003180711.1",
+        "biosample": "SAMN57333294",
+        "date_added": "2026-04-18",
+        "collection_date": "2026-04",
+        "geo": "United Kingdom: United Kingdom"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT000097456.3",
+      "biosample": "SAMEA3639320",
+      "date": "1995-01-01",
+      "date_raw": "1995",
+      "geo": "Australia",
+      "geo_country": "Australia",
+      "geo_admin1": null,
+      "source": "food",
+      "source_category": "Food"
+    },
+    "oldest_human": {
+      "pdt": "PDT001122104.1",
+      "biosample": "SAMN20372606",
+      "date": "2002-01-01",
+      "date_raw": "2002",
+      "geo": "New Zealand",
+      "geo_country": "New Zealand",
+      "geo_admin1": null,
+      "source": "clinical",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": {
+      "pdt": "PDT000097456.3",
+      "biosample": "SAMEA3639320",
+      "date": "1995-01-01",
+      "date_raw": "1995",
+      "geo": "Australia",
+      "geo_country": "Australia",
+      "geo_admin1": null,
+      "source": "food",
+      "source_category": "Food"
+    },
+    "histogram": [
+      {
+        "year": 1995,
+        "n_human": 0,
+        "n_nonhuman": 2
+      },
+      {
+        "year": 1996,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 1997,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 1998,
+        "n_human": 0,
+        "n_nonhuman": 2
+      },
+      {
+        "year": 1999,
+        "n_human": 0,
+        "n_nonhuman": 3
+      },
+      {
+        "year": 2000,
+        "n_human": 0,
+        "n_nonhuman": 17
+      },
+      {
+        "year": 2001,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2002,
+        "n_human": 1,
+        "n_nonhuman": 2
+      },
+      {
+        "year": 2003,
+        "n_human": 0,
+        "n_nonhuman": 8
+      },
+      {
+        "year": 2004,
+        "n_human": 0,
+        "n_nonhuman": 3
+      },
+      {
+        "year": 2005,
+        "n_human": 0,
+        "n_nonhuman": 3
+      },
+      {
+        "year": 2006,
+        "n_human": 2,
+        "n_nonhuman": 3
+      },
+      {
+        "year": 2007,
+        "n_human": 1,
+        "n_nonhuman": 3
+      },
+      {
+        "year": 2008,
+        "n_human": 0,
+        "n_nonhuman": 4
+      },
+      {
+        "year": 2009,
+        "n_human": 0,
+        "n_nonhuman": 5
+      },
+      {
+        "year": 2010,
+        "n_human": 1,
+        "n_nonhuman": 33
+      },
+      {
+        "year": 2011,
+        "n_human": 8,
+        "n_nonhuman": 28
+      },
+      {
+        "year": 2012,
+        "n_human": 0,
+        "n_nonhuman": 27
+      },
+      {
+        "year": 2013,
+        "n_human": 10,
+        "n_nonhuman": 27
+      },
+      {
+        "year": 2014,
+        "n_human": 15,
+        "n_nonhuman": 24
+      },
+      {
+        "year": 2015,
+        "n_human": 3,
+        "n_nonhuman": 40
+      },
+      {
+        "year": 2016,
+        "n_human": 2,
+        "n_nonhuman": 61
+      },
+      {
+        "year": 2017,
+        "n_human": 5,
+        "n_nonhuman": 55
+      },
+      {
+        "year": 2018,
+        "n_human": 3,
+        "n_nonhuman": 28
+      },
+      {
+        "year": 2019,
+        "n_human": 4,
+        "n_nonhuman": 42
+      },
+      {
+        "year": 2020,
+        "n_human": 0,
+        "n_nonhuman": 59
+      },
+      {
+        "year": 2021,
+        "n_human": 7,
+        "n_nonhuman": 25
+      },
+      {
+        "year": 2022,
+        "n_human": 5,
+        "n_nonhuman": 21
+      },
+      {
+        "year": 2023,
+        "n_human": 2,
+        "n_nonhuman": 9
+      },
+      {
+        "year": 2024,
+        "n_human": 2,
+        "n_nonhuman": 22
+      },
+      {
+        "year": 2025,
+        "n_human": 0,
+        "n_nonhuman": 7
+      },
+      {
+        "year": 2026,
+        "n_human": 2,
+        "n_nonhuman": 0
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "Australia",
+        "lon": 133.8,
+        "lat": -25.3,
+        "n_human": 5,
+        "n_nonhuman": 36,
+        "days_ago": 1870
+      },
+      {
+        "label": "Denmark",
+        "lon": 10.0,
+        "lat": 56.0,
+        "n_human": 1,
+        "n_nonhuman": 7,
+        "days_ago": 4525
+      },
+      {
+        "label": "Switzerland",
+        "lon": 8.2,
+        "lat": 46.8,
+        "n_human": 4,
+        "n_nonhuman": 17,
+        "days_ago": 866
+      },
+      {
+        "label": "France",
+        "lon": 2.2,
+        "lat": 46.6,
+        "n_human": 0,
+        "n_nonhuman": 27,
+        "days_ago": 5256
+      },
+      {
+        "label": "Netherlands",
+        "lon": 5.3,
+        "lat": 52.1,
+        "n_human": 11,
+        "n_nonhuman": 27,
+        "days_ago": 2213
+      },
+      {
+        "label": "United States",
+        "lon": -98.5,
+        "lat": 39.8,
+        "n_human": 2,
+        "n_nonhuman": 60,
+        "days_ago": 220
+      },
+      {
+        "label": "Ireland",
+        "lon": -7.7,
+        "lat": 53.4,
+        "n_human": 1,
+        "n_nonhuman": 2,
+        "days_ago": 4405
+      },
+      {
+        "label": "United Kingdom",
+        "lon": -1.5,
+        "lat": 52.4,
+        "n_human": 23,
+        "n_nonhuman": 145,
+        "days_ago": 52
+      },
+      {
+        "label": "Belgium",
+        "lon": 4.5,
+        "lat": 50.5,
+        "n_human": 4,
+        "n_nonhuman": 0,
+        "days_ago": 4890
+      },
+      {
+        "label": "Sweden",
+        "lon": 15.3,
+        "lat": 62.0,
+        "n_human": 1,
+        "n_nonhuman": 0,
+        "days_ago": 4160
+      },
+      {
+        "label": "Austria",
+        "lon": 14.6,
+        "lat": 47.6,
+        "n_human": 2,
+        "n_nonhuman": 9,
+        "days_ago": 1603
+      },
+      {
+        "label": "Spain",
+        "lon": -3.7,
+        "lat": 40.4,
+        "n_human": 1,
+        "n_nonhuman": 7,
+        "days_ago": 1238
+      },
+      {
+        "label": "Germany",
+        "lon": 10.4,
+        "lat": 51.2,
+        "n_human": 10,
+        "n_nonhuman": 4,
+        "days_ago": 1968
+      },
+      {
+        "label": "New Zealand",
+        "lon": 172.2,
+        "lat": -41.3,
+        "n_human": 2,
+        "n_nonhuman": 7,
+        "days_ago": 4160
+      },
+      {
+        "label": "Russian Federation",
+        "lon": 105.3,
+        "lat": 61.5,
+        "n_human": 3,
+        "n_nonhuman": 1,
+        "days_ago": 1140
+      },
+      {
+        "label": "Canada",
+        "lon": -106.0,
+        "lat": 56.1,
+        "n_human": 0,
+        "n_nonhuman": 57,
+        "days_ago": 3429
+      },
+      {
+        "label": "Italy",
+        "lon": 12.5,
+        "lat": 42.8,
+        "n_human": 0,
+        "n_nonhuman": 9,
+        "days_ago": 1968
+      },
+      {
+        "label": "South Africa",
+        "lon": 25.1,
+        "lat": -29.0,
+        "n_human": 0,
+        "n_nonhuman": 57,
+        "days_ago": 1194
+      },
+      {
+        "label": "Chile",
+        "lon": -71.5,
+        "lat": -35.7,
+        "n_human": 0,
+        "n_nonhuman": 3,
+        "days_ago": 2469
+      },
+      {
+        "label": "China",
+        "lon": 104.2,
+        "lat": 35.9,
+        "n_human": 0,
+        "n_nonhuman": 8,
+        "days_ago": 2699
+      },
+      {
+        "label": "Czechia",
+        "lon": 15.5,
+        "lat": 49.8,
+        "n_human": 0,
+        "n_nonhuman": 2,
+        "days_ago": 4160
+      },
+      {
+        "label": "Slovenia",
+        "lon": 14.9,
+        "lat": 46.1,
+        "n_human": 0,
+        "n_nonhuman": 1,
+        "days_ago": 5621
+      },
+      {
+        "label": "Japan",
+        "lon": 138.3,
+        "lat": 36.2,
+        "n_human": 0,
+        "n_nonhuman": 1,
+        "days_ago": 1999
+      },
+      {
+        "label": "Portugal",
+        "lon": -8.2,
+        "lat": 39.4,
+        "n_human": 0,
+        "n_nonhuman": 1,
+        "days_ago": 507
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT003017757.1",
+      "biosample": "SAMN52658969",
+      "asm_acc": "GCA_053883175.1",
+      "collection_date": "1997-02-02",
+      "target_creation_date": "2025-12-09"
+    },
+    "host_summary": [
+      {
+        "host": "not available",
+        "n": 55
+      },
+      {
+        "host": "non-host associated",
+        "n": 19
+      },
+      {
+        "host": "natural / free-living",
+        "n": 14
+      },
+      {
+        "host": "food",
+        "n": 14
+      },
+      {
+        "host": "pig",
+        "n": 7
+      },
+      {
+        "host": "meat products",
+        "n": 2
+      },
+      {
+        "host": "fish products",
+        "n": 1
+      }
+    ],
+    "signals": {
+      "geographic_spread": {
+        "label": "multi-hemisphere",
+        "n_countries": 26,
+        "n_continents": 6,
+        "n_hemispheres": 2,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": true,
+        "evidence": "food_origin field",
+        "n_food_origin_mismatches": 52,
+        "human_countries": [
+          "Australia",
+          "Austria",
+          "Belgium",
+          "Denmark",
+          "Germany",
+          "Ireland",
+          "Netherlands",
+          "New Zealand",
+          "Russian Federation",
+          "Spain",
+          "Sweden",
+          "Switzerland",
+          "United Kingdom",
+          "United States",
+          "not collected"
+        ],
+        "food_countries": [
+          "Australia",
+          "Austria",
+          "Canada",
+          "China",
+          "Czechia",
+          "France",
+          "Germany",
+          "Italy",
+          "Netherlands",
+          "New Zealand",
+          "Not Provided",
+          "Portugal",
+          "Russian Federation",
+          "Slovenia",
+          "South Africa",
+          "Spain",
+          "Switzerland",
+          "United Kingdom",
+          "United States"
+        ]
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": true,
+        "n_bioprojects": 75,
+        "tier": "very strong"
+      },
+      "human_emergence": {
+        "flag": false,
+        "recent_ratio": 0.25,
+        "baseline_ratio": 0.113,
+        "delta": 0.137,
+        "n_recent_human": 2,
+        "n_recent_total": 8,
+        "n_baseline_total": 631
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": false,
+        "recent_rate": 0.0333,
+        "baseline_rate": 0.168,
+        "ratio": 0.2,
+        "n_recent": 2,
+        "n_baseline": 678
+      },
+      "ifsac": {
+        "top": {
+          "category": "environmental-factory/production facility",
+          "n": 22
+        },
+        "categories": [
+          {
+            "category": "environmental-factory/production facility",
+            "n": 22
+          },
+          {
+            "category": "environmental",
+            "n": 18
+          },
+          {
+            "category": "environmental-retail",
+            "n": 10
+          },
+          {
+            "category": "Land animals:Meat:Beef",
+            "n": 10
+          },
+          {
+            "category": "chicken",
+            "n": 9
+          }
+        ],
+        "n_total_ifsac": 116
+      },
+      "clonal_complex": {
+        "cc": "CC204",
+        "label": null,
+        "tooltip": null,
+        "has_notes": false
+      }
+    },
+    "mlst_alleles_dict": {
+      "abcZ": "5",
+      "bglA": "7",
+      "cat": "6",
+      "dapE": "4",
+      "dat": "5",
+      "ldh": "4",
+      "lhkA": "1"
+    },
+    "human_countries_attr": "Australia,Austria,Belgium,Denmark,Germany,Ireland,Netherlands,New Zealand,Russian Federation,Spain,Sweden,Switzerland,United Kingdom,United States,not collected"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000261066.1",
+    "n_total": 2,
+    "n_human": 2,
+    "n_nonhuman": 0,
+    "n_food": 0,
+    "n_animal": 0,
+    "n_environment": 0,
+    "earliest_collection_date": "2026-03-01",
+    "latest_collection_date": "2026-04-01",
+    "earliest_target_creation_date": "2026-04-10",
+    "latest_target_creation_date": "2026-04-11",
+    "temporal_span_days": 31,
+    "histogram_max_year_count": 2,
+    "deposit_lag_median": 41,
+    "deposit_lag_mean": 25,
+    "new_humans_in_window": 1,
+    "new_humans_30d": 0,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "Serotype 1/2b",
+    "consensus_serovar_n": 2,
+    "consensus_serovar_total": 2,
+    "mlst_scheme": null,
+    "mlst_st": null,
+    "mlst_alleles": null,
+    "mlst_representative_pdt": null,
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "United Kingdom",
+        "n": 2
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "United Kingdom": [
+          {
+            "admin1": "United Kingdom",
+            "n": 2
+          }
+        ]
+      },
+      "unspecified": {}
+    },
+    "source_summary": [
+      {
+        "category": "Human",
+        "source": "human",
+        "n": 2
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003171783.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003171783.1",
+        "biosample": "SAMN57185877",
+        "date_added": "2026-04-10",
+        "collection_date": "2026-04",
+        "geo": "United Kingdom: United Kingdom"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT003172468.1",
+      "biosample": "SAMN57202968",
+      "date": "2026-03-01",
+      "date_raw": "2026-03",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_human": {
+      "pdt": "PDT003172468.1",
+      "biosample": "SAMN57202968",
+      "date": "2026-03-01",
+      "date_raw": "2026-03",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": null,
+    "histogram": [
+      {
+        "year": 2026,
+        "n_human": 2,
+        "n_nonhuman": 0
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "United Kingdom",
+        "lon": -1.5,
+        "lat": 52.4,
+        "n_human": 2,
+        "n_nonhuman": 0,
+        "days_ago": 52
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT003172468.1",
+      "biosample": "SAMN57202968",
+      "asm_acc": "GCA_056687905.1",
+      "collection_date": "2026-03",
+      "target_creation_date": "2026-04-11"
+    },
+    "host_summary": [],
+    "signals": {
+      "geographic_spread": {
+        "label": null,
+        "n_countries": 1,
+        "n_continents": 1,
+        "n_hemispheres": 1,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": false,
+        "evidence": null,
+        "n_food_origin_mismatches": 0,
+        "human_countries": [
+          "United Kingdom"
+        ],
+        "food_countries": []
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": false,
+        "n_bioprojects": 1,
+        "tier": null
+      },
+      "human_emergence": {
+        "flag": false,
+        "n_recent_human": 2,
+        "n_recent_total": 2,
+        "n_baseline_total": 0,
+        "reason": "baseline_too_small"
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": false,
+        "recent_rate": 0.0,
+        "baseline_rate": 0.0,
+        "ratio": null,
+        "reason": "cluster_too_young"
+      },
+      "ifsac": {
+        "top": null,
+        "categories": []
+      },
+      "clonal_complex": {
+        "cc": null,
+        "label": null,
+        "tooltip": null,
+        "has_notes": false
+      }
+    },
+    "mlst_alleles_dict": {},
+    "human_countries_attr": "United Kingdom"
+  },
+  {
+    "pathogen": "Listeria",
+    "pds_acc": "PDS000044593.48",
+    "n_total": 69,
+    "n_human": 34,
+    "n_nonhuman": 35,
+    "n_food": 10,
+    "n_animal": 0,
+    "n_environment": 23,
+    "earliest_collection_date": "2010-04-01",
+    "latest_collection_date": "2026-04-01",
+    "earliest_target_creation_date": "2018-03-03",
+    "latest_target_creation_date": "2026-04-10",
+    "temporal_span_days": 5844,
+    "histogram_max_year_count": 19,
+    "deposit_lag_median": 30,
+    "deposit_lag_mean": 240,
+    "new_humans_in_window": 1,
+    "new_humans_30d": 0,
+    "new_humans_15d": 0,
+    "window_days": 60,
+    "consensus_serovar": "Serotype 4",
+    "consensus_serovar_n": 48,
+    "consensus_serovar_total": 57,
+    "mlst_scheme": "lmonocytogenes",
+    "mlst_st": "ST219",
+    "mlst_alleles": "{\"abcZ\": \"1\", \"bglA\": \"2\", \"cat\": \"9\", \"dapE\": \"1\", \"dat\": \"2\", \"ldh\": \"5\", \"lhkA\": \"3\"}",
+    "mlst_representative_pdt": "PDT002920806.1",
+    "mlst_error": null,
+    "countries": [
+      {
+        "country": "United Kingdom",
+        "n": 63
+      },
+      {
+        "country": "Russia",
+        "n": 2
+      },
+      {
+        "country": "Ireland",
+        "n": 1
+      },
+      {
+        "country": "South Africa",
+        "n": 1
+      },
+      {
+        "country": "Switzerland",
+        "n": 1
+      }
+    ],
+    "admin1": {
+      "by_country": {
+        "United Kingdom": [
+          {
+            "admin1": "United Kingdom",
+            "n": 56
+          },
+          {
+            "admin1": "South of England",
+            "n": 1
+          }
+        ],
+        "Russia": [
+          {
+            "admin1": "Moscow",
+            "n": 2
+          }
+        ],
+        "Switzerland": [
+          {
+            "admin1": "Zurich",
+            "n": 1
+          }
+        ]
+      },
+      "unspecified": {
+        "Ireland": 1,
+        "South Africa": 1,
+        "United Kingdom": 6
+      }
+    },
+    "source_summary": [
+      {
+        "category": "Human",
+        "source": "human",
+        "n": 31
+      },
+      {
+        "category": "Environment",
+        "source": "environmental",
+        "n": 17
+      },
+      {
+        "category": "Food",
+        "source": "food",
+        "n": 9
+      },
+      {
+        "category": "Environment",
+        "source": "river",
+        "n": 6
+      },
+      {
+        "category": "Unknown",
+        "source": "(unspecified)",
+        "n": 2
+      },
+      {
+        "category": "Human",
+        "source": "(unspecified)",
+        "n": 1
+      },
+      {
+        "category": "Human",
+        "source": "oropharyngeal swab",
+        "n": 1
+      },
+      {
+        "category": "Human",
+        "source": "endocervical specimen",
+        "n": 1
+      },
+      {
+        "category": "Food",
+        "source": "raw meat",
+        "n": 1
+      }
+    ],
+    "new_humans_pdts": [
+      "PDT003171784.1"
+    ],
+    "new_humans_dates": [
+      {
+        "pdt": "PDT003171784.1",
+        "biosample": "SAMN57185876",
+        "date_added": "2026-04-10",
+        "collection_date": "2026-04",
+        "geo": "United Kingdom: United Kingdom"
+      }
+    ],
+    "oldest_any": {
+      "pdt": "PDT001148376.1",
+      "biosample": "SAMN22208398",
+      "date": "2010-04-01",
+      "date_raw": "2010-04",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_human": {
+      "pdt": "PDT001148376.1",
+      "biosample": "SAMN22208398",
+      "date": "2010-04-01",
+      "date_raw": "2010-04",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "human",
+      "source_category": "Human"
+    },
+    "oldest_nonhuman": {
+      "pdt": "PDT000384674.2",
+      "biosample": "SAMN10128132",
+      "date": "2018-09-01",
+      "date_raw": "2018-09",
+      "geo": "United Kingdom: United Kingdom",
+      "geo_country": "United Kingdom",
+      "geo_admin1": "United Kingdom",
+      "source": "food",
+      "source_category": "Food"
+    },
+    "histogram": [
+      {
+        "year": 2010,
+        "n_human": 1,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2015,
+        "n_human": 3,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2018,
+        "n_human": 0,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2020,
+        "n_human": 1,
+        "n_nonhuman": 0
+      },
+      {
+        "year": 2021,
+        "n_human": 6,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2022,
+        "n_human": 6,
+        "n_nonhuman": 1
+      },
+      {
+        "year": 2023,
+        "n_human": 0,
+        "n_nonhuman": 11
+      },
+      {
+        "year": 2024,
+        "n_human": 7,
+        "n_nonhuman": 6
+      },
+      {
+        "year": 2025,
+        "n_human": 6,
+        "n_nonhuman": 13
+      },
+      {
+        "year": 2026,
+        "n_human": 3,
+        "n_nonhuman": 0
+      }
+    ],
+    "map_locations": [
+      {
+        "label": "United Kingdom",
+        "lon": -1.5,
+        "lat": 52.4,
+        "n_human": 31,
+        "n_nonhuman": 32,
+        "days_ago": 52
+      },
+      {
+        "label": "Russian Federation",
+        "lon": 105.3,
+        "lat": 61.5,
+        "n_human": 2,
+        "n_nonhuman": 0,
+        "days_ago": 1899
+      },
+      {
+        "label": "Switzerland",
+        "lon": 8.2,
+        "lat": 46.8,
+        "n_human": 0,
+        "n_nonhuman": 1,
+        "days_ago": 507
+      }
+    ],
+    "latest_assembly": {
+      "pdt": "PDT003171784.1",
+      "biosample": "SAMN57185876",
+      "asm_acc": "GCA_056666655.1",
+      "collection_date": "2026-04",
+      "target_creation_date": "2026-04-10"
+    },
+    "host_summary": [
+      {
+        "host": "not available",
+        "n": 1
+      }
+    ],
+    "signals": {
+      "geographic_spread": {
+        "label": "multi-hemisphere",
+        "n_countries": 5,
+        "n_continents": 2,
+        "n_hemispheres": 2,
+        "n_us_states": 0
+      },
+      "import_signal": {
+        "flag": true,
+        "evidence": "country mismatch between human and food isolates",
+        "n_food_origin_mismatches": 0,
+        "human_countries": [
+          "Russian Federation",
+          "South Africa",
+          "United Kingdom"
+        ],
+        "food_countries": [
+          "Switzerland",
+          "United Kingdom"
+        ]
+      },
+      "travel_signal": {
+        "flag": false,
+        "n_annotated": 0,
+        "annotated_pdts": []
+      },
+      "submitter_diversity": {
+        "flag": true,
+        "n_bioprojects": 7,
+        "tier": "strong"
+      },
+      "human_emergence": {
+        "flag": false,
+        "recent_ratio": 0.357,
+        "baseline_ratio": 0.538,
+        "delta": -0.181,
+        "n_recent_human": 5,
+        "n_recent_total": 14,
+        "n_baseline_total": 52
+      },
+      "amr_critical": {
+        "flag": false,
+        "classes_present": [],
+        "class_details": {},
+        "n_classes": 0
+      },
+      "acceleration": {
+        "flag": false,
+        "recent_rate": 0.0333,
+        "baseline_rate": 0.0228,
+        "ratio": 1.46,
+        "n_recent": 2,
+        "n_baseline": 67
+      },
+      "ifsac": {
+        "top": null,
+        "categories": []
+      },
+      "clonal_complex": {
+        "cc": null,
+        "label": null,
+        "tooltip": null,
+        "has_notes": false
+      }
+    },
+    "mlst_alleles_dict": {
+      "abcZ": "1",
+      "bglA": "2",
+      "cat": "9",
+      "dapE": "1",
+      "dat": "2",
+      "ldh": "5",
+      "lhkA": "3"
+    },
+    "human_countries_attr": "Russian Federation,South Africa,United Kingdom"
+  }
+]

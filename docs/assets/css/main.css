@@ -1,0 +1,761 @@
+/* Pathogen Watch v2 — Phase 1 minimal styles
+   The full editorial-aesthetic stylesheet ships in Phase 3.
+   For now: readable, clean, monospace for IDs. */
+
+:root {
+  --ink: #111;
+  --ink-soft: #444;
+  --ink-faint: #777;
+  --paper: #fafaf7;
+  --paper-2: #f0ede5;
+  --rule: #d8d2c4;
+  --rule-strong: #2a2f36;
+  --teal: #0f766e;
+  --teal-deep: #134e4a;
+  --rust: #b91c1c;
+  --rust-soft: #fee2e2;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+.masthead {
+  border-bottom: 3px double var(--rule-strong);
+  padding: 32px 0 24px;
+  background: var(--paper);
+}
+
+.masthead h1 {
+  font-family: Georgia, serif;
+  font-size: 32px;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.masthead-home {
+  color: inherit;
+  text-decoration: none;
+}
+.masthead-home:hover {
+  color: var(--teal-deep);
+}
+
+.help-link {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--teal-deep);
+  text-decoration: none;
+  border: 1px solid var(--teal-deep);
+  padding: 1px 8px;
+  border-radius: 2px;
+  margin-left: 10px;
+  font-weight: 500;
+  vertical-align: middle;
+}
+.help-link:hover {
+  background: var(--teal-deep);
+  color: white;
+}
+
+.methods-page {
+  max-width: 880px;
+  margin: 30px auto 60px;
+  line-height: 1.65;
+}
+
+.methods-page h2 {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  margin-top: 36px;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+  scroll-margin-top: 20px;
+}
+
+.methods-page h3 {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  margin: 22px 0 8px;
+  font-weight: 600;
+}
+
+.methods-page section:first-of-type h2 {
+  margin-top: 16px;
+}
+
+.methods-page p {
+  margin: 8px 0 12px;
+}
+
+.methods-page ul,
+.methods-page ol {
+  margin: 8px 0 12px 0;
+  padding-left: 24px;
+}
+
+.methods-page li {
+  margin-bottom: 4px;
+}
+
+.methods-page code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12.5px;
+  background: var(--paper-2);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+.methods-toc {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  padding: 16px 22px;
+  margin-bottom: 24px;
+}
+.methods-toc h2 {
+  font-size: 14px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  margin: 0 0 8px;
+  padding: 0;
+  border: none;
+}
+.methods-toc ol {
+  margin: 0;
+  padding-left: 22px;
+  font-size: 13px;
+  columns: 2;
+  column-gap: 32px;
+}
+.methods-toc li {
+  margin-bottom: 2px;
+  break-inside: avoid;
+}
+.methods-toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.methods-toc a:hover {
+  color: var(--teal-deep);
+  text-decoration: underline;
+}
+
+.defs {
+  margin: 12px 0;
+}
+.defs dt {
+  font-weight: 600;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+  margin-top: 10px;
+  color: var(--ink);
+}
+.defs dt:first-child {
+  margin-top: 0;
+}
+.defs dd {
+  margin: 2px 0 0 0;
+  padding-left: 14px;
+  border-left: 2px solid var(--rule);
+  color: var(--ink-soft);
+}
+
+.cc-defs dt,
+.amr-defs dt {
+  font-family: inherit;
+  font-size: inherit;
+  text-transform: none;
+}
+
+.keyword-list {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12.5px;
+  background: var(--paper-2);
+  padding: 8px 14px 8px 30px;
+  border: 1px solid var(--rule);
+  margin: 10px 0;
+}
+
+@media (max-width: 700px) {
+  .methods-toc ol {
+    columns: 1;
+  }
+}
+
+.review-banner {
+  background: #fef08a;
+  border-bottom: 2px solid #ca8a04;
+  color: #713f12;
+  padding: 10px 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+.review-banner strong {
+  color: #713f12;
+  font-weight: 700;
+}
+
+.beta-banner {
+  background: #fff3d6;
+  border-top: 1px solid #e5c66f;
+  border-bottom: 1px solid #e5c66f;
+  padding: 10px 0;
+  font-size: 13px;
+  color: #5d4400;
+}
+.beta-banner strong { color: #4a3500; }
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 20px;
+}
+.section-head h2 {
+  margin: 0;
+}
+
+.filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.filter-controls label {
+  color: var(--ink-soft);
+}
+.filter-controls select {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 4px 8px;
+  border: 1px solid var(--rule);
+  background: white;
+  cursor: pointer;
+  min-width: 160px;
+}
+.filter-controls select:hover {
+  border-color: var(--teal-deep);
+}
+.filter-status {
+  color: var(--ink-faint);
+  font-style: italic;
+  font-size: 12px;
+}
+
+.version {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+  color: var(--ink-faint);
+  font-weight: normal;
+  letter-spacing: 0;
+  margin-left: 12px;
+}
+
+.lede {
+  font-size: 16px;
+  color: var(--ink-soft);
+  max-width: 720px;
+  margin: 0 0 12px;
+}
+
+.meta {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin: 0;
+}
+
+.meta code { background: var(--paper-2); padding: 1px 6px; border-radius: 2px; }
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--rule);
+  background: white;
+  margin: 28px 0;
+}
+
+.tile {
+  padding: 16px 20px;
+  border-right: 1px solid var(--rule);
+}
+.tile:last-child { border-right: none; }
+
+.tile-label {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin-bottom: 8px;
+}
+.tile-value {
+  font-family: Georgia, serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+}
+.tile-sub {
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 8px;
+}
+
+section { margin: 36px 0; }
+section h2 {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  margin: 0 0 4px;
+  border-bottom: 1px solid var(--rule-strong);
+  padding-bottom: 6px;
+}
+
+.muted { color: var(--ink-faint); font-size: 14px; }
+
+.cluster-card {
+  background: white;
+  border: 2px solid #1a1a1a;
+  margin: 20px 0;
+  padding: 0;
+  box-shadow: 0 1px 0 #1a1a1a;  /* subtle bottom shadow to reinforce edge */
+}
+
+.cluster-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--rule);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.cluster-card-id {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.headline-typing {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--teal-deep);
+  background: white;
+  border: 1px solid var(--teal-deep);
+  padding: 1px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.02em;
+}
+
+.cluster-id {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.cluster-card-counts {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.cluster-card-counts strong { color: var(--rust); }
+
+.cluster-typing {
+  background: #fcfaf5;
+  border-bottom: 1px solid var(--rule);
+  padding: 8px 18px;
+  font-size: 13px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* Signals strip — visually distinct from cluster-typing, sits above it. */
+.cluster-signals {
+  background: white;
+  border-bottom: 1px solid var(--rule);
+  padding: 8px 18px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.signal-chip {
+  display: inline-block;
+  padding: 3px 9px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  border-radius: 3px;
+  border: 1px solid;
+  cursor: help;
+  user-select: none;
+}
+
+/* Geographic spread — escalating saturation by scale */
+.signal-geo                       { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+.signal-geo-multi_state           { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+.signal-geo-multi_country         { background: #fed7aa; color: #9a3412; border-color: #fb923c; }
+.signal-geo-multi_continent       { background: #fecaca; color: #991b1b; border-color: #f87171; }
+.signal-geo-multi_hemisphere      { background: #fee2e2; color: #7f1d1d; border-color: #ef4444; }
+
+/* Import signal — orange (notable) */
+.signal-import { background: #ffedd5; color: #9a3412; border-color: #fdba74; }
+
+/* Travel signal — blue, distinct from import */
+.signal-travel { background: #dbeafe; color: #1e3a8a; border-color: #93c5fd; }
+
+/* Submitter diversity — neutral teal (multi-source surveillance) */
+.signal-submitter { background: #ccfbf1; color: #134e4a; border-color: #5eead4; }
+
+/* Human-emergence — yellow-orange, "the canonical outbreak signal" */
+.signal-emergence { background: #fef08a; color: #713f12; border-color: #facc15; font-weight: 700; }
+
+/* Host species inline block */
+.host-species {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px dotted var(--rule);
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.host-species-label {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  margin-right: 4px;
+}
+.host-species-item {
+  font-style: italic;
+}
+.host-more {
+  font-style: normal;
+  color: var(--ink-faint);
+}
+
+/* Acceleration — strong red */
+.signal-accel  { background: #fee2e2; color: #991b1b; border-color: #f87171; }
+
+/* AMR — bright magenta-ish */
+.signal-amr    { background: #fce7f3; color: #831843; border-color: #f9a8d4; }
+
+/* IFSAC — neutral informational */
+.signal-ifsac  { background: #e0f2fe; color: #075985; border-color: #7dd3fc; }
+
+/* Clonal complex with curated note — purple (taxonomic) */
+.signal-cc          { background: #ede9fe; color: #5b21b6; border-color: #c4b5fd; }
+.signal-cc-neutral  { background: #f3f4f6; color: #4b5563; border-color: #d1d5db; }
+.typing-field {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.typing-label {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+.typing-value {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-weight: 600;
+  color: var(--ink);
+  background: white;
+  border: 1px solid var(--rule);
+  padding: 1px 7px;
+  border-radius: 2px;
+}
+.typing-confidence {
+  font-size: 11px;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.typing-missing {
+  font-style: italic;
+  color: var(--ink-faint);
+  font-size: 12px;
+}
+
+.cluster-card-body {
+  padding: 14px 18px;
+}
+
+.card-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.card-row:last-of-type {
+  border-bottom: none;
+  margin-bottom: 4px;
+}
+
+/* The bottom row (historical reference) is visually de-emphasized */
+.card-row-bottom {
+  grid-template-columns: 1fr;
+  background: #fafaf7;
+  padding: 12px 14px;
+  margin: 4px -14px -4px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  border-bottom: 1px solid var(--rule);
+}
+.card-row-bottom h4 {
+  color: var(--ink-faint);
+}
+
+.card-row h4 {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+
+.oldest-isolates { margin-bottom: 16px; }
+.oldest-list {
+  margin: 0;
+  font-size: 13px;
+}
+.oldest-list dt {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  margin-top: 6px;
+}
+.oldest-list dt:first-child { margin-top: 0; }
+.oldest-list dd {
+  margin: 0 0 2px;
+  padding-left: 8px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  border-left: 2px solid var(--rule);
+}
+
+.recent-humans, .sources, .geography, .histogram-block {
+  margin-bottom: 14px;
+}
+
+.recent-humans ul,
+.sources ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+}
+
+.recent-humans li,
+.sources li {
+  padding: 3px 0;
+  border-bottom: 1px dotted var(--rule);
+}
+.recent-humans li:last-child, .sources li:last-child { border: none; }
+.recent-humans li.more, .sources li.more {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.pdt-acc {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 11.5px;
+  background: var(--paper-2);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+.pdt-link {
+  color: var(--teal-deep);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--teal-deep);
+}
+.pdt-link:hover {
+  background: var(--teal-deep);
+  color: white;
+  border-bottom-color: transparent;
+}
+
+.counts-recency {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-left: 4px;
+}
+.counts-recency strong {
+  color: var(--ink);
+}
+
+.source-category {
+  display: inline-block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1px 6px;
+  border-radius: 2px;
+  background: var(--rule);
+  color: var(--ink);
+  margin-right: 4px;
+}
+.source-category-human       { background: #fef2f2; color: #991b1b; }
+.source-category-food        { background: #fef3c7; color: #92400e; }
+.source-category-animal      { background: #ecfeff; color: #155e75; }
+.source-category-environment { background: #ecfdf5; color: #065f46; }
+.source-category-unknown     { background: #f3f4f6; color: #4b5563; }
+
+.count { color: var(--ink-faint); font-size: 11px; }
+
+.geography p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.histogram-wrap {
+  background: #fafaf7;
+  border: 1px solid var(--rule);
+  padding: 4px;
+}
+.cluster-histogram { display: block; width: 100%; height: auto; }
+.cluster-histogram-empty { background: var(--paper-2); }
+
+.cluster-map-block {
+  /* Block wrapper for map in card top row */
+}
+.cluster-map {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: white;
+  border: 1px solid var(--rule);
+}
+.cluster-map-empty {
+  background: var(--paper-2);
+}
+.map-dot { cursor: help; }
+
+.map-legend {
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 4px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.map-legend-note {
+  font-style: italic;
+}
+.swatch-mixed {
+  background: linear-gradient(to right, #b91c1c 50%, #0f766e 50%);
+}
+
+.histogram-legend {
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 4px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.legend-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 4px;
+  vertical-align: middle;
+  border-radius: 1px;
+}
+.swatch-human    { background: #b91c1c; }
+.swatch-nonhuman { background: #0f766e; }
+
+.cluster-card-foot {
+  text-align: right;
+  font-size: 12px;
+  margin-top: 12px;
+  padding-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ext-link {
+  color: var(--teal-deep);
+  text-decoration: none;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border: 1px solid var(--teal-deep);
+}
+.ext-link:hover { background: var(--teal-deep); color: white; }
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.badge-pathogen-listeria      { background: #ecfdf5; color: #065f46; border: 1px solid #6ee7b7; }
+.badge-pathogen-stec          { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+.badge-pathogen-salmonella    { background: #fff7ed; color: #9a3412; border: 1px solid #fdba74; }
+.badge-pathogen-campylobacter { background: #eff6ff; color: #1e40af; border: 1px solid #93c5fd; }
+
+.empty {
+  padding: 32px;
+  text-align: center;
+  font-style: italic;
+  color: var(--ink-faint);
+  background: white;
+  border: 1px dashed var(--rule);
+}
+
+footer {
+  margin-top: 60px;
+  padding: 24px 0 40px;
+  border-top: 3px double var(--rule-strong);
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+footer a { color: var(--teal-deep); }
+
+@media (max-width: 800px) {
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .tile:nth-child(2) { border-right: none; }
+  .tile:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
+  .card-row { grid-template-columns: 1fr; }
+}

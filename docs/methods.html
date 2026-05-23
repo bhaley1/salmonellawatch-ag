@@ -1,0 +1,1027 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Methods — ListeriaWatch</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="container">
+    <h1>
+      <a href="index.html" class="masthead-home">ListeriaWatch</a>
+      <span class="version">v2 · beta</span>
+    </h1>
+    <p class="lede">
+      Methods, definitions, and caveats — what the signals on the dashboard actually mean.
+    </p>
+    <p class="meta">
+      <a href="index.html">← Back to dashboard</a>
+    </p>
+  </div>
+</header>
+
+<div class="review-banner">
+  <div class="container">
+    <strong>⚠ Private review.</strong> This page is shared for colleague feedback only.
+    Do not circulate the URL publicly. Send corrections to Bradd Haley.
+  </div>
+</div>
+
+<div class="beta-banner">
+  <div class="container">
+    <strong>Beta.</strong> ListeriaWatch is a personal research project, not an official
+    surveillance system. The documentation below reflects the author's interpretation
+    of public surveillance literature and is not peer-reviewed.
+  </div>
+</div>
+
+<main class="container methods-page">
+
+<nav class="methods-toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#data-sources">Data sources and update cadence</a></li>
+    <li><a href="#clusters">What a "cluster" is</a></li>
+    <li><a href="#dates">Date semantics: collection_date vs. target_creation_date</a></li>
+    <li><a href="#new-cases">"New human cases" and the 60d / 30d / 15d windows</a></li>
+    <li><a href="#geographic-spread">Geographic spread tiers</a></li>
+    <li><a href="#import-signal">Import signal</a></li>
+    <li><a href="#travel-signal">Travel signal</a></li>
+    <li><a href="#submitter-diversity">Submitter diversity (multi-BioProject)</a></li>
+    <li><a href="#human-emergence">Human emergence signal</a></li>
+    <li><a href="#acceleration">Acceleration</a></li>
+    <li><a href="#deposit-lag">Collection-to-deposit lag</a></li>
+    <li><a href="#mlst">MLST and Sequence Types</a></li>
+    <li><a href="#cc">Clonal Complex (CC) and lineage labels</a></li>
+    <li><a href="#amr">AMR clinical-importance flag</a></li>
+    <li><a href="#ifsac">IFSAC food categorization</a></li>
+    <li><a href="#host-species">Animal host species</a></li>
+    <li><a href="#map">Geographic footprint map</a></li>
+    <li><a href="#histogram">Isolates-per-year histogram</a></li>
+    <li><a href="#oldest">Cluster origins (oldest isolates)</a></li>
+    <li><a href="#references">References</a></li>
+    <li><a href="#caveats">Top-level caveats</a></li>
+  </ol>
+</nav>
+
+<section id="data-sources">
+  <h2>Data sources and update cadence</h2>
+  <p>
+    All cluster, isolate, and AMR data are sourced from
+    <a href="https://www.ncbi.nlm.nih.gov/pathogens/">NCBI Pathogen Detection</a>
+    (NCBI PD). NCBI PD is a public, FDA/CDC/USDA-collaborative platform that
+    receives bacterial isolate genomes from labs around the world and runs
+    daily SNP-based clustering to identify genomically related isolates.
+  </p>
+  <p>
+    ListeriaWatch ingests three files per pathogen per release from the NCBI
+    PD FTP site:
+  </p>
+  <ul>
+    <li><code>metadata.tsv</code> — per-isolate metadata (host, source, geography, dates, assembly references, IFSAC category, food_origin, host_disease)</li>
+    <li><code>cluster_list.tsv</code> — the per-cluster isolate membership manifest (Listeria, STEC, and Campylobacter only; Salmonella's cluster info is delivered differently)</li>
+    <li><code>amr.metadata.tsv</code> — AMRFinderPlus output (resistance gene calls per isolate)</li>
+  </ul>
+  <p>
+    The ingest runs nightly. NCBI itself updates files in place within a
+    release accession, so even between Listeria release bumps, individual
+    files may pick up new isolates.
+  </p>
+</section>
+
+<section id="clusters">
+  <h2>What a "cluster" is</h2>
+  <p>
+    A <strong>SNP cluster</strong> (NCBI PDS_acc, e.g. <code>PDS000024682.215</code>)
+    is a group of bacterial isolates whose whole-genome sequences are
+    genomically close enough to plausibly share a recent common contamination
+    source. NCBI computes these clusters daily using a SNP-based whole-genome
+    MLST approach with hierarchical clustering thresholds.
+  </p>
+  <p>
+    <strong>What clustering does NOT prove.</strong> Genomic relatedness is
+    necessary but not sufficient evidence of a foodborne outbreak. Two
+    isolates in the same cluster may share an outbreak source, may share a
+    common environmental reservoir, or may simply both descend from a
+    persistent clone that has been circulating for years. The cluster is a
+    <em>signal worth investigating</em>, not a confirmed outbreak. Outbreak
+    confirmation requires epidemiological investigation: case interviews,
+    exposure histories, food sampling, and so on.
+  </p>
+  <p>
+    On the dashboard, "cluster card" and "active cluster" both refer to a
+    cluster currently displayed: one with at least one human isolate whose
+    collection_date is within the last 60 days.
+  </p>
+</section>
+
+<section id="dates">
+  <h2>Date semantics: collection_date vs. target_creation_date</h2>
+  <p>
+    Every isolate in NCBI has at least two dates and they can differ by
+    months or years. Knowing which is which matters because most signals on
+    the dashboard depend on one specific choice.
+  </p>
+  <dl class="defs">
+    <dt><code>collection_date</code></dt>
+    <dd>
+      When the sample was physically collected from the patient, food,
+      animal, or environment. Reflects when illness or contamination
+      occurred in the world. Used by ListeriaWatch for the "New human cases
+      in last 60d/30d/15d" filter and counts.
+    </dd>
+    <dt><code>target_creation_date</code></dt>
+    <dd>
+      When NCBI's pathogen detection pipeline first processed the isolate
+      and added it to the cluster manifest. Reflects when the genomic
+      surveillance system first "saw" the case. Used by ListeriaWatch for
+      the acceleration signal because that signal is asking "is this
+      cluster being detected at an accelerating pace right now?"
+    </dd>
+  </dl>
+  <p>
+    These can diverge dramatically. A lab may collect samples in 2019, sit
+    on them for years, and finally upload sequence data in 2026 — those
+    will show recent target_creation_dates but old collection_dates.
+    ListeriaWatch's "new cases" framing intentionally uses collection_date
+    so that <em>actually-recent illness</em>, not <em>backlogged
+    deposits</em>, drives the headline number.
+  </p>
+</section>
+
+<section id="new-cases">
+  <h2>"New human cases" and the 60d / 30d / 15d windows</h2>
+  <p>
+    The headline "N new human cases in last 60d" counts cluster members with
+    <code>source_category = "Human"</code> AND <code>collection_date</code>
+    within the last 60 days. The 30d and 15d sub-counts apply progressively
+    tighter windows.
+  </p>
+  <p>
+    A cluster appears on the dashboard if and only if it has at least one
+    human case with a recent collection_date. Clusters that received new
+    food or environmental isolates but no recent human cases are NOT shown,
+    by design — the dashboard's purpose is to flag clusters where human
+    illness is currently being detected.
+  </p>
+  <p>
+    The "Listeria" choice of 60 days for the primary window is wider than
+    you would use for Salmonella (where 30 days is typical). It reflects
+    Listeria's epidemiology — long incubation periods (up to 70 days for
+    invasive disease) and slower laboratory characterization mean a tighter
+    window would miss many cases that are still part of an active outbreak
+    in epidemiological terms.
+  </p>
+</section>
+
+<section id="geographic-spread">
+  <h2>Geographic spread tiers</h2>
+  <p>
+    The cluster card may show one of four mutually exclusive geographic
+    spread chips. They are computed from the canonical country and U.S.
+    state of every isolate in the cluster (not just recent ones). Only the
+    strongest applicable tier displays.
+  </p>
+  <dl class="defs">
+    <dt>MULTI-STATE</dt>
+    <dd>
+      ≥2 distinct U.S. states are represented and no isolates from outside
+      the U.S. Detected only for U.S.-only clusters because NCBI's
+      <code>geo_admin1</code> field is reliably populated for U.S. isolates
+      but inconsistently for most other countries.
+    </dd>
+    <dt>MULTI-COUNTRY</dt>
+    <dd>
+      ≥2 distinct countries on the same continent. A single-state U.S.
+      cluster with one Mexican isolate triggers this, not multi-state.
+    </dd>
+    <dt>MULTI-CONTINENT</dt>
+    <dd>
+      ≥2 distinct continents (out of North America, South America, Europe,
+      Asia, Africa, Oceania). A cluster with isolates from the U.S. and
+      Japan would trigger this even if only two countries are involved.
+    </dd>
+    <dt>MULTI-HEMISPHERE</dt>
+    <dd>
+      Isolates from both Northern and Southern hemispheres, classified by
+      country population centroid. Indonesia is classified Southern;
+      Tanzania Southern; Kenya Southern (by population centroid, despite
+      crossing the equator); most other equator-straddling countries
+      similarly assigned by population.
+    </dd>
+  </dl>
+  <p>
+    <strong>Caveat.</strong> Two-country clusters and 50-country clusters
+    receive the same MULTI-COUNTRY chip. The label is a <em>tier</em>, not
+    a strength-of-spread metric. To see the actual scope, hover the chip
+    for the numeric counts (e.g., "12 countries · 4 continents · 8 US
+    states"), or look at the map.
+  </p>
+  <p>
+    Country names are canonicalized to ISO names ("USA" → "United States";
+    "UK" → "United Kingdom"; etc.) before being compared. Countries not in
+    the lookup table (~200 covered) are passed through unchanged and may
+    not contribute to continent or hemisphere classification.
+  </p>
+</section>
+
+<section id="import-signal">
+  <h2>Import signal</h2>
+  <p>
+    The IMPORT SIGNAL chip is a <strong>pointer signal</strong> that the
+    <em>contaminated food vehicle may have crossed an international border
+    before being consumed</em>. In standard foodborne disease classification,
+    an imported case is one in which the food vehicle traveled, not the
+    person. Two ways this signal triggers:
+  </p>
+  <ol>
+    <li>
+      <strong>Country mismatch.</strong> The cluster contains human
+      isolates from one country and food isolates from a different country.
+      Example: U.S. human cases in the same cluster as Mexican food
+      isolates suggests an imported food vector.
+    </li>
+    <li>
+      <strong><code>food_origin</code> field populated.</strong> NCBI's
+      <code>food_origin</code> column, when filled in, records the
+      country where the food was produced (separate from where the isolate
+      was collected). Any mismatch between food_origin and
+      <code>geo_country</code> triggers the signal.
+    </li>
+  </ol>
+  <p>
+    <strong>What this signal does not establish.</strong> Co-occurrence of
+    human and food isolates from different countries in a genomic cluster
+    does not prove that imported food caused the human cases. The strain
+    may simply circulate internationally. The chip is a pointer to clusters
+    worth investigating, not a confirmation of imported-food etiology.
+    Distinguishing import from non-import requires the standard
+    public-health workflow: case interviews, food traceback, supplier
+    investigation.
+  </p>
+  <p>
+    <strong>Relationship to the travel signal.</strong> A cluster may fire
+    the IMPORT SIGNAL and the TRAVEL SIGNAL simultaneously, and they are
+    not mutually exclusive. Each is computed independently from different
+    NCBI metadata fields and answers a different question. See the
+    <a href="#travel-signal">travel signal section below</a> for the
+    distinction.
+  </p>
+</section>
+
+<section id="travel-signal">
+  <h2>Travel signal</h2>
+  <p>
+    The TRAVEL SIGNAL chip is a <strong>pointer signal</strong> that
+    <em>the case-patient may have been exposed to the pathogen while
+    traveling outside their country of residence</em>. In standard
+    foodborne disease classification, a travel-associated case is one in
+    which the person traveled, not the food vehicle. The two surveillance
+    bodies most cited in this dashboard's literature — CDC and ECDC — both
+    treat "travel-associated" as a distinct case classification from
+    "imported food vehicle".
+  </p>
+  <h3>The scientific distinction from import signal</h3>
+  <dl class="defs">
+    <dt>Import (food vehicle crossed border)</dt>
+    <dd>
+      The contaminated food was produced in country B, distributed to
+      country A, and consumed by a case-patient who never left country A.
+      Vehicle traveled; person did not.
+    </dd>
+    <dt>Travel-associated (person crossed border)</dt>
+    <dd>
+      The case-patient was exposed to the pathogen while in country B
+      (typically through food consumed there) and was diagnosed after
+      returning to country A. Person traveled; vehicle did not.
+    </dd>
+  </dl>
+  <p>
+    These are <strong>different epidemiological phenomena with different
+    public-health responses</strong>. Import cases drive food recalls and
+    trade investigations. Travel cases drive traveler advisories and
+    surveillance of foreign food systems. The signals are not redundant.
+  </p>
+
+  <h3>How this signal is detected</h3>
+  <p>
+    The TRAVEL SIGNAL chip fires when at least one human cluster member's
+    <code>host_disease</code> or <code>isolation_source</code> field
+    contains submitter-annotated text indicating travel association.
+    Recognized phrases (case-insensitive substring match):
+  </p>
+  <ul class="keyword-list">
+    <li>"travel-associated", "travel associated", "travel-related", "travel related"</li>
+    <li>"traveler", "traveller", "returning traveler", "returning traveller"</li>
+    <li>"imported case", "imported listeriosis", "imported infection"</li>
+  </ul>
+  <p>
+    Note that several of those keywords contain the word "imported" — these
+    refer to an <em>imported case</em> (the person was infected abroad),
+    not to imported food. The TRAVEL SIGNAL is still the correct chip
+    semantically.
+  </p>
+
+  <h3>Important limitations</h3>
+  <p>
+    <strong>NCBI Pathogen Detection has no dedicated travel-history field.</strong>
+    Travel association is detectable here <em>only when the submitter
+    happened to annotate it</em> in free-text fields. The vast majority of
+    travel-associated cases are NOT annotated this way — they appear as
+    ordinary domestic cases.
+  </p>
+  <p>
+    This signal therefore has a very high false-negative rate. Treat the
+    chip as "this cluster contains at least one known travel case worth
+    investigating" — not as a measure of how travel-associated the cluster
+    actually is. <strong>Absence of the chip does NOT mean the cluster is
+    domestic.</strong>
+  </p>
+
+  <h3>Co-firing with import signal</h3>
+  <p>
+    A cluster can fire both the IMPORT SIGNAL and the TRAVEL SIGNAL at the
+    same time, because they are computed independently from different
+    NCBI metadata. Possible interpretations of co-firing:
+  </p>
+  <ul>
+    <li>
+      <strong>Both genuinely apply.</strong> An imported food vehicle is
+      causing domestic cases, and there are independent travel-associated
+      cases linked to the food's country of origin. Genuinely informative
+      pattern.
+    </li>
+    <li>
+      <strong>Only the import signal reflects reality.</strong> A
+      travel-annotated isolate landed in a cluster whose true significance
+      is an imported food vector unrelated to the traveler.
+    </li>
+    <li>
+      <strong>Only the travel signal reflects reality.</strong> The
+      country mismatch driving the import signal may reflect that the
+      strain circulates internationally rather than that any food was
+      actually imported.
+    </li>
+    <li>
+      <strong>Both could be coincidental.</strong> The chips flag
+      configurations worth investigating; they do not confirm either
+      etiology.
+    </li>
+  </ul>
+  <p>
+    Distinguishing these requires <strong>epidemiological case
+    investigation</strong> — case interviews about food exposure history,
+    food traceback, supplier-level investigation — which this dashboard
+    cannot perform. The signals are pointer tools for surveillance
+    professionals, not diagnostic tools.
+  </p>
+</section>
+
+<section id="submitter-diversity">
+  <h2>Submitter diversity (multi-BioProject)</h2>
+  <p>
+    The MULTI-SUBMITTER chip fires when ≥5 distinct NCBI BioProject
+    accessions contributed isolates to the cluster. A second tier ("very
+    strong") is noted at ≥10 distinct BioProjects.
+  </p>
+  <h3>What this signal means</h3>
+  <p>
+    A BioProject (e.g., <code>PRJNA001234</code>) is NCBI's grouping for
+    related sequence submissions, usually one organization's surveillance
+    program or research study. When the same SNP cluster contains
+    contributions from many distinct BioProjects, that indicates
+    <strong>independent laboratories or organizations are each detecting
+    related isolates</strong> — a much stronger surveillance signal than
+    one lab repeatedly finding closely-related strains in their own
+    collection (which could be cohort contamination or a single facility's
+    persistent strain).
+  </p>
+  <h3>Caveat on this proxy</h3>
+  <p>
+    BioProject does not map 1:1 to "independent lab." Some large public-
+    health agencies use a single BioProject for years of submissions
+    (under-counting their independence); some studies span multiple
+    BioProjects (over-counting). The signal is therefore a useful proxy
+    for submitter diversity, not an exact measure. Interpret as "this
+    cluster has caught the attention of many different submitters", not
+    as a precise count of independent labs.
+  </p>
+</section>
+
+<section id="human-emergence">
+  <h2>Human emergence signal</h2>
+  <p>
+    The EMERGING chip fires when a previously food- or
+    environment-dominated cluster is now seeing human cases. The chip
+    shows the percentage shift, e.g., "EMERGING (40% human, up from 5%)".
+  </p>
+  <h3>Epidemiological rationale</h3>
+  <p>
+    The canonical "outbreak emerging" pattern for foodborne pathogens is:
+    a contaminated food source persists (often in a processing
+    environment) and accumulates many food/environmental isolates over
+    months or years. When that contamination finally causes detected
+    human illness, the cluster's source-mix shifts from food-dominant to
+    increasingly human-dominant. This shift is one of the earliest
+    actionable surveillance signals — it indicates a known contamination
+    source has now been linked to disease, and the source itself is often
+    already identifiable in the food/environment isolates.
+  </p>
+  <h3>Detection criteria</h3>
+  <p>
+    The signal fires when ALL of the following hold:
+  </p>
+  <ul>
+    <li>The cluster has ≥10 baseline isolates older than 365 days</li>
+    <li>The cluster has ≥3 isolates collected in the last 365 days</li>
+    <li>The recent human-fraction is at least 30%</li>
+    <li>The recent human-fraction is at least 20 percentage points higher than the baseline human-fraction</li>
+    <li>The baseline was less than 50% human (otherwise this isn't "emergence" — the cluster was always mostly human)</li>
+  </ul>
+  <p>
+    Thresholds are calibrated to flag meaningful shifts (e.g., 5% → 30%)
+    while ignoring small fluctuations (e.g., 40% → 45%).
+  </p>
+  <h3>Caveat</h3>
+  <p>
+    Like all signals on this dashboard, this is a pointer. A real
+    investigation requires confirming the source-mix shift reflects a
+    real change in case detection rather than a sampling artifact (e.g.,
+    a state suddenly increasing clinical surveillance).
+  </p>
+</section>
+
+<section id="acceleration">
+  <h2>Acceleration</h2>
+  <p>
+    The ACCELERATING (Nx) chip fires when a cluster is gaining new isolates
+    faster than its historical baseline. Formally:
+  </p>
+  <ol>
+    <li>
+      The cluster must be at least 180 days old (by earliest
+      target_creation_date). Younger clusters cannot form a meaningful
+      baseline.
+    </li>
+    <li>
+      Per-day rate over the last 60 days =
+      <code>n_recent / 60</code>, where <code>n_recent</code> is the count
+      of cluster members whose <code>target_creation_date</code> falls in
+      the last 60 days.
+    </li>
+    <li>
+      Per-day baseline rate =
+      <code>n_baseline / (age_days − 60)</code>, where
+      <code>n_baseline</code> is the count of cluster members older than
+      that.
+    </li>
+    <li>
+      Chip fires when <code>recent_rate / baseline_rate ≥ 2.0</code> AND
+      <code>n_recent ≥ 2</code>. The "(2.5×)" number in the chip is the
+      ratio.
+    </li>
+  </ol>
+  <h3>Relationship to standard outbreak-detection algorithms</h3>
+  <p>
+    The general approach — flagging unusual increases in case counts
+    relative to a baseline — is foundational to public-health surveillance
+    and is implemented in mature, peer-reviewed algorithms such as CUSUM,
+    EARS (CDC), Farrington (ECDC), and SaTScan. <strong>This dashboard's
+    implementation is a simplified ratio, not a calibrated statistical
+    test.</strong> Specifically:
+  </p>
+  <ul>
+    <li>The standard algorithms model expected count variance and provide a calibrated false-positive rate (e.g., flag at α=0.05). This implementation uses a fixed 2× threshold with no statistical calibration.</li>
+    <li>The standard algorithms account for seasonality. <em>Listeria</em> has summer peaks; this implementation does not adjust for them.</li>
+    <li>The standard algorithms use guard bands to avoid baseline contamination by the very recent past. This implementation simply splits at 60 days.</li>
+  </ul>
+  <p>
+    For production surveillance, refer to the dedicated tools listed in
+    the <a href="#references">references</a>. The chip on this dashboard
+    is a "look at this cluster" pointer, not a substitute for proper
+    outbreak detection methodology.
+  </p>
+  <h3>Why <code>target_creation_date</code> and not <code>collection_date</code>?</h3>
+  <p>
+    The acceleration signal is asking "is this cluster being detected by
+    surveillance at an accelerating pace?" That maps to ingestion date,
+    not sampling date. A lab dumping a long backlog into NCBI in one week
+    can trigger this signal even when real-world illness is not actually
+    accelerating. This is a known limitation; the chip should always be
+    interpreted alongside the histogram to check the trend.
+  </p>
+</section>
+
+<section id="deposit-lag">
+  <h2>Collection-to-deposit lag</h2>
+  <p>
+    The "Deposit lag" field in the typing strip shows the median number of
+    days between when cluster isolates were collected and when they were
+    deposited in NCBI Pathogen Detection. Lower numbers mean the
+    surveillance pipeline is delivering near-real-time information; higher
+    numbers mean the data largely reflects backlogged deposits.
+  </p>
+  <p>
+    When the mean and median diverge by more than 30 days, the typing
+    strip notes the mean as "skewed" — this indicates the cluster has a
+    bimodal lag distribution (some recently-deposited fresh data plus
+    some long-backlogged historical data).
+  </p>
+  <p>
+    <strong>How to interpret.</strong>
+  </p>
+  <ul>
+    <li><strong>&lt;30 days median:</strong> Active surveillance pipeline, deposits keeping up with collection.</li>
+    <li><strong>30–180 days median:</strong> Typical for academic and federal surveillance — sequencing and metadata review takes time.</li>
+    <li><strong>&gt;180 days median:</strong> The cluster's signal is heavily backlog-driven. Recent "new" deposits may reflect old cases. Acceleration signals on such clusters should be viewed skeptically.</li>
+  </ul>
+</section>
+
+<section id="mlst">
+  <h2>MLST and Sequence Types</h2>
+  <p>
+    <strong>MLST</strong> (Multi-Locus Sequence Typing) classifies bacterial
+    isolates by sequencing seven specific housekeeping genes and
+    concatenating their allele numbers into a Sequence Type (ST). For
+    <em>Listeria monocytogenes</em>, the loci are
+    <code>abcZ</code>, <code>bglA</code>, <code>cat</code>,
+    <code>dapE</code>, <code>dat</code>, <code>ldh</code>, and
+    <code>lhkA</code>. The canonical reference database is
+    <a href="https://pubmlst.org/organisms/listeria-monocytogenes">PubMLST</a>.
+  </p>
+  <p>
+    ListeriaWatch picks one representative isolate per cluster (preferring
+    Complete Genome &gt; Chromosome &gt; Scaffold &gt; Contig, then highest
+    contig N50, then earliest collection date), downloads its assembly from
+    NCBI, and runs
+    <a href="https://github.com/tseemann/mlst">Torsten Seemann's mlst tool</a>
+    on it. Because cluster members are by definition genomically tight, we
+    assume the resulting ST applies to all members of the cluster. In
+    practice this holds for >99% of clusters.
+  </p>
+  <p>
+    The dashboard shows:
+  </p>
+  <ul>
+    <li><strong>ST<em>n</em></strong> — e.g. ST6, ST121: the assigned sequence type.</li>
+    <li><strong>"pending"</strong> — the cluster's representative has not been typed yet (MLST runs incrementally with a per-day budget).</li>
+    <li><strong>"untypeable"</strong> — the genome failed MLST, typically because of poor assembly quality or unusual allele combinations not in the PubMLST scheme.</li>
+  </ul>
+</section>
+
+<section id="cc">
+  <h2>Clonal Complex (CC) and lineage labels</h2>
+  <p>
+    A <strong>Clonal Complex (CC)</strong> groups STs that descend from a
+    common ancestor, defined formally by the goeBURST algorithm applied to
+    a population of typed strains. PubMLST publishes canonical CC
+    assignments for <em>L. monocytogenes</em>. ListeriaWatch derives the CC
+    from the cluster's ST using a curated lookup table (~50 STs mapped to
+    ~30 CCs).
+  </p>
+  <p>
+    The dashboard attaches short summary labels to six CCs that are
+    commonly discussed in <em>Listeria</em> surveillance literature. These
+    labels reflect <em>observed patterns reported in the literature</em>,
+    not deterministic biological claims about any individual isolate.
+  </p>
+  <dl class="defs cc-defs">
+    <dt>CC1 — "hypervirulent lineage"</dt>
+    <dd>
+      CC1 isolates have been historically over-represented in invasive
+      listeriosis cases reported in the surveillance literature, and the
+      lineage has been associated with dairy-related outbreaks.
+    </dd>
+    <dt>CC2 — "outbreak-associated lineage"</dt>
+    <dd>
+      CC2 has appeared in multiple large multistate outbreaks reported in
+      the literature and is commonly seen in clinical isolates.
+    </dd>
+    <dt>CC4 — "maternal-fetal lineage"</dt>
+    <dd>
+      Sometimes referred to as the "<em>Listeria epidemica</em>" lineage in
+      the literature, CC4 has been reported with a strong association with
+      maternal-fetal disease and severe clinical outcomes.
+    </dd>
+    <dt>CC6 — "emerging outbreak lineage"</dt>
+    <dd>
+      CC6 has been associated with several recent deli-meat outbreaks
+      reported in the surveillance literature and has been described as
+      hypervirulent in recent publications.
+    </dd>
+    <dt>CC9 — "food-common, lower-virulence"</dt>
+    <dd>
+      CC9 is frequently isolated from food and food-processing
+      environments. Surveillance reports describe CC9 as appearing less
+      often than expected in clinical cases relative to its food-source
+      prevalence.
+    </dd>
+    <dt>CC121 — "processing-environment persistent"</dt>
+    <dd>
+      CC121 has been well-documented in the literature as persistent in
+      food-processing facilities over years to decades. Recent publications
+      describe increasing clinical relevance.
+    </dd>
+  </dl>
+  <p>
+    <strong>Important caveat.</strong> The author of this dashboard is not
+    a clinical microbiologist or specialist in <em>Listeria</em> CC
+    epidemiology. These labels are compiled from training-data summaries of
+    public surveillance literature and have not been peer-reviewed. Treat
+    them as <strong>pointers to the literature</strong>, not as
+    authoritative claims. The label on any individual cluster says
+    something about typical patterns reported for that CC, not about the
+    specific cluster being looked at.
+  </p>
+  <p>
+    Clusters whose CC has no curated note display a neutral chip showing
+    just the CC number (e.g. "CC8").
+  </p>
+</section>
+
+<section id="amr">
+  <h2>AMR clinical-importance flag</h2>
+  <p>
+    The AMR chip fires when at least one isolate in the cluster carries an
+    acquired resistance gene targeting a drug class used for first-line
+    <em>Listeria</em> treatment. The first-line treatment regimens are:
+  </p>
+  <ul>
+    <li>Invasive listeriosis: <strong>ampicillin + gentamicin</strong></li>
+    <li>Penicillin-allergic patients: <strong>trimethoprim-sulfamethoxazole</strong></li>
+  </ul>
+  <p>
+    Acquired resistance to any of these is uncommon in <em>Listeria</em>
+    and therefore noteworthy when it appears. The dashboard flags these
+    gene families (drawn from AMRFinderPlus output in
+    <code>amr.metadata.tsv</code>):
+  </p>
+  <dl class="defs amr-defs">
+    <dt>Tetracyclines</dt>
+    <dd><code>tet(M)</code>, <code>tet(O)</code>, <code>tet(S)</code>, <code>tet(T)</code>, <code>tet(W)</code>, <code>tet(L)</code>, <code>tet(K)</code></dd>
+    <dt>Macrolides / lincosamides</dt>
+    <dd><code>erm(A)</code>, <code>erm(B)</code>, <code>erm(C)</code>, <code>erm(G)</code>, <code>mef(A)</code>, <code>mef(E)</code>, <code>lnu(A)</code>, <code>lnu(B)</code>, <code>lnu(G)</code></dd>
+    <dt>Aminoglycosides</dt>
+    <dd><code>aph(3')-III</code>, <code>aph(3')-Ia</code>, <code>aph(2'')-Ia</code>, <code>aac(6')-aph(2'')</code>, <code>aac(6')-Ie-aph(2'')-Ia</code>, <code>aadA</code>, <code>aadE</code>, <code>ant(6)-Ia</code></dd>
+    <dt>Trimethoprim / sulfonamides</dt>
+    <dd><code>dfrG</code>, <code>dfrD</code>, <code>dfrK</code>, <code>dfrA</code>, <code>sul1</code>, <code>sul2</code>, <code>sul3</code></dd>
+    <dt>Chloramphenicol / phenicols</dt>
+    <dd><code>cat</code>, <code>catA</code>, <code>catB</code>, <code>fexA</code>, <code>fexB</code></dd>
+    <dt>Penicillins (rare in Listeria)</dt>
+    <dd><code>blaZ</code>, <code>mecA</code>, <code>mecC</code></dd>
+  </dl>
+  <p>
+    <strong>Critical caveat.</strong> The chip flags <em>gene presence</em>,
+    not <em>confirmed phenotype</em>. An isolate that carries
+    <code>tet(M)</code> in its genome may or may not be clinically
+    resistant to tetracyclines. Phenotypic confirmation requires antibiotic
+    susceptibility testing in a clinical microbiology lab. The chip is a
+    "this cluster has a resistance gene worth looking at" pointer.
+  </p>
+  <p>
+    <strong>Caveat on Listeria intrinsic resistance.</strong> <em>Listeria
+    monocytogenes</em> is intrinsically resistant to several antibiotic
+    classes (cephalosporins, fosfomycin, and others). Those resistances
+    are species-level and do not contribute to this signal; we only flag
+    <em>acquired</em> resistance to drugs that would otherwise be used
+    clinically.
+  </p>
+  <p>
+    <strong>Caveat on the curated list.</strong> The gene list above has
+    not been peer-reviewed. The drug-class groupings reflect canonical
+    AMRFinderPlus categorization but the choice of which genes to consider
+    "first-line clinically important" was made by the dashboard author
+    from literature summaries. Domain experts should review before using
+    this signal in any decision-making.
+  </p>
+</section>
+
+<section id="ifsac">
+  <h2>IFSAC food categorization</h2>
+  <p>
+    The IFSAC chip shows the most common food category among nonhuman
+    isolates in the cluster, as recorded in NCBI's
+    <code>IFSAC_category</code> field.
+  </p>
+  <p>
+    <strong>IFSAC</strong> (Interagency Food Safety Analytics Collaboration)
+    is a federal interagency group — CDC, FDA, and USDA-FSIS — that
+    publishes a standardized food categorization scheme for foodborne
+    illness attribution. The canonical scheme is published by
+    <a href="https://www.cdc.gov/ifsac/overview/index.html">CDC IFSAC</a>.
+    Common categories include Dairy, Vegetable Row Crops, Meat-Poultry,
+    Beef, Pork, Chicken, Turkey, Fish, and so on.
+  </p>
+  <p>
+    Human isolates are excluded from the IFSAC count — their IFSAC field,
+    when populated, describes the patient's reported food exposure, which
+    is a different epidemiological semantic from "isolate sourced from food
+    category X."
+  </p>
+  <p>
+    <strong>Caveat.</strong> ListeriaWatch displays whatever string the
+    submitter entered. Inconsistencies in submitter labeling (e.g., "BEEF"
+    vs. "beef" vs. "Beef products") will produce inconsistent category
+    labels.
+  </p>
+</section>
+
+<section id="host-species">
+  <h2>Animal host species</h2>
+  <p>
+    For clusters with nonhuman animal isolates, the "Animal hosts" line
+    under Top sources of isolation shows the actual host strings as
+    submitted to NCBI — e.g., <em>Bos taurus</em> (cattle), <em>Sus
+    scrofa</em> (pig), <em>Gallus gallus</em> (chicken). Counts are the
+    number of cluster isolates with each host string.
+  </p>
+  <p>
+    This information is hidden behind the broader "Animal" source category
+    in most surveillance views. Surfacing it directly helps investigators
+    quickly identify the species reservoir of a cluster.
+  </p>
+  <h3>Caveat</h3>
+  <p>
+    NCBI host strings are inconsistently submitted. The same species may
+    appear as "Bos taurus", "bovine", "cattle", or "cow" depending on the
+    submitter. This dashboard does not canonicalize — strings are
+    displayed as submitted. When interpreting host counts, mentally
+    collapse synonyms.
+  </p>
+</section>
+
+<section id="map">
+  <h2>Geographic footprint map</h2>
+  <p>
+    The per-cluster map shows the cluster's full geographic footprint
+    across all isolates with a known <code>collection_date</code> and a
+    geocodable location. There is no time-window filter on the map (the
+    "1-year window" was removed because <em>Listeria</em> clusters span
+    decades). Recency is encoded as <strong>dot opacity</strong> instead:
+  </p>
+  <ul>
+    <li>Most-recent isolate at the location is ≤365 days old → full opacity</li>
+    <li>Most-recent isolate is 1–5 years old → progressively faded (linear interpolation)</li>
+    <li>Most-recent isolate is &gt;5 years old → minimum opacity (0.35)</li>
+  </ul>
+  <p>
+    <strong>Location aggregation:</strong> U.S. isolates with a known
+    <code>geo_admin1</code> (state) aggregate to state centroids; all
+    other isolates aggregate to country centroids. Isolates with no
+    geocodable location are dropped silently (not counted on the map).
+  </p>
+  <p>
+    <strong>Dot color:</strong> red = human cases at that location, teal =
+    nonhuman, split red/teal = mixed location. Dot radius scales with
+    sqrt(total count), clamped at a maximum.
+  </p>
+  <p>
+    <strong>Caveat on map outlines.</strong> The continent silhouettes are
+    hand-drawn approximations, not Natural Earth-quality data. They
+    provide geographic context at the small inset size; they are not
+    cartographically precise. Small islands, archipelagos, and minor
+    coastline features are omitted or compressed.
+  </p>
+</section>
+
+<section id="histogram">
+  <h2>Isolates-per-year histogram</h2>
+  <p>
+    The histogram bins cluster members by the year of their
+    <code>collection_date</code>. Red = human isolates, teal = nonhuman.
+    Years with no isolates appear as empty slots (no bar). The y-axis
+    auto-scales to the busiest year's count.
+  </p>
+  <p>
+    Use the histogram alongside the acceleration chip: a cluster flagged
+    as accelerating should show an obviously rising recent-years pattern in
+    the histogram. Acceleration triggered without a visible trend in the
+    histogram is a red flag that the signal is a deposition artifact rather
+    than real activity.
+  </p>
+</section>
+
+<section id="oldest">
+  <h2>Cluster origins (oldest isolates)</h2>
+  <p>
+    The "Cluster origins" panel shows three reference points for when the
+    cluster was first detected:
+  </p>
+  <dl class="defs">
+    <dt>Oldest isolate (any source)</dt>
+    <dd>The earliest-collected isolate in the cluster regardless of source category. Tells you when the cluster's genomic signal first appeared at all.</dd>
+    <dt>Oldest human isolate</dt>
+    <dd>The earliest-collected human isolate. Tells you when this cluster first caused detected disease.</dd>
+    <dt>Oldest nonhuman isolate</dt>
+    <dd>The earliest-collected food, animal, or environmental isolate. Tells you when a (potential) source first showed up in surveillance.</dd>
+  </dl>
+  <p>
+    Each panel displays the collection date, geographic location, and
+    isolation source (when available), plus the PDT accession. Ties broken
+    by preferring more-specific geography (admin1 over country) and then
+    by alphabetical PDT.
+  </p>
+</section>
+
+<section id="references">
+  <h2>References</h2>
+  <p>
+    The methods and definitions on this page draw on the following
+    sources. Where a primary source is available the link points there;
+    otherwise the canonical project URL.
+  </p>
+
+  <h3>Surveillance data and tools</h3>
+  <ul>
+    <li>
+      <strong>NCBI Pathogen Detection.</strong>
+      Primary data source for all clusters, isolate metadata, and AMR calls
+      on this dashboard.
+      <a href="https://www.ncbi.nlm.nih.gov/pathogens/" target="_blank" rel="noopener">https://www.ncbi.nlm.nih.gov/pathogens/</a>
+    </li>
+    <li>
+      <strong>NCBI Pathogen Detection — about.</strong>
+      Description of the SNP clustering, AMR, and submission workflows.
+      <a href="https://www.ncbi.nlm.nih.gov/pathogens/about/" target="_blank" rel="noopener">https://www.ncbi.nlm.nih.gov/pathogens/about/</a>
+    </li>
+    <li>
+      <strong>AMRFinderPlus.</strong>
+      Tool used by NCBI to identify AMR, stress response, and virulence
+      genes in submitted isolates. Source of the gene calls referenced by
+      the AMR signal.
+      <a href="https://github.com/ncbi/amr/wiki" target="_blank" rel="noopener">https://github.com/ncbi/amr/wiki</a>
+    </li>
+    <li>
+      <strong>PubMLST: <em>Listeria monocytogenes</em>.</strong>
+      Canonical reference for ST assignments and CC groupings used by
+      this dashboard.
+      <a href="https://pubmlst.org/organisms/listeria-monocytogenes" target="_blank" rel="noopener">https://pubmlst.org/organisms/listeria-monocytogenes</a>
+    </li>
+    <li>
+      <strong>Torsten Seemann — mlst.</strong>
+      Command-line MLST typing tool, run by this dashboard to type each
+      cluster's representative assembly.
+      <a href="https://github.com/tseemann/mlst" target="_blank" rel="noopener">https://github.com/tseemann/mlst</a>
+    </li>
+    <li>
+      <strong>CDC IFSAC.</strong>
+      Interagency Food Safety Analytics Collaboration — source of the
+      standardized IFSAC food category labels.
+      <a href="https://www.cdc.gov/ifsac/overview/index.html" target="_blank" rel="noopener">https://www.cdc.gov/ifsac/overview/index.html</a>
+    </li>
+    <li>
+      <strong>Natural Earth.</strong>
+      Public-domain reference geographic data. The world map outlines on
+      this dashboard are simplified approximations inspired by but not
+      directly derived from Natural Earth data.
+      <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">https://www.naturalearthdata.com/</a>
+    </li>
+  </ul>
+
+  <h3>Outbreak-detection methodology (acceleration signal)</h3>
+  <p>
+    The acceleration signal on this dashboard is a simplified ratio-based
+    flag. Mature outbreak-detection algorithms are referenced below for
+    surveillance professionals who need properly calibrated statistical
+    tests:
+  </p>
+  <ul>
+    <li>
+      <strong>Farrington algorithm (1996).</strong>
+      Farrington, C.P., Andrews, N.J., Beale, A.D., &amp; Catchpole, M.A.
+      "A Statistical Algorithm for the Early Detection of Outbreaks of
+      Infectious Disease." <em>Journal of the Royal Statistical Society:
+      Series A</em>, 159(3): 547–563.
+      <a href="https://doi.org/10.2307/2983331" target="_blank" rel="noopener">https://doi.org/10.2307/2983331</a>
+    </li>
+    <li>
+      <strong>Farrington Flexible (Noufaily et al., 2013).</strong>
+      Improved version of the Farrington algorithm with reweighting for
+      past aberrations and better seasonality handling. Used by ECDC and
+      UKHSA for routine outbreak detection.
+    </li>
+    <li>
+      <strong>CUSUM (Cumulative Sum Control Chart).</strong>
+      Page, E.S. (1954). "Continuous Inspection Schemes." <em>Biometrika</em>,
+      41(1/2): 100–115. The classic foundation for cumulative-sum
+      change-detection used widely in public-health surveillance.
+      <a href="https://doi.org/10.2307/2333009" target="_blank" rel="noopener">https://doi.org/10.2307/2333009</a>
+    </li>
+    <li>
+      <strong>SaTScan.</strong>
+      Software implementing spatial, temporal, and space-time scan
+      statistics for outbreak detection. Used by many state and national
+      public-health agencies.
+      <a href="https://www.satscan.org/" target="_blank" rel="noopener">https://www.satscan.org/</a>
+    </li>
+    <li>
+      <strong>R <code>surveillance</code> package.</strong>
+      Reference R implementation of Farrington and other algorithms.
+      <a href="https://cran.r-project.org/package=surveillance" target="_blank" rel="noopener">https://cran.r-project.org/package=surveillance</a>
+    </li>
+  </ul>
+
+  <h3>Foodborne disease classification (import vs. travel)</h3>
+  <ul>
+    <li>
+      <strong>ECDC Listeria surveillance.</strong>
+      The European Centre for Disease Prevention and Control publishes
+      annual epidemiological reports that distinguish imported food cases
+      from travel-associated cases.
+      <a href="https://www.ecdc.europa.eu/en/listeriosis" target="_blank" rel="noopener">https://www.ecdc.europa.eu/en/listeriosis</a>
+    </li>
+    <li>
+      <strong>CDC Listeria surveillance.</strong>
+      U.S. national listeriosis surveillance, including the Listeria
+      Initiative case investigations.
+      <a href="https://www.cdc.gov/listeria/php/surveillance/index.html" target="_blank" rel="noopener">https://www.cdc.gov/listeria/php/surveillance/index.html</a>
+    </li>
+    <li>
+      <strong>FoodNet (CDC).</strong>
+      Active surveillance for foodborne disease in the U.S.; the
+      operational reference for case definitions.
+      <a href="https://www.cdc.gov/foodnet/" target="_blank" rel="noopener">https://www.cdc.gov/foodnet/</a>
+    </li>
+  </ul>
+
+  <p class="meta">
+    Specific clinical and microbiological claims in the CC and AMR
+    sections of this page are <strong>compilations from training-data
+    summaries of public surveillance literature, not peer-reviewed
+    statements</strong>. Domain experts should consult primary sources
+    before using them in any decision-making.
+  </p>
+</section>
+
+<section id="caveats">
+  <h2>Top-level caveats</h2>
+  <ol>
+    <li>
+      <strong>ListeriaWatch is a personal research project, not an official
+      surveillance system.</strong> It is not authorized to issue health
+      advisories, food recalls, or outbreak declarations. CDC, FDA, and
+      USDA do that, with the benefit of epidemiological and laboratory
+      investigation that this dashboard does not perform.
+    </li>
+    <li>
+      <strong>Clusters are genomic predictions, not confirmed outbreaks.</strong>
+      Genomic relatedness is necessary but not sufficient for outbreak
+      confirmation. Cases in the same cluster may not share a real food
+      vector.
+    </li>
+    <li>
+      <strong>The CC and AMR labels have not been peer-reviewed.</strong>
+      They are based on the author's compilation of public literature
+      summaries. Treat them as pointers to the literature, not as
+      authoritative biological claims. Domain experts should review before
+      drawing conclusions.
+    </li>
+    <li>
+      <strong>Travel association is under-detected.</strong> The travel
+      signal catches only submitter-annotated travel cases. Most
+      travel-associated illness is not annotated this way.
+    </li>
+    <li>
+      <strong>Import and travel signals can co-fire on the same cluster.</strong>
+      Each is computed independently from different metadata fields.
+      Co-firing does not mean both phenomena are present — and absence
+      does not rule them out. Distinguishing requires epidemiological case
+      investigation that this dashboard cannot perform.
+    </li>
+    <li>
+      <strong>Data lags real-time deposits by hours to days.</strong> The
+      ingest runs nightly. A case sequenced today will appear here
+      tomorrow at the earliest.
+    </li>
+    <li>
+      <strong>Missing data is silent.</strong> An isolate without a
+      <code>collection_date</code> doesn't appear in "new cases" counts;
+      an isolate without a geocodable location doesn't appear on the map;
+      an isolate without an <code>IFSAC_category</code> doesn't contribute
+      to the IFSAC chip. These are common.
+    </li>
+  </ol>
+</section>
+
+<section>
+  <p class="meta">
+    <a href="index.html">← Back to dashboard</a>
+  </p>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>
+      ListeriaWatch v2 · daily surveillance digest · Data from
+      <a href="https://www.ncbi.nlm.nih.gov/pathogens/">NCBI Pathogen Detection</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
