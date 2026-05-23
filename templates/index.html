@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ListeriaWatch — daily Listeria monocytogenes cluster surveillance</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="container">
+    <h1>ListeriaWatch <span class="version">v2 · beta</span></h1>
+    <p class="lede">
+      A daily-updated digest of <em>Listeria monocytogenes</em> genomic clusters with recent
+      human cases, sourced from NCBI Pathogen Detection. Each cluster card shows the
+      isolates that started the cluster, the cluster's typing, and how the cluster has
+      grown year over year.
+    </p>
+    <p class="meta">
+      Generated {{ generated_at }}
+      {% if latest_release %}
+        · latest release: <code>{{ latest_release.pdg_release }}</code>
+      {% endif %}
+      · <a href="methods.html">Methods &amp; definitions</a>
+    </p>
+  </div>
+</header>
+
+{% if review_mode %}
+<div class="review-banner">
+  <div class="container">
+    <strong>⚠ Private review.</strong> This page is shared for colleague feedback only.
+    Do not circulate the URL publicly. Findings here are preliminary and have not been
+    validated. Send corrections to <a href="mailto:bradd.haley@usda.gov">Bradd Haley</a>.
+  </div>
+</div>
+{% endif %}
+
+<div class="beta-banner">
+  <div class="container">
+    <strong>Beta.</strong> ListeriaWatch is a personal research project, not an official
+    surveillance system. Data lags real-time deposits by hours to days. Clusters are
+    computational predictions of genomic relatedness; they don't prove a foodborne link.
+  </div>
+</div>
+
+<main class="container">
+
+<section class="tiles">
+  <div class="tile">
+    <div class="tile-label">Active clusters</div>
+    <div class="tile-value">{{ totals.n_active or 0 }}</div>
+    <div class="tile-sub">≥1 new human in last {{ window_days }}d</div>
+  </div>
+  <div class="tile">
+    <div class="tile-label">New human cases ({{ window_days }}d)</div>
+    <div class="tile-value">{{ totals.n_new_humans_window or 0 }}</div>
+    <div class="tile-sub">across all active clusters</div>
+  </div>
+  <div class="tile">
+    <div class="tile-label">Human-containing clusters</div>
+    <div class="tile-value">{{ totals.n_human_clusters or 0 }}</div>
+    <div class="tile-sub">in the database</div>
+  </div>
+  <div class="tile">
+    <div class="tile-label">Mixed clusters</div>
+    <div class="tile-value">{{ totals.n_mixed or 0 }}</div>
+    <div class="tile-sub">human + nonhuman</div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <h2>
+      Recent human cluster activity
+      <a href="methods.html" class="help-link" title="What do the signal chips mean?">what's this?</a>
+    </h2>
+    {% if countries_for_dropdown %}
+    <div class="filter-controls">
+      <label for="country-filter">Filter by country of recent human cases:</label>
+      <select id="country-filter" aria-label="Filter clusters by country">
+        <option value="all">All countries</option>
+        {% for country in countries_for_dropdown %}
+        <option value="{{ country }}">{{ country }}</option>
+        {% endfor %}
+      </select>
+      <span class="filter-status" id="filter-status"></span>
+    </div>
+    {% endif %}
+  </div>
+  <p class="muted">
+    Clusters with at least one human isolate created in NCBI in the last {{ window_days }} days.
+    Sorted by number of new cases.
+  </p>
+
+  {% if clusters %}
+    <div id="cluster-list">
+    {% for c in clusters %}
+    <article class="cluster-card" data-human-countries="{{ c.human_countries_attr }}">
+
+      <header class="cluster-card-head">
+        <div class="cluster-card-id">
+          <span class="badge badge-pathogen-{{ c.pathogen|lower }}">{{ c.pathogen }}</span>
+          {% if c.consensus_serovar %}
+            <span class="headline-typing">serovar {{ c.consensus_serovar }}</span>
+          {% endif %}
+          {% if c.mlst_st and not c.mlst_error %}
+            <span class="headline-typing">{{ c.mlst_st }}</span>
+          {% endif %}
+          <code class="cluster-id">{{ c.pds_acc }}</code>
+        </div>
+        <div class="cluster-card-counts">
+          <strong>{{ c.new_humans_in_window }}</strong>
+          new human case{{ 's' if c.new_humans_in_window != 1 else '' }}
+          in last {{ window_days }}d
+          <span class="counts-recency">
+            · <strong>{{ c.new_humans_30d }}</strong> in 30d
+            · <strong>{{ c.new_humans_15d }}</strong> in 15d
+          </span>
+        </div>
+      </header>
+
+      {% set s = c.signals or {} %}
+      {% set gs = s.get('geographic_spread') or {} %}
+      {% set imp = s.get('import_signal') or {} %}
+      {% set trv = s.get('travel_signal') or {} %}
+      {% set sub = s.get('submitter_diversity') or {} %}
+      {% set hemerg = s.get('human_emergence') or {} %}
+      {% set amr = s.get('amr_critical') or {} %}
+      {% set acc = s.get('acceleration') or {} %}
+      {% set ifs = s.get('ifsac') or {} %}
+      {% set ccx = s.get('clonal_complex') or {} %}
+      {% if gs.get('label') or imp.get('flag') or trv.get('flag') or sub.get('flag') or hemerg.get('flag') or amr.get('flag') or acc.get('flag') or ifs.get('top') or ccx.get('label') %}
+      <div class="cluster-signals">
+        {% if hemerg.get('flag') %}
+          <span class="signal-chip signal-emergence"
+                title="Cluster transitioning from food/environment to human cases. Recent human ratio {{ (hemerg.recent_ratio*100)|round(0)|int }}% vs. baseline {{ (hemerg.baseline_ratio*100)|round(0)|int }}%. See methods."
+                >EMERGING ({{ (hemerg.recent_ratio*100)|round(0)|int }}% human, up from {{ (hemerg.baseline_ratio*100)|round(0)|int }}%)</span>
+        {% endif %}
+        {% if gs.get('label') %}
+          <span class="signal-chip signal-geo signal-geo-{{ gs.label|replace('-','_') }}"
+                title="{{ gs.n_countries }} countries · {{ gs.n_continents }} continents · {{ gs.n_us_states }} US states"
+                >{{ gs.label|replace('-',' ')|upper }}</span>
+        {% endif %}
+        {% if imp.get('flag') %}
+          <span class="signal-chip signal-import"
+                title="Import (food vehicle may have crossed border) — pointer signal, not confirmation. Evidence: {{ imp.evidence }}. Can co-fire with travel signal; see methods."
+                >IMPORT SIGNAL</span>
+        {% endif %}
+        {% if trv.get('flag') %}
+          <span class="signal-chip signal-travel"
+                title="Travel-associated (person may have crossed border) — pointer signal, not confirmation. {{ trv.n_annotated }} annotated case(s). Under-detected; can co-fire with import signal. See methods."
+                >TRAVEL SIGNAL</span>
+        {% endif %}
+        {% if sub.get('flag') %}
+          <span class="signal-chip signal-submitter"
+                title="{{ sub.n_bioprojects }} distinct BioProjects detecting this strain. Many independent submitters is harder to explain as cohort effect. See methods."
+                >MULTI-SUBMITTER ({{ sub.n_bioprojects }} BioProjects)</span>
+        {% endif %}
+        {% if acc.get('flag') %}
+          <span class="signal-chip signal-accel"
+                title="Recent rate {{ acc.ratio }}× baseline ({{ acc.n_recent }} new of {{ acc.n_recent + acc.n_baseline }} total). Uses target_creation_date — see methods."
+                >ACCELERATING ({{ acc.ratio }}×)</span>
+        {% endif %}
+        {% if amr.get('flag') %}
+          <span class="signal-chip signal-amr"
+                title="First-line resistance gene detected: {{ amr.classes_present|join('; ') }}. Gene presence — NOT confirmed phenotype. See methods."
+                >AMR: {{ amr.classes_present|join(', ') }}</span>
+        {% endif %}
+        {% if ifs.get('top') %}
+          <span class="signal-chip signal-ifsac"
+                title="IFSAC food categories from nonhuman isolates: {{ ifs.categories|map(attribute='category')|join(', ') }}"
+                >IFSAC: {{ ifs.top.category }} ({{ ifs.top.n }})</span>
+        {% endif %}
+        {% if ccx.get('label') %}
+          <span class="signal-chip signal-cc"
+                title="{{ ccx.tooltip }} (Draft label — see methods page for caveats.)"
+                >{{ ccx.cc }}: {{ ccx.label }}</span>
+        {% elif ccx.get('cc') %}
+          <span class="signal-chip signal-cc-neutral"
+                title="Clonal complex assigned from MLST; no curated note for this CC"
+                >{{ ccx.cc }}</span>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <div class="cluster-typing">
+        <span class="typing-field">
+          <span class="typing-label">Serovar:</span>
+          {% if c.consensus_serovar %}
+            <span class="typing-value">{{ c.consensus_serovar }}</span>
+            <span class="typing-confidence">({{ c.consensus_serovar_n }} of {{ c.consensus_serovar_total }} agree)</span>
+          {% else %}
+            <span class="typing-missing">not determined</span>
+          {% endif %}
+        </span>
+        <span class="typing-field">
+          <span class="typing-label">MLST:</span>
+          {% if c.mlst_st and not c.mlst_error %}
+            <span class="typing-value">{{ c.mlst_st }}</span>
+            {% if c.mlst_representative_pdt %}
+              <span class="typing-confidence">(via
+                <a href="{{ ncbi_link_for(c.mlst_representative_pdt) }}"
+                   class="pdt-link" target="_blank" rel="noopener"
+                   title="View {{ c.mlst_representative_pdt }} on NCBI">{{ c.mlst_representative_pdt }}</a>)
+              </span>
+            {% endif %}
+          {% elif c.mlst_error %}
+            <span class="typing-missing" title="{{ c.mlst_error }}">{{ c.mlst_error|replace('_', ' ') }}</span>
+          {% else %}
+            <span class="typing-missing">pending</span>
+          {% endif %}
+        </span>
+        <span class="typing-field">
+          <span class="typing-label">Span:</span>
+          {% if c.temporal_span_days is not none %}
+            <span class="typing-value">{{ c.temporal_span_days|span_label }}</span>
+            {% if c.temporal_span_days|span_interp %}
+              <span class="typing-confidence">({{ c.temporal_span_days|span_interp }})</span>
+            {% endif %}
+          {% else %}
+            <span class="typing-missing">unknown</span>
+          {% endif %}
+        </span>
+        <span class="typing-field">
+          <span class="typing-label">Cumulative:</span>
+          <span class="typing-value">{{ c.n_human }} human</span>
+          <span class="typing-confidence">/ {{ c.n_nonhuman }} nonhuman</span>
+          {% if c.earliest_collection_date %}
+            <span class="typing-confidence">since {{ c.earliest_collection_date[:4] }}</span>
+          {% endif %}
+        </span>
+        {% if c.deposit_lag_median is not none %}
+        <span class="typing-field"
+              title="Median number of days between sample collection and NCBI deposit, across cluster isolates. Lower = fresher surveillance signal. See methods.">
+          <span class="typing-label">Deposit lag:</span>
+          <span class="typing-value">{{ c.deposit_lag_median }}d median</span>
+          {% if c.deposit_lag_mean is not none and (c.deposit_lag_mean - c.deposit_lag_median)|abs > 30 %}
+            <span class="typing-confidence">({{ c.deposit_lag_mean }}d mean — skewed)</span>
+          {% endif %}
+        </span>
+        {% endif %}
+      </div>
+
+      <div class="cluster-card-body">
+
+        <!-- WHAT'S NEW: the activity that brought this cluster onto the page -->
+        <div class="card-row card-row-top">
+          <div class="recent-humans">
+            <h4>New human cases (last {{ window_days }}d)</h4>
+            <ul>
+              {% for h in c.new_humans_dates[:10] %}
+              <li>
+                {% if h.biosample %}
+                <a href="https://www.ncbi.nlm.nih.gov/biosample/{{ h.biosample }}"
+                   class="pdt-acc pdt-link"
+                   title="View BioSample {{ h.biosample }} on NCBI"
+                   target="_blank" rel="noopener">{{ h.pdt }}</a>
+                {% else %}
+                <a href="https://www.ncbi.nlm.nih.gov/pathogens/isolates/#{{ h.pdt }}"
+                   class="pdt-acc pdt-link"
+                   title="View isolate {{ h.pdt }} on NCBI Pathogen Detection"
+                   target="_blank" rel="noopener">{{ h.pdt }}</a>
+                {% endif %}
+                · collected {{ h.collection_date or '—' }}
+                · {{ h.geo or '—' }}
+              </li>
+              {% endfor %}
+              {% if c.new_humans_dates|length > 10 %}
+              <li class="more">+ {{ c.new_humans_dates|length - 10 }} more</li>
+              {% endif %}
+            </ul>
+          </div>
+
+          <div class="cluster-map-block">
+            <h4>Geographic footprint</h4>
+            {{ c|map_svg|safe }}
+            <div class="map-legend">
+              <span class="legend-swatch swatch-human"></span> human
+              <span class="legend-swatch swatch-nonhuman"></span> nonhuman
+              <span class="legend-swatch swatch-mixed"></span> mixed
+              <span class="map-legend-note">· faded dots = older</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- WHAT THE CLUSTER LOOKS LIKE OVERALL: sources + histogram -->
+        <div class="card-row card-row-mid">
+          {% if c.source_summary %}
+          <div class="sources">
+            <h4>Top sources of isolation</h4>
+            <ul>
+              {% for s in c.source_summary[:5] %}
+              <li>
+                <span class="source-category source-category-{{ s.category|lower }}">{{ s.category }}</span>
+                {{ s.source }} <span class="count">×{{ s.n }}</span>
+              </li>
+              {% endfor %}
+            </ul>
+            {% if c.host_summary %}
+            <div class="host-species">
+              <span class="host-species-label">Animal hosts:</span>
+              {% for h in c.host_summary[:5] %}<span class="host-species-item">{{ h.host }} ({{ h.n }})</span>{% if not loop.last %}, {% endif %}{% endfor %}
+              {% if c.host_summary|length > 5 %}<span class="host-species-item host-more">+{{ c.host_summary|length - 5 }} more</span>{% endif %}
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <div class="histogram-block">
+            <h4>Isolates per year</h4>
+            <div class="histogram-wrap">
+              {{ c|histogram_svg|safe }}
+            </div>
+            <div class="histogram-legend">
+              <span class="legend-swatch swatch-human"></span> human
+              <span class="legend-swatch swatch-nonhuman"></span> nonhuman
+            </div>
+          </div>
+        </div>
+
+        <!-- HISTORICAL REFERENCE: how this cluster started -->
+        <div class="card-row card-row-bottom">
+          <div class="oldest-isolates">
+            <h4>Cluster origins (historical reference)</h4>
+            <dl class="oldest-list">
+              <dt>Oldest isolate (any source)</dt>
+              <dd>
+                {% if c.oldest_any %}
+                  {{ c.oldest_any.date_raw or c.oldest_any.date or 'date unknown' }} ·
+                  {{ c.oldest_any.geo or 'location unknown' }} ·
+                  {{ c.oldest_any.source or 'source unknown' }}
+                  (<a href="{{ ncbi_link_for(c.oldest_any.pdt, c.oldest_any.biosample) }}"
+                      class="pdt-link" target="_blank" rel="noopener"
+                      title="View {{ c.oldest_any.pdt }} on NCBI">{{ c.oldest_any.pdt }}</a>)
+                {% else %}—{% endif %}
+              </dd>
+              <dt>Oldest human isolate</dt>
+              <dd>
+                {% if c.oldest_human %}
+                  {{ c.oldest_human.date_raw or c.oldest_human.date or 'date unknown' }} ·
+                  {{ c.oldest_human.geo or 'location unknown' }} ·
+                  {{ c.oldest_human.source or 'source unknown' }}
+                  (<a href="{{ ncbi_link_for(c.oldest_human.pdt, c.oldest_human.biosample) }}"
+                      class="pdt-link" target="_blank" rel="noopener"
+                      title="View {{ c.oldest_human.pdt }} on NCBI">{{ c.oldest_human.pdt }}</a>)
+                {% else %}—{% endif %}
+              </dd>
+              <dt>Oldest nonhuman isolate</dt>
+              <dd>
+                {% if c.oldest_nonhuman %}
+                  {{ c.oldest_nonhuman.date_raw or c.oldest_nonhuman.date or 'date unknown' }} ·
+                  {{ c.oldest_nonhuman.geo or 'location unknown' }} ·
+                  {{ c.oldest_nonhuman.source or 'source unknown' }}
+                  (<a href="{{ ncbi_link_for(c.oldest_nonhuman.pdt, c.oldest_nonhuman.biosample) }}"
+                      class="pdt-link" target="_blank" rel="noopener"
+                      title="View {{ c.oldest_nonhuman.pdt }} on NCBI">{{ c.oldest_nonhuman.pdt }}</a>)
+                {% else %}—{% endif %}
+              </dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="cluster-card-foot">
+          {% if c.latest_assembly %}
+          <a href="https://www.ncbi.nlm.nih.gov/datasets/genome/{{ c.latest_assembly.asm_acc }}/"
+             class="ext-link"
+             title="View NCBI Datasets page for {{ c.latest_assembly.asm_acc }} — most-recently-deposited assembled isolate in this cluster (collected {{ c.latest_assembly.collection_date or 'unknown' }})"
+             target="_blank" rel="noopener">Latest assembly: {{ c.latest_assembly.asm_acc }} →</a>
+          {% endif %}
+          <a href="https://www.ncbi.nlm.nih.gov/pathogens/isolates/#{{ c.pds_acc }}"
+             class="ext-link"
+             target="_blank" rel="noopener">View cluster on NCBI →</a>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty">
+      No clusters with new human cases in the last {{ window_days }} days.
+    </div>
+  {% endif %}
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>
+      ListeriaWatch v2 · daily surveillance digest · Data from
+      <a href="https://www.ncbi.nlm.nih.gov/pathogens/">NCBI Pathogen Detection</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+// Country filter for cluster cards.
+// Reads each card's data-human-countries attribute (CSV of canonical names).
+// Hides cards that don't have a human isolate from the selected country.
+// "all" shows every card.
+(function () {
+  var selector = document.getElementById('country-filter');
+  var status = document.getElementById('filter-status');
+  if (!selector) return;
+
+  var cards = document.querySelectorAll('#cluster-list .cluster-card');
+  var total = cards.length;
+
+  function applyFilter() {
+    var want = selector.value;
+    var visible = 0;
+    cards.forEach(function (card) {
+      var attr = card.getAttribute('data-human-countries') || '';
+      var countries = attr ? attr.split(',') : [];
+      var show = (want === 'all') || (countries.indexOf(want) !== -1);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    if (status) {
+      if (want === 'all') {
+        status.textContent = 'showing ' + total + ' clusters';
+      } else {
+        status.textContent = 'showing ' + visible + ' of ' + total + ' clusters with cases in ' + want;
+      }
+    }
+  }
+
+  selector.addEventListener('change', applyFilter);
+  applyFilter();  // initialize status text on page load
+})();
+</script>
+
+</body>
+</html>
