@@ -6,12 +6,12 @@
   --ink: #111;
   --ink-soft: #444;
   --ink-faint: #777;
-  --paper: #fafaf7;
-  --paper-2: #f0ede5;
+  --paper: #fff8f7;
+  --paper-2: #fdecea;
   --rule: #d8d2c4;
   --rule-strong: #2a2f36;
-  --teal: #0f766e;
-  --teal-deep: #134e4a;
+  --teal: #c0392b;
+  --teal-deep: #922b21;
   --rust: #b91c1c;
   --rust-soft: #fee2e2;
 }
@@ -759,3 +759,17 @@ footer a { color: var(--teal-deep); }
   .tile:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
   .card-row { grid-template-columns: 1fr; }
 }
+
+/* Pathogen badges */
+.badge-pathogen-salmonella {
+  background: #fa8072;
+  color: #5c1a14;
+  border: 1px solid #e06050;
+}
+.badge-pathogen-listeria {
+  background: #0f766e;
+  color: white;
+  border: 1px solid #134e4a;
+}
+
+/* Salmon-toned page background */

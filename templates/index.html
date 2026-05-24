@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ListeriaWatch — daily Listeria monocytogenes cluster surveillance</title>
+  <title>SalmonellaWatch — daily Salmonella enterica cluster surveillance</title>
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
 
 <header class="masthead">
   <div class="container">
-    <h1>ListeriaWatch <span class="version">v2 · beta</span></h1>
+    <h1>SalmonellaWatch <span class="version">v2 · beta</span></h1>
     <p class="lede">
-      A daily-updated digest of <em>Listeria monocytogenes</em> genomic clusters with recent
+      A daily-updated digest of <em>Salmonella enterica</em> genomic clusters with recent
       human cases, sourced from NCBI Pathogen Detection. Each cluster card shows the
       isolates that started the cluster, the cluster's typing, and how the cluster has
       grown year over year.
@@ -39,7 +39,7 @@
 
 <div class="beta-banner">
   <div class="container">
-    <strong>Beta.</strong> ListeriaWatch is a personal research project, not an official
+    <strong>Beta.</strong> SalmonellaWatch is a personal research project, not an official
     surveillance system. Data lags real-time deposits by hours to days. Clusters are
     computational predictions of genomic relatedness; they don't prove a foodborne link.
   </div>
@@ -102,8 +102,8 @@
       <header class="cluster-card-head">
         <div class="cluster-card-id">
           <span class="badge badge-pathogen-{{ c.pathogen|lower }}">{{ c.pathogen }}</span>
-          {% if c.consensus_serovar %}
-            <span class="headline-typing">serovar {{ c.consensus_serovar }}</span>
+          {% if c.consensus_serotype %}
+            <span class="headline-typing">serotype {{ c.consensus_serotype }}</span>
           {% endif %}
           {% if c.mlst_st and not c.mlst_error %}
             <span class="headline-typing">{{ c.mlst_st }}</span>
@@ -187,10 +187,10 @@
 
       <div class="cluster-typing">
         <span class="typing-field">
-          <span class="typing-label">Serovar:</span>
-          {% if c.consensus_serovar %}
-            <span class="typing-value">{{ c.consensus_serovar }}</span>
-            <span class="typing-confidence">({{ c.consensus_serovar_n }} of {{ c.consensus_serovar_total }} agree)</span>
+          <span class="typing-label">Serotype:</span>
+          {% if c.consensus_serotype %}
+            <span class="typing-value">{{ c.consensus_serotype }}</span>
+            <span class="typing-confidence">({{ c.consensus_serotype_n }} of {{ c.consensus_serotype_total }} agree)</span>
           {% else %}
             <span class="typing-missing">not determined</span>
           {% endif %}
@@ -389,7 +389,7 @@
 <footer>
   <div class="container">
     <p>
-      ListeriaWatch v2 · daily surveillance digest · Data from
+      SalmonellaWatch v2 · daily surveillance digest · Data from
       <a href="https://www.ncbi.nlm.nih.gov/pathogens/">NCBI Pathogen Detection</a>
     </p>
   </div>

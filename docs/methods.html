@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Methods — ListeriaWatch</title>
+  <title>Methods — SalmonellaWatch</title>
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
 <header class="masthead">
   <div class="container">
     <h1>
-      <a href="index.html" class="masthead-home">ListeriaWatch</a>
+      <a href="index.html" class="masthead-home">SalmonellaWatch</a>
       <span class="version">v2 · beta</span>
     </h1>
     <p class="lede">
@@ -32,7 +32,7 @@
 
 <div class="beta-banner">
   <div class="container">
-    <strong>Beta.</strong> ListeriaWatch is a personal research project, not an official
+    <strong>Beta.</strong> SalmonellaWatch is a personal research project, not an official
     surveillance system. The documentation below reflects the author's interpretation
     of public surveillance literature and is not peer-reviewed.
   </div>
@@ -77,17 +77,17 @@
     daily SNP-based clustering to identify genomically related isolates.
   </p>
   <p>
-    ListeriaWatch ingests three files per pathogen per release from the NCBI
+    SalmonellaWatch ingests three files per pathogen per release from the NCBI
     PD FTP site:
   </p>
   <ul>
     <li><code>metadata.tsv</code> — per-isolate metadata (host, source, geography, dates, assembly references, IFSAC category, food_origin, host_disease)</li>
-    <li><code>cluster_list.tsv</code> — the per-cluster isolate membership manifest (Listeria, STEC, and Campylobacter only; Salmonella's cluster info is delivered differently)</li>
+    <li><code>cluster_list.tsv</code> — the per-cluster isolate membership manifest (Salmonella, STEC, and Campylobacter only; Salmonella's cluster info is delivered differently)</li>
     <li><code>amr.metadata.tsv</code> — AMRFinderPlus output (resistance gene calls per isolate)</li>
   </ul>
   <p>
     The ingest runs nightly. NCBI itself updates files in place within a
-    release accession, so even between Listeria release bumps, individual
+    release accession, so even between Salmonella release bumps, individual
     files may pick up new isolates.
   </p>
 </section>
@@ -130,14 +130,14 @@
     <dd>
       When the sample was physically collected from the patient, food,
       animal, or environment. Reflects when illness or contamination
-      occurred in the world. Used by ListeriaWatch for the "New human cases
+      occurred in the world. Used by SalmonellaWatch for the "New human cases
       in last 60d/30d/15d" filter and counts.
     </dd>
     <dt><code>target_creation_date</code></dt>
     <dd>
       When NCBI's pathogen detection pipeline first processed the isolate
       and added it to the cluster manifest. Reflects when the genomic
-      surveillance system first "saw" the case. Used by ListeriaWatch for
+      surveillance system first "saw" the case. Used by SalmonellaWatch for
       the acceleration signal because that signal is asking "is this
       cluster being detected at an accelerating pace right now?"
     </dd>
@@ -146,7 +146,7 @@
     These can diverge dramatically. A lab may collect samples in 2019, sit
     on them for years, and finally upload sequence data in 2026 — those
     will show recent target_creation_dates but old collection_dates.
-    ListeriaWatch's "new cases" framing intentionally uses collection_date
+    SalmonellaWatch's "new cases" framing intentionally uses collection_date
     so that <em>actually-recent illness</em>, not <em>backlogged
     deposits</em>, drives the headline number.
   </p>
@@ -168,9 +168,9 @@
     illness is currently being detected.
   </p>
   <p>
-    The "Listeria" choice of 60 days for the primary window is wider than
+    The "Salmonella" choice of 60 days for the primary window is wider than
     you would use for Salmonella (where 30 days is typical). It reflects
-    Listeria's epidemiology — long incubation periods (up to 70 days for
+    Salmonella's epidemiology — long incubation periods (up to 70 days for
     invasive disease) and slower laboratory characterization mean a tighter
     window would miss many cases that are still part of an active outbreak
     in epidemiological terms.
@@ -316,7 +316,7 @@
   <ul class="keyword-list">
     <li>"travel-associated", "travel associated", "travel-related", "travel related"</li>
     <li>"traveler", "traveller", "returning traveler", "returning traveller"</li>
-    <li>"imported case", "imported listeriosis", "imported infection"</li>
+    <li>"imported case", "imported salmonellosis", "imported infection"</li>
   </ul>
   <p>
     Note that several of those keywords contain the word "imported" — these
@@ -495,7 +495,7 @@
   </p>
   <ul>
     <li>The standard algorithms model expected count variance and provide a calibrated false-positive rate (e.g., flag at α=0.05). This implementation uses a fixed 2× threshold with no statistical calibration.</li>
-    <li>The standard algorithms account for seasonality. <em>Listeria</em> has summer peaks; this implementation does not adjust for them.</li>
+    <li>The standard algorithms account for seasonality. <em>Salmonella</em> has summer peaks; this implementation does not adjust for them.</li>
     <li>The standard algorithms use guard bands to avoid baseline contamination by the very recent past. This implementation simply splits at 60 days.</li>
   </ul>
   <p>
@@ -546,14 +546,14 @@
     <strong>MLST</strong> (Multi-Locus Sequence Typing) classifies bacterial
     isolates by sequencing seven specific housekeeping genes and
     concatenating their allele numbers into a Sequence Type (ST). For
-    <em>Listeria monocytogenes</em>, the loci are
+    <em>Salmonella enterica</em>, the loci are
     <code>abcZ</code>, <code>bglA</code>, <code>cat</code>,
     <code>dapE</code>, <code>dat</code>, <code>ldh</code>, and
     <code>lhkA</code>. The canonical reference database is
     <a href="https://pubmlst.org/organisms/listeria-monocytogenes">PubMLST</a>.
   </p>
   <p>
-    ListeriaWatch picks one representative isolate per cluster (preferring
+    SalmonellaWatch picks one representative isolate per cluster (preferring
     Complete Genome &gt; Chromosome &gt; Scaffold &gt; Contig, then highest
     contig N50, then earliest collection date), downloads its assembly from
     NCBI, and runs
@@ -578,13 +578,13 @@
     A <strong>Clonal Complex (CC)</strong> groups STs that descend from a
     common ancestor, defined formally by the goeBURST algorithm applied to
     a population of typed strains. PubMLST publishes canonical CC
-    assignments for <em>L. monocytogenes</em>. ListeriaWatch derives the CC
+    assignments for <em>L. monocytogenes</em>. SalmonellaWatch derives the CC
     from the cluster's ST using a curated lookup table (~50 STs mapped to
     ~30 CCs).
   </p>
   <p>
     The dashboard attaches short summary labels to six CCs that are
-    commonly discussed in <em>Listeria</em> surveillance literature. These
+    commonly discussed in <em>Salmonella</em> surveillance literature. These
     labels reflect <em>observed patterns reported in the literature</em>,
     not deterministic biological claims about any individual isolate.
   </p>
@@ -592,7 +592,7 @@
     <dt>CC1 — "hypervirulent lineage"</dt>
     <dd>
       CC1 isolates have been historically over-represented in invasive
-      listeriosis cases reported in the surveillance literature, and the
+      salmonellosis cases reported in the surveillance literature, and the
       lineage has been associated with dairy-related outbreaks.
     </dd>
     <dt>CC2 — "outbreak-associated lineage"</dt>
@@ -602,7 +602,7 @@
     </dd>
     <dt>CC4 — "maternal-fetal lineage"</dt>
     <dd>
-      Sometimes referred to as the "<em>Listeria epidemica</em>" lineage in
+      Sometimes referred to as the "<em>Salmonella epidemica</em>" lineage in
       the literature, CC4 has been reported with a strong association with
       maternal-fetal disease and severe clinical outcomes.
     </dd>
@@ -628,7 +628,7 @@
   </dl>
   <p>
     <strong>Important caveat.</strong> The author of this dashboard is not
-    a clinical microbiologist or specialist in <em>Listeria</em> CC
+    a clinical microbiologist or specialist in <em>Salmonella</em> CC
     epidemiology. These labels are compiled from training-data summaries of
     public surveillance literature and have not been peer-reviewed. Treat
     them as <strong>pointers to the literature</strong>, not as
@@ -647,14 +647,14 @@
   <p>
     The AMR chip fires when at least one isolate in the cluster carries an
     acquired resistance gene targeting a drug class used for first-line
-    <em>Listeria</em> treatment. The first-line treatment regimens are:
+    <em>Salmonella</em> treatment. The first-line treatment regimens are:
   </p>
   <ul>
-    <li>Invasive listeriosis: <strong>ampicillin + gentamicin</strong></li>
+    <li>Invasive salmonellosis: <strong>ampicillin + gentamicin</strong></li>
     <li>Penicillin-allergic patients: <strong>trimethoprim-sulfamethoxazole</strong></li>
   </ul>
   <p>
-    Acquired resistance to any of these is uncommon in <em>Listeria</em>
+    Acquired resistance to any of these is uncommon in <em>Salmonella</em>
     and therefore noteworthy when it appears. The dashboard flags these
     gene families (drawn from AMRFinderPlus output in
     <code>amr.metadata.tsv</code>):
@@ -670,7 +670,7 @@
     <dd><code>dfrG</code>, <code>dfrD</code>, <code>dfrK</code>, <code>dfrA</code>, <code>sul1</code>, <code>sul2</code>, <code>sul3</code></dd>
     <dt>Chloramphenicol / phenicols</dt>
     <dd><code>cat</code>, <code>catA</code>, <code>catB</code>, <code>fexA</code>, <code>fexB</code></dd>
-    <dt>Penicillins (rare in Listeria)</dt>
+    <dt>Penicillins (rare in Salmonella)</dt>
     <dd><code>blaZ</code>, <code>mecA</code>, <code>mecC</code></dd>
   </dl>
   <p>
@@ -682,7 +682,7 @@
     "this cluster has a resistance gene worth looking at" pointer.
   </p>
   <p>
-    <strong>Caveat on Listeria intrinsic resistance.</strong> <em>Listeria
+    <strong>Caveat on Salmonella intrinsic resistance.</strong> <em>Salmonella
     monocytogenes</em> is intrinsically resistant to several antibiotic
     classes (cephalosporins, fosfomycin, and others). Those resistances
     are species-level and do not contribute to this signal; we only flag
@@ -722,7 +722,7 @@
     category X."
   </p>
   <p>
-    <strong>Caveat.</strong> ListeriaWatch displays whatever string the
+    <strong>Caveat.</strong> SalmonellaWatch displays whatever string the
     submitter entered. Inconsistencies in submitter labeling (e.g., "BEEF"
     vs. "beef" vs. "Beef products") will produce inconsistent category
     labels.
@@ -759,7 +759,7 @@
     The per-cluster map shows the cluster's full geographic footprint
     across all isolates with a known <code>collection_date</code> and a
     geocodable location. There is no time-window filter on the map (the
-    "1-year window" was removed because <em>Listeria</em> clusters span
+    "1-year window" was removed because <em>Salmonella</em> clusters span
     decades). Recency is encoded as <strong>dot opacity</strong> instead:
   </p>
   <ul>
@@ -855,7 +855,7 @@
       <a href="https://github.com/ncbi/amr/wiki" target="_blank" rel="noopener">https://github.com/ncbi/amr/wiki</a>
     </li>
     <li>
-      <strong>PubMLST: <em>Listeria monocytogenes</em>.</strong>
+      <strong>PubMLST: <em>Salmonella enterica</em>.</strong>
       Canonical reference for ST assignments and CC groupings used by
       this dashboard.
       <a href="https://pubmlst.org/organisms/listeria-monocytogenes" target="_blank" rel="noopener">https://pubmlst.org/organisms/listeria-monocytogenes</a>
@@ -927,15 +927,15 @@
   <h3>Foodborne disease classification (import vs. travel)</h3>
   <ul>
     <li>
-      <strong>ECDC Listeria surveillance.</strong>
+      <strong>ECDC Salmonella surveillance.</strong>
       The European Centre for Disease Prevention and Control publishes
       annual epidemiological reports that distinguish imported food cases
       from travel-associated cases.
-      <a href="https://www.ecdc.europa.eu/en/listeriosis" target="_blank" rel="noopener">https://www.ecdc.europa.eu/en/listeriosis</a>
+      <a href="https://www.ecdc.europa.eu/en/salmonellosis" target="_blank" rel="noopener">https://www.ecdc.europa.eu/en/salmonellosis</a>
     </li>
     <li>
-      <strong>CDC Listeria surveillance.</strong>
-      U.S. national listeriosis surveillance, including the Listeria
+      <strong>CDC Salmonella surveillance.</strong>
+      U.S. national salmonellosis surveillance, including the Salmonella
       Initiative case investigations.
       <a href="https://www.cdc.gov/listeria/php/surveillance/index.html" target="_blank" rel="noopener">https://www.cdc.gov/listeria/php/surveillance/index.html</a>
     </li>
@@ -960,7 +960,7 @@
   <h2>Top-level caveats</h2>
   <ol>
     <li>
-      <strong>ListeriaWatch is a personal research project, not an official
+      <strong>SalmonellaWatch is a personal research project, not an official
       surveillance system.</strong> It is not authorized to issue health
       advisories, food recalls, or outbreak declarations. CDC, FDA, and
       USDA do that, with the benefit of epidemiological and laboratory
@@ -1017,7 +1017,7 @@
 <footer>
   <div class="container">
     <p>
-      ListeriaWatch v2 · daily surveillance digest · Data from
+      SalmonellaWatch v2 · daily surveillance digest · Data from
       <a href="https://www.ncbi.nlm.nih.gov/pathogens/">NCBI Pathogen Detection</a>
     </p>
   </div>
