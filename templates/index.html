@@ -569,21 +569,95 @@
       if (country === 'all') {
         amrList.querySelectorAll('.amr-chip').forEach(function(c) { c.style.display = ''; });
         if (amrNote) amrNote.textContent = '';
+        // Remove any "no data" message
+        var noAmrMsg = amrList.querySelector('.amr-no-country');
+        if (noAmrMsg) noAmrMsg.remove();
       } else {
         var countryAmr = parseJSON(card.getAttribute('data-country-amr'));
         var myAmr = countryAmr[geoKey(country)] || countryAmr[country] || [];
         var myAmrSet = new Set(myAmr.map(function(x) { return x.amr; }));
-        var chips = amrList.querySelectorAll('.amr-chip');
+        // Build count map for display
+        var amrCounts = {};
+        myAmr.forEach(function(x) { amrCounts[x.amr] = x.n; });
+        var chips = amrList.querySelectorAll('.amr-chip:not(.amr-no-country)');
         var shown = 0;
         chips.forEach(function(chip) {
           var amrVal = chip.getAttribute('data-amr') || '';
-          var show = myAmrSet.has(amrVal);
-          chip.style.display = show ? '' : 'none';
-          if (show) shown++;
+          var inCountry = myAmrSet.has(amrVal);
+          chip.style.display = inCountry ? '' : 'none';
+          if (inCountry) {
+            shown++;
+            // Show count for this country
+            var cnt = amrCounts[amrVal] || '';
+            chip.title = cnt ? cnt + ' isolate' + (cnt > 1 ? 's' : '') + ' in ' + country : '';
+          }
         });
+        // Remove old no-data message if any
+        var oldMsg = amrList.querySelector('.amr-no-country');
+        if (oldMsg) oldMsg.remove();
+        if (shown === 0) {
+          var msg = document.createElement('span');
+          msg.className = 'amr-chip amr-no-country';
+          msg.style.background = 'var(--paper-2)';
+          msg.style.color = 'var(--ink-faint)';
+          msg.textContent = 'No AMR data for ' + country;
+          amrList.appendChild(msg);
+        }
         if (amrNote) amrNote.textContent = shown > 0
-          ? '(' + shown + ' variants in ' + country + ')'
-          : '(no AMR data for ' + country + ')';
+          ? '(' + shown + ' variant' + (shown > 1 ? 's' : '') + ' in ' + country + ')'
+          : '';
+      }
+    }
+
+    // --- Source breakdown ---
+    var srcGrid = card.querySelector('.source-breakdown-grid');
+    if (srcGrid) {
+      if (country === 'all') {
+        // Restore all items
+        srcGrid.querySelectorAll('.src-item').forEach(function(item) {
+          item.style.display = '';
+        });
+        var noSrcMsg = srcGrid.querySelector('.src-no-country');
+        if (noSrcMsg) noSrcMsg.remove();
+      } else {
+        var countrySrc = parseJSON(card.getAttribute('data-country-src'));
+        var mySrc = countrySrc[geoKey(country)] || countrySrc[country] || [];
+        // Bucket the sources
+        var beef = 0, poultry = 0, swine = 0, produce = 0, rte = 0, water = 0, other = {};
+        mySrc.forEach(function(s) {
+          var cl = (s.src || '').toLowerCase();
+          var cat = (s.cat || '').toLowerCase();
+          if (cat === 'human' || cat === 'clinical') return;
+          if (cl.includes('beef') || cl.includes('bovine') || cl.includes('cow')) beef += s.n;
+          else if (cl.includes('chicken') || cl.includes('turkey') || cl.includes('poultry') || cl.includes('broiler')) poultry += s.n;
+          else if (cl.includes('pork') || cl.includes('swine') || cl.includes('pig')) swine += s.n;
+          else if (cl.includes('vegetable') || cl.includes('fruit') || cl.includes('leafy') || cl.includes('herb') || cl.includes('nut') || cl.includes('produce')) produce += s.n;
+          else if (cl.includes('rte') || cl.includes('ready-to-eat') || cl.includes('deli')) rte += s.n;
+          else if (cl.includes('water') || cl.includes('aquatic')) water += s.n;
+          else { other[s.src] = (other[s.src] || 0) + s.n; }
+        });
+        // Rebuild the grid
+        srcGrid.innerHTML = '';
+        function addSrcItem(label, n) {
+          if (n <= 0) return;
+          var div = document.createElement('div');
+          div.className = 'src-item';
+          div.innerHTML = '<span class="src-label">' + label + '</span><span class="src-count">' + n + '</span>';
+          srcGrid.appendChild(div);
+        }
+        addSrcItem('Beef/Bovine', beef);
+        addSrcItem('Poultry/Avian', poultry);
+        addSrcItem('Swine/Pork', swine);
+        addSrcItem('Produce', produce);
+        addSrcItem('RTE Foods', rte);
+        addSrcItem('Water', water);
+        Object.keys(other).forEach(function(k) { if (other[k] >= 2) addSrcItem(k, other[k]); });
+        if (srcGrid.children.length === 0) {
+          var msg = document.createElement('div');
+          msg.className = 'src-no-country src-item';
+          msg.innerHTML = '<span class="src-label" style="color:var(--ink-faint)">No non-human source data for ' + country + '</span>';
+          srcGrid.appendChild(msg);
+        }
       }
     }
   }
