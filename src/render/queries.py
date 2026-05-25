@@ -154,6 +154,7 @@ def get_recent_activity_clusters(
                 "biosample": cr["biosample_acc"],
                 "collection_date": cr["collection_date_raw"] or cr["collection_date"],
                 "geo": cr["geo_loc_name"],
+                "geo_country": cr["geo_country"] or "",
             })
 
     # Pre-fetch country-keyed AMR genotypes

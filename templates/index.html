@@ -290,7 +290,7 @@
             <h4 class="human-cases-header">New human cases (last {{ window_days }}d)</h4>
             <ul class="human-cases-list">
               {% for h in c.new_humans_dates %}
-              <li data-geo-country="{{ h.geo.split(':')[0].strip() if h.geo else '' }}">
+              <li data-geo-country="{{ h.get('geo_country', '') or (h.geo.split(':')[0].strip() if h.geo else '') }}">
                 {% if h.biosample %}
                 <a href="https://www.ncbi.nlm.nih.gov/biosample/{{ h.biosample }}"
                    class="pdt-acc pdt-link"
@@ -519,6 +519,15 @@
 
   function parseJSON(s) { try { return JSON.parse(s || '{}'); } catch(e) { return {}; } }
 
+  var COUNTRY_TO_GEO = {
+    'United States': 'USA',
+    'United Kingdom': 'United Kingdom',
+    'South Korea': 'Republic of Korea',
+  };
+  function geoKey(country) {
+    return COUNTRY_TO_GEO[country] || country;
+  }
+
   function updateCardSections(card, country) {
     // --- Human cases ---
     var humanList = card.querySelector('.human-cases-list');
@@ -538,13 +547,11 @@
           var geo = (li.getAttribute('data-geo-country') || '').toLowerCase();
           var countryData = parseJSON(card.getAttribute('data-country-humans'));
           // Check if this isolate's geo matches
-          var show = geo.includes(country.toLowerCase()) ||
-                     Object.keys(countryData).some(function(k) {
-                       return k.toLowerCase() === country.toLowerCase();
-                     });
-          // Simpler: show all items whose geo contains selected country
-          var geoFull = li.textContent;
-          show = geoFull.toLowerCase().includes(country.toLowerCase());
+          var geoCountry = (li.getAttribute('data-geo-country') || '').trim();
+          var geoKey2 = geoKey(country);
+          var show = geoCountry === geoKey2 || geoCountry === country ||
+                     li.textContent.toLowerCase().includes(country.toLowerCase()) ||
+                     li.textContent.toLowerCase().includes(geoKey2.toLowerCase());
           li.style.display = show ? '' : 'none';
           if (show) shown++;
         });
@@ -564,7 +571,7 @@
         if (amrNote) amrNote.textContent = '';
       } else {
         var countryAmr = parseJSON(card.getAttribute('data-country-amr'));
-        var myAmr = countryAmr[country] || [];
+        var myAmr = countryAmr[geoKey(country)] || countryAmr[country] || [];
         var myAmrSet = new Set(myAmr.map(function(x) { return x.amr; }));
         var chips = amrList.querySelectorAll('.amr-chip');
         var shown = 0;
@@ -612,7 +619,7 @@
         // Count human cases for this country
         if (wantCountry !== 'all') {
           var countryHumans = parseJSON(card.getAttribute('data-country-humans'));
-          var countryList = countryHumans[wantCountry] || [];
+          var countryList = countryHumans[geoKey(wantCountry)] || countryHumans[wantCountry] || [];
           newHumans += countryList.length;
         } else {
           newHumans += nh;

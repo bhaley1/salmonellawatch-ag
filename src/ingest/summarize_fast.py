@@ -123,7 +123,7 @@ def materialize_cluster_summary(
     recent_human_rows = conn.execute("""
         SELECT pds_acc, pdt_acc, biosample_acc,
                collection_date, collection_date_raw,
-               target_creation_date, geo_loc_name
+               target_creation_date, geo_loc_name, geo_country
         FROM isolates
         WHERE pds_acc IS NOT NULL AND pds_acc != ''
           AND source_category = 'Human'
@@ -137,6 +137,7 @@ def materialize_cluster_summary(
             "collection_date": r[4] or r[3],
             "date_added": r[5],
             "geo": r[6],
+            "geo_country": r[7] if len(r) > 7 else "",
         })
 
     # ── Step 6: deposit lag per cluster ──────────────────────────────────
