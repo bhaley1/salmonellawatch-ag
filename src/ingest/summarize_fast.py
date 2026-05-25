@@ -273,6 +273,20 @@ def materialize_cluster_summary(
             )
 
     # ── Step 12: signals + INSERT per cluster ─────────────────────────────
+    log.info("Step 11b: bulk member fetch for signals computation...")
+    members_by_pds: dict[str, list] = {}
+    member_rows = conn.execute("""
+        SELECT pdt_acc, pds_acc, pathogen, epi_type, source_category,
+               geo_country, geo_admin1, geo_loc_name, isolation_source,
+               collection_date, target_creation_date, food_origin,
+               bioproject_acc, biosample_acc, host
+        FROM isolates
+        WHERE pds_acc IS NOT NULL AND pds_acc != ''
+    """).fetchall()
+    for r in member_rows:
+        members_by_pds.setdefault(r["pds_acc"], []).append(dict(r))
+    log.info(f"  Fetched member data for {len(members_by_pds)} clusters")
+
     log.info("Step 12: computing signals and inserting rows...")
     from .. import signals as _signals
     from ..render import map as _map
@@ -340,14 +354,9 @@ def materialize_cluster_summary(
             "unspecified": raw_admin1["unspecified"],
         }
 
-        # Signals — need member dicts for geographic/AMR signals
-        # Use lightweight version: pass country list instead of all members
-        member_dicts_for_signals = [
-            {"geo_country": item["country"], "source_category": "Human", "n": item["n"]}
-            for item in countries_by_pds.get(pds, [])
-        ]
+        # Signals — use real member dicts
         signals_blob = _signals.compute_all_signals(
-            members=member_dicts_for_signals,
+            members=members_by_pds.get(pds, []),
             amr_genes_per_isolate={},
             mlst_st=mlst_st_by_pds.get(pds),
             today=today,
