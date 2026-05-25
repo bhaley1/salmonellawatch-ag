@@ -28,7 +28,7 @@ INSERT INTO isolates (
     scientific_name, serovar, biosample_acc, asm_acc, sra_acc,
     asm_level, asm_stats_contig_n50,
     food_origin, ifsac_category, host_disease, bioproject_acc,
-    pdg_release, last_seen_at
+    pdg_release, last_seen_at, amr_genotypes
 ) VALUES (
     :pdt_acc, :pathogen, :pds_acc, :epi_type, :source_category,
     :host, :isolation_source, :geo_loc_name, :geo_country, :geo_admin1,
@@ -36,7 +36,7 @@ INSERT INTO isolates (
     :scientific_name, :serovar, :biosample_acc, :asm_acc, :sra_acc,
     :asm_level, :asm_stats_contig_n50,
     :food_origin, :ifsac_category, :host_disease, :bioproject_acc,
-    :pdg_release, :last_seen_at
+    :pdg_release, :last_seen_at, :amr_genotypes
 )
 ON CONFLICT(pdt_acc) DO UPDATE SET
     pds_acc              = excluded.pds_acc,
@@ -62,7 +62,8 @@ ON CONFLICT(pdt_acc) DO UPDATE SET
     host_disease         = excluded.host_disease,
     bioproject_acc       = excluded.bioproject_acc,
     pdg_release          = excluded.pdg_release,
-    last_seen_at         = excluded.last_seen_at
+    last_seen_at         = excluded.last_seen_at,
+    amr_genotypes        = excluded.amr_genotypes
 """
 
 
@@ -111,6 +112,7 @@ def upsert_isolates(
             "bioproject_acc":       row.bioproject_acc,
             "pdg_release":          row.pdg_release,
             "last_seen_at":         now,
+            "amr_genotypes":        row.amr_genotypes,
         })
         count += 1
         if len(batch) >= batch_size:

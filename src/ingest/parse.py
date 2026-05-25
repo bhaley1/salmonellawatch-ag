@@ -52,6 +52,8 @@ class IsolateRow:
     host_disease: str | None
     bioproject_acc: str | None
     pdg_release: str
+    last_seen_at: str | None = None
+    amr_genotypes: str | None = None
 
 
 @dataclass
@@ -330,6 +332,7 @@ def iter_isolates(
                 scientific_name=_first_present(row, COL_CANDIDATES["scientific_name"]),
                 serovar=_first_present(row, COL_CANDIDATES["serovar"]),
                 biosample_acc=_first_present(row, COL_CANDIDATES["biosample_acc"]),
+                amr_genotypes=_first_present(row, ["AMR_genotypes", "amr_genotypes"]) or None,
                 asm_acc=_first_present(row, COL_CANDIDATES["asm_acc"]),
                 sra_acc=_first_present(row, COL_CANDIDATES["sra_acc"]),
                 asm_level=_first_present(row, COL_CANDIDATES["asm_level"]),

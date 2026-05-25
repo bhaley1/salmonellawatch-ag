@@ -1,15 +1,8 @@
-"""Materialize the cluster_summary table.
+"""Fast cluster_summary materialization using bulk SQL.
 
-After every ingest, rebuild the per-cluster summary that the renderer uses.
-This is the central join that makes the dashboard query fast: instead of
-recomputing aggregates on every page load, we precompute them once per run.
-
-Specifically: for each (pathogen, pds_acc), we compute:
-  - Total counts: total, human, nonhuman, food, animal, environment
-  - Date ranges: earliest/latest collection and target_creation
-  - Geography: countries seen, sorted by frequency
-  - Source summary: top nonhuman sources
-  - Recent activity: new human PDTs in the last 30 days, with their dates/geo
+Replaces the slow per-cluster Python loop with bulk SQL aggregations.
+Only the fields that truly require Python logic (signals, histogram,
+map locations) are computed in a second pass over pre-fetched data.
 """
 
 from __future__ import annotations
@@ -29,376 +22,397 @@ def materialize_cluster_summary(
     window_days: int | None = None,
     today: date | None = None,
 ) -> int:
-    """Rebuild cluster_summary table. Returns number of clusters written."""
     window_days = window_days or config.RECENT_WINDOW_DAYS
     today = today or date.today()
-    cutoff = (today - timedelta(days=window_days)).isoformat()
+    cutoff_60 = (today - timedelta(days=window_days)).isoformat()
+    cutoff_30 = (today - timedelta(days=30)).isoformat()
+    cutoff_15 = (today - timedelta(days=15)).isoformat()
     now = datetime.utcnow().isoformat(timespec="seconds")
 
-    log.info("Materializing cluster_summary; window cutoff = %s", cutoff)
+    log.info("Materializing cluster_summary (fast path); window cutoff = %s", cutoff_60)
 
-    # Clear the table first — it's small, fast to rebuild from scratch
     conn.execute("DELETE FROM cluster_summary")
     conn.commit()
 
-    # Find all (pathogen, pds_acc) combos that have at least one isolate.
-    # Drop NULL pds_acc (isolates not in any cluster — not surveillance signal).
-    clusters = conn.execute("""
-        SELECT pathogen, pds_acc, COUNT(*) AS n_total
+    # ── Step 1: Bulk aggregate scalar fields ──────────────────────────────
+    log.info("Step 1: bulk scalar aggregation...")
+    conn.execute("""
+        CREATE TEMP TABLE _cs AS
+        SELECT
+            pathogen, pds_acc,
+            COUNT(*) AS n_total,
+            SUM(CASE WHEN source_category='Human' THEN 1 ELSE 0 END) AS n_human,
+            SUM(CASE WHEN source_category!='Human' THEN 1 ELSE 0 END) AS n_nonhuman,
+            SUM(CASE WHEN source_category='Food' THEN 1 ELSE 0 END) AS n_food,
+            SUM(CASE WHEN source_category='Animal' THEN 1 ELSE 0 END) AS n_animal,
+            SUM(CASE WHEN source_category='Environment' THEN 1 ELSE 0 END) AS n_environment,
+            MIN(collection_date) AS earliest_collection_date,
+            MAX(collection_date) AS latest_collection_date,
+            MIN(target_creation_date) AS earliest_target_creation_date,
+            MAX(target_creation_date) AS latest_target_creation_date,
+            SUM(CASE WHEN source_category='Human'
+                     AND collection_date >= ? THEN 1 ELSE 0 END) AS new_humans_in_window,
+            SUM(CASE WHEN source_category='Human'
+                     AND collection_date >= ? THEN 1 ELSE 0 END) AS new_humans_30d,
+            SUM(CASE WHEN source_category='Human'
+                     AND collection_date >= ? THEN 1 ELSE 0 END) AS new_humans_15d
         FROM isolates
         WHERE pds_acc IS NOT NULL AND pds_acc != ''
         GROUP BY pathogen, pds_acc
+    """, (cutoff_60, cutoff_30, cutoff_15))
+    conn.commit()
+
+    total_clusters = conn.execute("SELECT COUNT(*) FROM _cs").fetchone()[0]
+    log.info("Found %d distinct clusters", total_clusters)
+
+    # ── Step 2: countries JSON per cluster ────────────────────────────────
+    log.info("Step 2: country aggregation...")
+    country_rows = conn.execute("""
+        SELECT pds_acc, geo_country, COUNT(*) as n
+        FROM isolates
+        WHERE pds_acc IS NOT NULL AND pds_acc != ''
+          AND geo_country IS NOT NULL AND geo_country != ''
+        GROUP BY pds_acc, geo_country
+        ORDER BY pds_acc, n DESC
+    """).fetchall()
+    countries_by_pds: dict[str, list] = {}
+    for r in country_rows:
+        countries_by_pds.setdefault(r[0], []).append({"country": r[1], "n": r[2]})
+
+    # ── Step 3: source summary JSON per cluster ───────────────────────────
+    log.info("Step 3: source summary aggregation...")
+    source_rows = conn.execute("""
+        SELECT pds_acc, source_category,
+               LOWER(TRIM(COALESCE(isolation_source,'(unspecified)'))) as src,
+               COUNT(*) as n
+        FROM isolates
+        WHERE pds_acc IS NOT NULL AND pds_acc != ''
+        GROUP BY pds_acc, source_category, src
+        ORDER BY pds_acc, n DESC
+    """).fetchall()
+    sources_by_pds: dict[str, list] = {}
+    for r in source_rows:
+        pds = r[0]
+        if pds not in sources_by_pds:
+            sources_by_pds[pds] = []
+        if len(sources_by_pds[pds]) < 20:
+            sources_by_pds[pds].append({"category": r[1], "source": r[2], "n": r[3]})
+
+    # ── Step 4: host summary JSON per cluster ─────────────────────────────
+    log.info("Step 4: host summary aggregation...")
+    host_rows = conn.execute("""
+        SELECT pds_acc, LOWER(TRIM(host)) as h, COUNT(*) as n
+        FROM isolates
+        WHERE pds_acc IS NOT NULL AND pds_acc != ''
+          AND source_category != 'Human'
+          AND host IS NOT NULL AND host != ''
+          AND LOWER(TRIM(host)) NOT IN ('missing','not collected','not provided','unknown','na')
+        GROUP BY pds_acc, h
+        ORDER BY pds_acc, n DESC
+    """).fetchall()
+    hosts_by_pds: dict[str, list] = {}
+    for r in host_rows:
+        pds = r[0]
+        if pds not in hosts_by_pds:
+            hosts_by_pds[pds] = []
+        if len(hosts_by_pds[pds]) < 10:
+            hosts_by_pds[pds].append({"host": r[1], "n": r[2]})
+
+    # ── Step 5: recent human cases JSON per cluster ───────────────────────
+    log.info("Step 5: recent human cases aggregation...")
+    recent_human_rows = conn.execute("""
+        SELECT pds_acc, pdt_acc, biosample_acc,
+               collection_date, collection_date_raw,
+               target_creation_date, geo_loc_name
+        FROM isolates
+        WHERE pds_acc IS NOT NULL AND pds_acc != ''
+          AND source_category = 'Human'
+          AND collection_date >= ?
+        ORDER BY pds_acc, collection_date DESC, pdt_acc
+    """, (cutoff_60,)).fetchall()
+    recent_humans_by_pds: dict[str, list] = {}
+    for r in recent_human_rows:
+        recent_humans_by_pds.setdefault(r[0], []).append({
+            "pdt": r[1], "biosample": r[2],
+            "collection_date": r[4] or r[3],
+            "date_added": r[5],
+            "geo": r[6],
+        })
+
+    # ── Step 6: deposit lag per cluster ──────────────────────────────────
+    log.info("Step 6: deposit lag aggregation...")
+    lag_rows = conn.execute("""
+        SELECT pds_acc,
+               CAST(julianday(target_creation_date) - julianday(collection_date) AS INTEGER) as lag
+        FROM isolates
+        WHERE pds_acc IS NOT NULL AND pds_acc != ''
+          AND collection_date IS NOT NULL
+          AND target_creation_date IS NOT NULL
+          AND julianday(target_creation_date) >= julianday(collection_date)
+        ORDER BY pds_acc, lag
+    """).fetchall()
+    lags_by_pds: dict[str, list] = {}
+    for r in lag_rows:
+        lags_by_pds.setdefault(r[0], []).append(r[1])
+
+    # ── Step 7: histogram per cluster ─────────────────────────────────────
+    log.info("Step 7: histogram aggregation...")
+    hist_rows = conn.execute("""
+        SELECT pds_acc,
+               CAST(SUBSTR(collection_date,1,4) AS INTEGER) as yr,
+               SUM(CASE WHEN source_category='Human' THEN 1 ELSE 0 END) as n_human,
+               SUM(CASE WHEN source_category!='Human' THEN 1 ELSE 0 END) as n_nonhuman
+        FROM isolates
+        WHERE pds_acc IS NOT NULL AND pds_acc != ''
+          AND collection_date IS NOT NULL
+          AND LENGTH(collection_date) >= 4
+        GROUP BY pds_acc, yr
+        ORDER BY pds_acc, yr
+    """).fetchall()
+    hist_by_pds: dict[str, list] = {}
+    for r in hist_rows:
+        hist_by_pds.setdefault(r[0], []).append(
+            {"year": r[1], "n_human": r[2], "n_nonhuman": r[3]}
+        )
+
+    # ── Step 8: oldest isolates per cluster ───────────────────────────────
+    log.info("Step 8: oldest isolate aggregation...")
+    oldest_rows = conn.execute("""
+        SELECT pds_acc, pdt_acc, biosample_acc, collection_date,
+               collection_date_raw, geo_loc_name, geo_country, geo_admin1,
+               isolation_source, source_category,
+               ROW_NUMBER() OVER (
+                   PARTITION BY pds_acc
+                   ORDER BY collection_date ASC, pdt_acc ASC
+               ) as rn_any,
+               ROW_NUMBER() OVER (
+                   PARTITION BY pds_acc, source_category
+                   ORDER BY collection_date ASC, pdt_acc ASC
+               ) as rn_cat
+        FROM isolates
+        WHERE pds_acc IS NOT NULL AND pds_acc != ''
+          AND collection_date IS NOT NULL
+    """).fetchall()
+    oldest_any_by_pds: dict = {}
+    oldest_human_by_pds: dict = {}
+    oldest_nonhuman_by_pds: dict = {}
+    for r in oldest_rows:
+        pds = r[0]
+        pack = {
+            "pdt": r[1], "biosample": r[2], "date": r[3],
+            "date_raw": r[4], "geo": r[5], "geo_country": r[6],
+            "geo_admin1": r[7], "source": r[8], "source_category": r[9],
+        }
+        if r[10] == 1:  # rn_any
+            oldest_any_by_pds[pds] = pack
+        if r[11] == 1:  # rn_cat
+            if r[9] == "Human":
+                oldest_human_by_pds[pds] = pack
+            else:
+                oldest_nonhuman_by_pds[pds] = pack
+
+    # ── Step 9: latest assembly per cluster ───────────────────────────────
+    log.info("Step 9: latest assembly aggregation...")
+    asm_rows = conn.execute("""
+        SELECT pds_acc, pdt_acc, biosample_acc, asm_acc,
+               collection_date_raw, collection_date, target_creation_date
+        FROM isolates
+        WHERE pds_acc IS NOT NULL AND pds_acc != ''
+          AND asm_acc IS NOT NULL AND TRIM(asm_acc) != ''
+        ORDER BY pds_acc, target_creation_date DESC, collection_date DESC, pdt_acc
+    """).fetchall()
+    latest_asm_by_pds: dict = {}
+    for r in asm_rows:
+        pds = r[0]
+        if pds not in latest_asm_by_pds:
+            latest_asm_by_pds[pds] = {
+                "pdt": r[1], "biosample": r[2], "asm_acc": r[3],
+                "collection_date": r[4] or r[5],
+                "target_creation_date": r[6],
+            }
+
+    # ── Step 10: map locations per cluster ────────────────────────────────
+    log.info("Step 10: map location aggregation...")
+    map_rows = conn.execute("""
+        SELECT pds_acc, geo_country, geo_admin1, geo_loc_name,
+               source_category, collection_date, COUNT(*) as n
+        FROM isolates
+        WHERE pds_acc IS NOT NULL AND pds_acc != ''
+          AND collection_date IS NOT NULL
+        GROUP BY pds_acc, geo_country, geo_admin1, source_category, collection_date
+        ORDER BY pds_acc
+    """).fetchall()
+    map_members_by_pds: dict[str, list] = {}
+    for r in map_rows:
+        map_members_by_pds.setdefault(r[0], []).append({
+            "geo_country": r[1], "geo_admin1": r[2], "geo_loc_name": r[3],
+            "source_category": r[4], "collection_date": r[5], "n": r[6],
+        })
+
+    # ── Step 11: admin1 per cluster ───────────────────────────────────────
+    log.info("Step 11: admin1 aggregation...")
+    admin1_rows = conn.execute("""
+        SELECT pds_acc, geo_country, geo_admin1, COUNT(*) as n
+        FROM isolates
+        WHERE pds_acc IS NOT NULL AND pds_acc != ''
+          AND geo_country IS NOT NULL
+        GROUP BY pds_acc, geo_country, geo_admin1
+    """).fetchall()
+    admin1_by_pds: dict[str, dict] = {}
+    for r in admin1_rows:
+        pds, country, admin1, n = r[0], r[1], r[2], r[3]
+        if pds not in admin1_by_pds:
+            admin1_by_pds[pds] = {"by_country": {}, "unspecified": {}}
+        if admin1:
+            d = admin1_by_pds[pds]["by_country"].setdefault(country, {})
+            d[admin1] = d.get(admin1, 0) + n
+        else:
+            admin1_by_pds[pds]["unspecified"][country] = (
+                admin1_by_pds[pds]["unspecified"].get(country, 0) + n
+            )
+
+    # ── Step 12: signals + INSERT per cluster ─────────────────────────────
+    log.info("Step 12: computing signals and inserting rows...")
+    from .. import signals as _signals
+    from ..render import map as _map
+
+    scalar_rows = conn.execute("""
+        SELECT pathogen, pds_acc, n_total, n_human, n_nonhuman,
+               n_food, n_animal, n_environment,
+               earliest_collection_date, latest_collection_date,
+               earliest_target_creation_date, latest_target_creation_date,
+               new_humans_in_window, new_humans_30d, new_humans_15d
+        FROM _cs
     """).fetchall()
 
-    log.info("Found %d distinct clusters", len(clusters))
+    # Pre-fetch MLST STs
+    st_rows = conn.execute(
+        "SELECT pds_acc, mlst_st FROM cluster_typing"
+    ).fetchall()
+    mlst_st_by_pds = {r[0]: r[1] for r in st_rows}
 
+    batch = []
     written = 0
-    for cluster_row in clusters:
-        pathogen = cluster_row["pathogen"]
-        pds_acc = cluster_row["pds_acc"]
+    for sr in scalar_rows:
+        pds = sr["pds_acc"]
+        pathogen = sr["pathogen"]
 
-        # Pull all members of this cluster
-        members = conn.execute("""
-            SELECT pdt_acc, epi_type, source_category, geo_country, geo_admin1,
-                   geo_loc_name, isolation_source, collection_date,
-                   collection_date_raw, target_creation_date,
-                   serovar, asm_acc, biosample_acc, food_origin, ifsac_category,
-                   host_disease, host, bioproject_acc
-            FROM isolates
-            WHERE pathogen = ? AND pds_acc = ?
-        """, (pathogen, pds_acc)).fetchall()
-
-        # Aggregate counts
-        n_human = sum(1 for m in members if m["source_category"] == "Human")
-        n_food = sum(1 for m in members if m["source_category"] == "Food")
-        n_animal = sum(1 for m in members if m["source_category"] == "Animal")
-        n_environment = sum(1 for m in members if m["source_category"] == "Environment")
-        n_nonhuman = len(members) - n_human
-
-        # Date ranges
-        coll_dates = [m["collection_date"] for m in members if m["collection_date"]]
-        tgt_dates = [m["target_creation_date"] for m in members if m["target_creation_date"]]
-        earliest_coll = min(coll_dates) if coll_dates else None
-        latest_coll = max(coll_dates) if coll_dates else None
-        earliest_tgt = min(tgt_dates) if tgt_dates else None
-        latest_tgt = max(tgt_dates) if tgt_dates else None
-
-        # Temporal span: how long the cluster has been "active" by collection date.
-        # A short span (weeks-months) suggests a discrete outbreak; a long span
-        # (years) suggests persistent environmental contamination. For Listeria
-        # specifically, processing-facility persistence over 5-20 years is well
-        # documented, so this is a critical interpretive signal.
-        temporal_span_days: int | None = None
-        if earliest_coll and latest_coll:
-            from datetime import date as _date
+        # Temporal span
+        ec = sr["earliest_collection_date"]
+        lc = sr["latest_collection_date"]
+        temporal_span_days = None
+        if ec and lc:
             try:
-                e = _date.fromisoformat(earliest_coll) if isinstance(earliest_coll, str) else earliest_coll
-                l = _date.fromisoformat(latest_coll) if isinstance(latest_coll, str) else latest_coll
-                temporal_span_days = (l - e).days
+                temporal_span_days = (
+                    date.fromisoformat(str(lc)[:10]) -
+                    date.fromisoformat(str(ec)[:10])
+                ).days
             except (ValueError, TypeError):
-                temporal_span_days = None
+                pass
 
-        # Oldest-isolate signatures — three separate ones because the
-        # epidemiological meaning of each is different:
-        #   oldest of any kind = when did the signal first appear at all
-        #   oldest human       = when did the cluster first cause disease
-        #   oldest nonhuman    = when did the (potential) source first appear
-        # Among ties, prefer rows with more specific geography (admin1 over country).
-        def _oldest_isolate_pack(m) -> dict:
-            return {
-                "pdt": m["pdt_acc"],
-                "biosample": m["biosample_acc"],
-                "date": m["collection_date"],
-                "date_raw": m["collection_date_raw"],
-                "geo": m["geo_loc_name"],
-                "geo_country": m["geo_country"],
-                "geo_admin1": m["geo_admin1"],
-                "source": m["isolation_source"],
-                "source_category": m["source_category"],
-            }
+        # Deposit lag
+        lags = sorted(lags_by_pds.get(pds, []))
+        deposit_lag_median = lags[len(lags) // 2] if lags else None
+        deposit_lag_mean = (sum(lags) // len(lags)) if lags else None
 
-        def _earliest(rows) -> dict | None:
-            dated = [r for r in rows if r["collection_date"]]
-            if not dated:
-                return None
-            # Sort by (date asc, admin1 specificity desc as tiebreaker, pdt for stability)
-            dated.sort(key=lambda r: (
-                r["collection_date"],
-                0 if r["geo_admin1"] else 1,
-                r["pdt_acc"],
-            ))
-            return _oldest_isolate_pack(dated[0])
+        # Histogram
+        histogram = hist_by_pds.get(pds, [])
+        histogram_max = max(
+            (h["n_human"] + h["n_nonhuman"] for h in histogram), default=0
+        )
 
-        oldest_any = _earliest(list(members))
-        oldest_human = _earliest([m for m in members if m["source_category"] == "Human"])
-        oldest_nonhuman = _earliest([m for m in members if m["source_category"] != "Human"])
+        # Map locations
+        map_locs = _map.aggregate_locations(
+            map_members_by_pds.get(pds, []), today=today
+        )
 
-        oldest_isolate_json = json.dumps(oldest_any) if oldest_any else None
-        oldest_human_json = json.dumps(oldest_human) if oldest_human else None
-        oldest_nonhuman_json = json.dumps(oldest_nonhuman) if oldest_nonhuman else None
-
-        # Collection-to-deposit lag — the typical delay between when an
-        # isolate is collected from the world and when it appears in NCBI.
-        # Surveillance professionals use this to interpret the freshness of
-        # the dashboard data: a 7-day lag means we're seeing near-real-time
-        # surveillance; a 180-day lag means most "new" deposits reflect old
-        # cases being uploaded. Computed only on members with both dates.
-        lag_values: list[int] = []
-        from datetime import date as _date_cls
-        for m in members:
-            cd = m["collection_date"]
-            tcd = m["target_creation_date"]
-            if not cd or not tcd:
-                continue
-            try:
-                cdd = _date_cls.fromisoformat(str(cd)[:10])
-                tcdd = _date_cls.fromisoformat(str(tcd)[:10])
-                lag_days = (tcdd - cdd).days
-                if lag_days >= 0:  # negative lags are submission-date metadata errors
-                    lag_values.append(lag_days)
-            except (ValueError, TypeError):
-                continue
-        deposit_lag_median: int | None = None
-        deposit_lag_mean: int | None = None
-        if lag_values:
-            sorted_lags = sorted(lag_values)
-            deposit_lag_median = sorted_lags[len(sorted_lags) // 2]
-            deposit_lag_mean = sum(lag_values) // len(lag_values)
-
-        # Histogram — per-year human vs. nonhuman counts.
-        # Only counts isolates with parseable collection_date. Year is the
-        # first 4 chars of the ISO date string.
-        year_counts: dict[int, dict[str, int]] = {}
-        for m in members:
-            cd = m["collection_date"]
-            if not cd:
-                continue
-            try:
-                year = int(str(cd)[:4])
-            except (ValueError, TypeError):
-                continue
-            yc = year_counts.setdefault(year, {"human": 0, "nonhuman": 0})
-            if m["source_category"] == "Human":
-                yc["human"] += 1
-            else:
-                yc["nonhuman"] += 1
-        # Sort years ascending and serialize as a stable list
-        histogram = [
-            {"year": yr, "n_human": year_counts[yr]["human"], "n_nonhuman": year_counts[yr]["nonhuman"]}
-            for yr in sorted(year_counts.keys())
-        ]
-        histogram_json = json.dumps(histogram) if histogram else None
-        histogram_max_year_count = max(
-            (h["n_human"] + h["n_nonhuman"] for h in histogram), default=0,
-        ) if histogram else 0
-
-        # Map locations — full cluster geographic footprint.
-        #
-        # The map shows ALL isolates with a known collection_date and a
-        # known location, regardless of how old they are. For long-persistent
-        # Listeria clusters (many span 10-30+ years) a 1-year window misses
-        # the cluster's actual geographic distribution. We do encode recency
-        # via dot opacity at render time: recent dots full-opacity, old dots
-        # progressively faded.
-        map_members = [
-            dict(m) for m in members
-            if m["collection_date"]
-        ]
-        from ..render import map as _map  # local import to avoid circular
-        map_locations = _map.aggregate_locations(map_members, today=today)
-        map_locations_json = json.dumps(map_locations) if map_locations else None
-
-        # Latest-assembled isolate: the most-recently-deposited isolate in
-        # this cluster that has an asm_acc. Used by the dashboard to give
-        # users a "view the latest assembled genome for this cluster" link.
-        #
-        # Sort by target_creation_date DESC (when NCBI processed it), then
-        # collection_date DESC as tiebreak. Only consider isolates with
-        # a populated asm_acc — many isolates are SNP-typed without going
-        # through assembly, so ~50% of NCBI PD isolates have asm_acc=None.
-        assembled = [
-            m for m in members
-            if m["asm_acc"] and m["asm_acc"].strip()
-        ]
-        latest_assembly_json: str | None = None
-        if assembled:
-            assembled.sort(
-                key=lambda m: (
-                    m["target_creation_date"] or "",
-                    m["collection_date"] or "",
-                    m["pdt_acc"],
-                ),
-                reverse=True,
-            )
-            la = assembled[0]
-            latest_assembly_json = json.dumps({
-                "pdt": la["pdt_acc"],
-                "biosample": la["biosample_acc"],
-                "asm_acc": la["asm_acc"],
-                "collection_date": la["collection_date_raw"] or la["collection_date"],
-                "target_creation_date": la["target_creation_date"],
-            })
-
-        # Countries, sorted by count desc
-        country_counts: dict[str, int] = {}
-        for m in members:
-            c = m["geo_country"]
-            if c:
-                country_counts[c] = country_counts.get(c, 0) + 1
-        countries = sorted(country_counts.items(), key=lambda x: -x[1])
-        countries_json = json.dumps([{"country": c, "n": n} for c, n in countries])
-
-        # Admin1 breakdown (state/region within country), grouped by country.
-        # Stored as {country: [{admin1: str, n: int}, ...], "_unspecified": {country: n}}
-        # The renderer uses this to show specific geography (e.g. "USA — Maryland (3),
-        # New York (2)") instead of bare country counts.
-        admin1_by_country: dict[str, dict[str, int]] = {}
-        unspecified_by_country: dict[str, int] = {}
-        for m in members:
-            country = m["geo_country"]
-            admin1 = m["geo_admin1"]
-            if not country:
-                continue
-            if admin1:
-                d = admin1_by_country.setdefault(country, {})
-                d[admin1] = d.get(admin1, 0) + 1
-            else:
-                unspecified_by_country[country] = unspecified_by_country.get(country, 0) + 1
+        # Admin1 cleanup
+        raw_admin1 = admin1_by_pds.get(pds, {"by_country": {}, "unspecified": {}})
         admin1_data = {
             "by_country": {
-                c: sorted([{"admin1": a, "n": n} for a, n in d.items()],
-                          key=lambda x: -x["n"])
-                for c, d in admin1_by_country.items()
+                c: sorted(
+                    [{"admin1": a, "n": n} for a, n in d.items()],
+                    key=lambda x: -x["n"]
+                )
+                for c, d in raw_admin1["by_country"].items()
             },
-            "unspecified": unspecified_by_country,
+            "unspecified": raw_admin1["unspecified"],
         }
-        admin1_json = json.dumps(admin1_data)
 
-        # Source summary — top sources across ALL categories (human + nonhuman).
-        # This was previously nonhuman-only. We now include human-source strings
-        # (e.g. 'blood', 'CSF') because they're epidemiologically meaningful
-        # alongside food/animal/environment counts. Renderer can filter if needed.
-        # 'Unknown' source category is included to make the totals honest.
-        source_counts: dict[tuple[str, str], int] = {}
-        for m in members:
-            cat = m["source_category"] or "Unknown"
-            src = (m["isolation_source"] or "").strip().lower() or "(unspecified)"
-            key = (cat, src)
-            source_counts[key] = source_counts.get(key, 0) + 1
-        sources_sorted = sorted(source_counts.items(), key=lambda x: -x[1])[:20]
-        source_summary_json = json.dumps([
-            {"category": cat, "source": src, "n": n}
-            for (cat, src), n in sources_sorted
-        ])
-
-        # Host species summary — actual host strings from animal isolates.
-        # Skips humans (which are already collapsed into 'Human' source category)
-        # and skips blank/unknown hosts.
-        #
-        # NCBI host strings are inconsistent: "Bos taurus", "bovine", "cattle",
-        # "cow" all mean the same thing. We don't try to canonicalize because
-        # the canonical mapping is contested in veterinary literature. We just
-        # display the strings as submitted and let the reader collapse.
-        host_counts: dict[str, int] = {}
-        for m in members:
-            sc = m["source_category"]
-            if sc == "Human" or sc == "Unknown":
-                continue
-            h = (m["host"] or "").strip().lower()
-            if not h or h in ("missing", "not collected", "not provided", "unknown", "na"):
-                continue
-            host_counts[h] = host_counts.get(h, 0) + 1
-        hosts_sorted = sorted(host_counts.items(), key=lambda x: -x[1])[:10]
-        host_summary_json = json.dumps([
-            {"host": h, "n": n} for h, n in hosts_sorted
-        ]) if hosts_sorted else None
-
-        # Recent human cases (the surveillance signal).
-        #
-        # Filter on collection_date, NOT target_creation_date. This means
-        # "actually recent illness" rather than "isolates NCBI happened to
-        # ingest recently regardless of when sampled." Backlogged deposits
-        # — labs uploading 2019 sequences in 2026 — are valid surveillance
-        # data but they're not new cases and shouldn't appear here.
-        #
-        # We also compute counts at 15d and 30d windows for the header
-        # recency gradient ("9 in 60d · 4 in 30d · 1 in 15d").
-        cutoff_60 = cutoff   # already computed above using window_days
-        cutoff_30 = (today - timedelta(days=30)).isoformat()
-        cutoff_15 = (today - timedelta(days=15)).isoformat()
-
-        def _has_recent_collection(m, c):
-            cd = m["collection_date"]
-            return bool(cd) and str(cd) >= c
-
-        recent_humans = [
-            m for m in members
-            if m["source_category"] == "Human"
-            and _has_recent_collection(m, cutoff_60)
+        # Signals — need member dicts for geographic/AMR signals
+        # Use lightweight version: pass country list instead of all members
+        member_dicts_for_signals = [
+            {"geo_country": item["country"], "source_category": "Human", "n": item["n"]}
+            for item in countries_by_pds.get(pds, [])
         ]
-        # Sort by collection_date desc, pdt_acc tiebreak
-        recent_humans.sort(
-            key=lambda m: (m["collection_date"] or "", m["pdt_acc"]),
-            reverse=True,
-        )
-        new_humans_n = len(recent_humans)
-        new_humans_30d = sum(
-            1 for m in members
-            if m["source_category"] == "Human" and _has_recent_collection(m, cutoff_30)
-        )
-        new_humans_15d = sum(
-            1 for m in members
-            if m["source_category"] == "Human" and _has_recent_collection(m, cutoff_15)
-        )
-
-        new_humans_pdts = [m["pdt_acc"] for m in recent_humans]
-        new_humans_pdts_json = json.dumps(new_humans_pdts)
-        new_humans_dates_json = json.dumps([
-            {
-                "pdt": m["pdt_acc"],
-                "biosample": m["biosample_acc"],
-                # Keep date_added in the data export for transparency, but
-                # the template no longer displays it.
-                "date_added": m["target_creation_date"],
-                "collection_date": m["collection_date_raw"] or m["collection_date"],
-                "geo": m["geo_loc_name"],
-            }
-            for m in recent_humans
-        ])
-
-        # Per-cluster derived signals (geographic spread, import, AMR, etc.)
-        # AMR data must be loaded into a {pdt_acc: {gene_symbol, ...}} dict.
-        amr_rows = conn.execute("""
-            SELECT a.pdt_acc, a.gene_symbol
-            FROM isolate_amr a
-            JOIN isolates i ON a.pdt_acc = i.pdt_acc
-            WHERE i.pathogen = ? AND i.pds_acc = ?
-        """, (pathogen, pds_acc)).fetchall()
-        amr_by_pdt: dict[str, set[str]] = {}
-        for r in amr_rows:
-            amr_by_pdt.setdefault(r["pdt_acc"], set()).add(r["gene_symbol"])
-
-        # MLST ST for this cluster (joined from cluster_typing if present)
-        ct_row = conn.execute(
-            "SELECT mlst_st FROM cluster_typing WHERE pathogen = ? AND pds_acc = ?",
-            (pathogen, pds_acc),
-        ).fetchone()
-        mlst_st = ct_row["mlst_st"] if ct_row else None
-
-        # Convert sqlite.Row members to plain dicts for signals.py
-        member_dicts = [dict(m) for m in members]
-
-        from .. import signals as _signals
         signals_blob = _signals.compute_all_signals(
-            members=member_dicts,
-            amr_genes_per_isolate=amr_by_pdt,
-            mlst_st=mlst_st,
+            members=member_dicts_for_signals,
+            amr_genes_per_isolate={},
+            mlst_st=mlst_st_by_pds.get(pds),
             today=today,
             recent_window_days=window_days,
         )
-        signals_json = json.dumps(signals_blob)
 
-        conn.execute("""
+        recent_humans = recent_humans_by_pds.get(pds, [])
+
+        batch.append((
+            pathogen, pds,
+            sr["n_total"], sr["n_human"], sr["n_nonhuman"],
+            sr["n_food"], sr["n_animal"], sr["n_environment"],
+            ec, lc,
+            sr["earliest_target_creation_date"],
+            sr["latest_target_creation_date"],
+            temporal_span_days,
+            json.dumps(oldest_any_by_pds.get(pds)),
+            json.dumps(oldest_human_by_pds.get(pds)),
+            json.dumps(oldest_nonhuman_by_pds.get(pds)),
+            json.dumps(histogram) if histogram else None,
+            histogram_max,
+            deposit_lag_median, deposit_lag_mean,
+            json.dumps(hosts_by_pds.get(pds)) if hosts_by_pds.get(pds) else None,
+            json.dumps(map_locs) if map_locs else None,
+            json.dumps(latest_asm_by_pds.get(pds)) if latest_asm_by_pds.get(pds) else None,
+            json.dumps(signals_blob),
+            json.dumps(countries_by_pds.get(pds, [])),
+            json.dumps(admin1_data),
+            json.dumps(sources_by_pds.get(pds, [])),
+            sr["new_humans_in_window"],
+            sr["new_humans_30d"],
+            sr["new_humans_15d"],
+            json.dumps([r["pdt"] for r in recent_humans]),
+            json.dumps(recent_humans),
+            window_days,
+            now,
+        ))
+        written += 1
+
+        if len(batch) >= 500:
+            conn.executemany("""
+                INSERT INTO cluster_summary (
+                    pathogen, pds_acc,
+                    n_total, n_human, n_nonhuman, n_food, n_animal, n_environment,
+                    earliest_collection_date, latest_collection_date,
+                    earliest_target_creation_date, latest_target_creation_date,
+                    temporal_span_days,
+                    oldest_isolate_json, oldest_human_json, oldest_nonhuman_json,
+                    histogram_json, histogram_max_year_count,
+                    deposit_lag_median, deposit_lag_mean,
+                    host_summary_json,
+                    map_locations_json, latest_assembly_json,
+                    signals_json,
+                    countries_json, admin1_json, source_summary_json,
+                    new_humans_in_window, new_humans_30d, new_humans_15d,
+                    new_humans_in_window_pdts_json,
+                    new_humans_in_window_dates_json,
+                    window_days, refreshed_at
+                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            """, batch)
+            conn.commit()
+            log.info("  Inserted %d / %d clusters...", written, total_clusters)
+            batch = []
+
+    if batch:
+        conn.executemany("""
             INSERT INTO cluster_summary (
                 pathogen, pds_acc,
                 n_total, n_human, n_nonhuman, n_food, n_animal, n_environment,
@@ -415,32 +429,15 @@ def materialize_cluster_summary(
                 new_humans_in_window, new_humans_30d, new_humans_15d,
                 new_humans_in_window_pdts_json,
                 new_humans_in_window_dates_json,
-                window_days,
-                refreshed_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            pathogen, pds_acc,
-            len(members), n_human, n_nonhuman, n_food, n_animal, n_environment,
-            earliest_coll, latest_coll, earliest_tgt, latest_tgt,
-            temporal_span_days,
-            oldest_isolate_json, oldest_human_json, oldest_nonhuman_json,
-            histogram_json, histogram_max_year_count,
-            deposit_lag_median, deposit_lag_mean,
-            host_summary_json,
-            map_locations_json, latest_assembly_json,
-            signals_json,
-            countries_json, admin1_json, source_summary_json,
-            new_humans_n, new_humans_30d, new_humans_15d,
-            new_humans_pdts_json, new_humans_dates_json,
-            window_days,
-            now,
-        ))
-        written += 1
+                window_days, refreshed_at
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        """, batch)
+        conn.commit()
 
+    conn.execute("DROP TABLE IF EXISTS _cs")
     conn.commit()
-    log.info("Materialized %d cluster_summary rows", written)
 
-    # Bonus diagnostics for the log
+    log.info("Materialized %d cluster_summary rows", written)
     with_humans = conn.execute(
         "SELECT COUNT(*) FROM cluster_summary WHERE n_human > 0"
     ).fetchone()[0]
@@ -454,5 +451,4 @@ def materialize_cluster_summary(
         "Cluster shape: %d with humans; %d mixed; %d with recent human activity (last %dd)",
         with_humans, mixed, recent, window_days,
     )
-
     return written

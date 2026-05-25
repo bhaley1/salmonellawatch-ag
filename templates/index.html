@@ -147,7 +147,7 @@
           {% if c.mlst_st and not c.mlst_error %}
             <span class="headline-typing">{{ c.mlst_st }}</span>
           {% endif %}
-          <code class="cluster-id">{{ c.pds_acc }}</code>
+          <a href="https://www.ncbi.nlm.nih.gov/pathogens/isolates/#{{ c.pds_acc }}" target="_blank" rel="noopener" class="cluster-id-link" title="View {{ c.pds_acc }} on NCBI Pathogen Detection"><code class="cluster-id">{{ c.pds_acc }}</code></a>
         </div>
         <div class="cluster-card-counts">
           <strong>{{ c.new_humans_in_window }}</strong>
@@ -310,6 +310,26 @@
               <li class="more">+ {{ c.new_humans_dates|length - 10 }} more</li>
               {% endif %}
             </ul>
+            <!-- Non-human isolates last 60d -->
+            <div class="recent-nonhuman">
+              <h4>New non-human isolates (last {{ window_days }}d)</h4>
+              {% if c.recent_nonhuman %}
+                <ul>
+                {% for nh in c.recent_nonhuman[:8] %}
+                  <li>
+                    <span class="nh-source">{{ nh.ifsac_category or nh.isolation_source or 'unknown source' }}</span>
+                    {% if nh.geo_country %}· <span class="nh-country">{{ nh.geo_country }}</span>{% endif %}
+                    <span class="count">×{{ nh.n }}</span>
+                  </li>
+                {% endfor %}
+                {% if c.recent_nonhuman|length > 8 %}
+                  <li class="more">+ {{ c.recent_nonhuman|length - 8 }} more</li>
+                {% endif %}
+                </ul>
+              {% else %}
+                <p class="muted">No non-human isolates in last {{ window_days }}d</p>
+              {% endif %}
+            </div>
           </div>
 
           <div class="cluster-map-block">
@@ -323,6 +343,52 @@
             </div>
           </div>
         </div>
+
+        <!-- AMR GENOTYPES -->
+        {% if c.amr_genotype_list %}
+        <div class="card-row card-row-amr">
+          <div class="amr-section">
+            <h4>AMR genotypes observed in cluster</h4>
+            <div class="amr-genotype-list">
+              {% for amr in c.amr_genotype_list[:10] %}
+                <span class="amr-chip">{{ amr }}</span>
+              {% endfor %}
+              {% if c.amr_genotype_list|length > 10 %}
+                <span class="amr-chip amr-more">+{{ c.amr_genotype_list|length - 10 }} more variants</span>
+              {% endif %}
+            </div>
+          </div>
+          <!-- SOURCE BREAKDOWN -->
+          <div class="source-breakdown">
+            <h4>Isolation source breakdown</h4>
+            <div class="source-breakdown-grid">
+              {% if c.source_breakdown.beef %}
+                <div class="src-item"><span class="src-label">Beef/Bovine</span><span class="src-count">{{ c.source_breakdown.beef }}</span></div>
+              {% endif %}
+              {% if c.source_breakdown.poultry %}
+                <div class="src-item"><span class="src-label">Poultry/Avian</span><span class="src-count">{{ c.source_breakdown.poultry }}</span></div>
+              {% endif %}
+              {% if c.source_breakdown.swine %}
+                <div class="src-item"><span class="src-label">Swine/Pork</span><span class="src-count">{{ c.source_breakdown.swine }}</span></div>
+              {% endif %}
+              {% if c.source_breakdown.produce %}
+                <div class="src-item"><span class="src-label">Produce</span><span class="src-count">{{ c.source_breakdown.produce }}</span></div>
+              {% endif %}
+              {% if c.source_breakdown.rte %}
+                <div class="src-item"><span class="src-label">RTE Foods</span><span class="src-count">{{ c.source_breakdown.rte }}</span></div>
+              {% endif %}
+              {% if c.source_breakdown.water %}
+                <div class="src-item"><span class="src-label">Water</span><span class="src-count">{{ c.source_breakdown.water }}</span></div>
+              {% endif %}
+              {% for cat, n in c.source_breakdown.other.items() %}
+                {% if n >= 5 %}
+                  <div class="src-item"><span class="src-label">{{ cat }}</span><span class="src-count">{{ n }}</span></div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
 
         <!-- WHAT THE CLUSTER LOOKS LIKE OVERALL: sources + histogram -->
         <div class="card-row card-row-mid">
@@ -531,17 +597,19 @@
   if (sortSelect)     sortSelect.addEventListener('change', applyAll);
   applyAll();
 
-  // Chip links to methods page
+  // Chip links to methods page — anchors match methods.html section IDs
   document.querySelectorAll('[class*="signal-"]').forEach(function(chip) {
     var cls = chip.className || '';
     var anchor = 'signals';
-    if (cls.includes('multi-hemisphere')) anchor = 'multi-hemisphere';
-    else if (cls.includes('import'))      anchor = 'import-signal';
-    else if (cls.includes('multi-sub'))   anchor = 'multi-submitter';
-    else if (cls.includes('accel'))       anchor = 'accelerating';
-    else if (cls.includes('ifsac'))       anchor = 'ifsac';
-    else if (cls.includes('-cc'))         anchor = 'clonal-complex';
+    if (cls.includes('multi-hemisphere'))  anchor = 'geographic-spread';
+    else if (cls.includes('import'))       anchor = 'import-signal';
+    else if (cls.includes('multi-sub'))    anchor = 'submitter-diversity';
+    else if (cls.includes('accel'))        anchor = 'acceleration';
+    else if (cls.includes('ifsac'))        anchor = 'ifsac';
+    else if (cls.includes('signal-cc'))    anchor = 'cc';
+    else if (cls.includes('signal-amr'))   anchor = 'amr';
     chip.style.cursor = 'pointer';
+    chip.title = chip.title || 'Click to see definition on methods page';
     chip.addEventListener('click', function(e) {
       e.stopPropagation();
       window.location.href = 'methods.html#' + anchor;

@@ -790,3 +790,29 @@ footer a { color: var(--teal-deep); }
 }
 .headline-soc { color: #dc2626 !important; font-weight: 700; }
 .typing-soc { color: #dc2626; font-weight: 700; }
+
+/* ── Non-human isolates ─────────────────────────────────── */
+.recent-nonhuman { margin-top: 12px; }
+.recent-nonhuman h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); margin-bottom: 6px; }
+.nh-source { font-weight: 600; color: var(--ink-soft); }
+.nh-country { font-style: italic; color: var(--ink-faint); }
+
+/* ── AMR genotypes ──────────────────────────────────────── */
+.card-row-amr { display: flex; gap: 24px; padding: 10px 0; border-top: 1px solid var(--rule); flex-wrap: wrap; }
+.amr-section { flex: 1 1 300px; }
+.amr-section h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); margin-bottom: 6px; }
+.amr-genotype-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.amr-chip { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; font-size: 11px; font-family: monospace; padding: 2px 6px; border-radius: 3px; }
+.amr-more { background: var(--paper-2); color: var(--ink-faint); border-color: var(--rule); }
+
+/* ── Source breakdown ───────────────────────────────────── */
+.source-breakdown { flex: 1 1 200px; }
+.source-breakdown h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); margin-bottom: 6px; }
+.source-breakdown-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.src-item { display: flex; align-items: center; gap: 4px; background: var(--paper-2); padding: 2px 8px; border-radius: 3px; font-size: 12px; }
+.src-label { color: var(--ink-soft); }
+.src-count { font-weight: 700; color: var(--teal-deep); }
+
+/* ── PDS accession link ─────────────────────────────────── */
+.cluster-id-link { text-decoration: none; }
+.cluster-id-link:hover code { text-decoration: underline; color: var(--teal-deep); }

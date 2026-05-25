@@ -66,6 +66,62 @@ def get_recent_activity_clusters(
         LIMIT ?
     """, params).fetchall()
 
+    # Pre-fetch AMR genotype summaries for active clusters
+    pds_accs = [r["pds_acc"] for r in rows]
+    placeholders = ",".join("?" * len(pds_accs))
+    
+    amr_by_cluster: dict[str, list[str]] = {}
+    if pds_accs:
+        amr_rows = conn.execute(f"""
+            SELECT pds_acc, amr_genotypes, COUNT(*) as n
+            FROM isolates
+            WHERE pds_acc IN ({placeholders})
+            AND amr_genotypes IS NOT NULL AND amr_genotypes != ''
+            GROUP BY pds_acc, amr_genotypes
+            ORDER BY pds_acc, n DESC
+        """, pds_accs).fetchall()
+        for ar in amr_rows:
+            pds = ar["pds_acc"]
+            if pds not in amr_by_cluster:
+                amr_by_cluster[pds] = []
+            amr_by_cluster[pds].append(ar["amr_genotypes"])
+
+    # Pre-fetch recent non-human isolates (last 60 days) for active clusters
+    nonhuman_by_cluster: dict[str, list[dict]] = {}
+    if pds_accs:
+        nh_rows = conn.execute(f"""
+            SELECT pds_acc, epi_type, isolation_source, host,
+                   geo_country, ifsac_category, target_creation_date,
+                   COUNT(*) as n
+            FROM isolates
+            WHERE pds_acc IN ({placeholders})
+            AND epi_type = 'environmental/other'
+            AND target_creation_date >= date('now', '-60 days')
+            GROUP BY pds_acc, geo_country, ifsac_category, isolation_source
+            ORDER BY pds_acc, n DESC
+        """, pds_accs).fetchall()
+        for nr in nh_rows:
+            pds = nr["pds_acc"]
+            if pds not in nonhuman_by_cluster:
+                nonhuman_by_cluster[pds] = []
+            nonhuman_by_cluster[pds].append(dict(nr))
+
+    # Pre-fetch source breakdown per cluster
+    source_by_cluster: dict[str, dict] = {}
+    if pds_accs:
+        src_rows = conn.execute(f"""
+            SELECT pds_acc, ifsac_category, COUNT(*) as n
+            FROM isolates
+            WHERE pds_acc IN ({placeholders})
+            AND ifsac_category IS NOT NULL
+            GROUP BY pds_acc, ifsac_category
+        """, pds_accs).fetchall()
+        for sr in src_rows:
+            pds = sr["pds_acc"]
+            if pds not in source_by_cluster:
+                source_by_cluster[pds] = {}
+            source_by_cluster[pds][sr["ifsac_category"]] = sr["n"]
+
     out: list[dict[str, Any]] = []
     for r in rows:
         d = dict(r)
@@ -86,6 +142,33 @@ def get_recent_activity_clusters(
 
         # SOC flag from SISTR
         d["is_soc"] = bool(d.get("sistr_soc"))
+
+        # Attach pre-fetched aggregations
+        pds = d["pds_acc"]
+        d["amr_genotype_list"] = amr_by_cluster.get(pds, [])
+        d["recent_nonhuman"] = nonhuman_by_cluster.get(pds, [])
+
+        # Source breakdown bucketed for display
+        raw_src = source_by_cluster.get(pds, {})
+        src = {"beef": 0, "poultry": 0, "produce": 0, "rte": 0,
+               "water": 0, "swine": 0, "other": {}}
+        for cat, n in raw_src.items():
+            cl = cat.lower()
+            if any(x in cl for x in ["beef", "bovine", "cow"]):
+                src["beef"] += n
+            elif any(x in cl for x in ["chicken", "turkey", "poultry", "broiler"]):
+                src["poultry"] += n
+            elif any(x in cl for x in ["vegetable", "fruit", "produce", "leafy", "sprout", "herb", "nut"]):
+                src["produce"] += n
+            elif any(x in cl for x in ["ready-to-eat", "rte", "deli"]):
+                src["rte"] += n
+            elif any(x in cl for x in ["water", "aquatic", "stream"]):
+                src["water"] += n
+            elif any(x in cl for x in ["pork", "swine", "pig"]):
+                src["swine"] += n
+            elif "human" not in cl and "clinical" not in cl:
+                src["other"][cat] = src["other"].get(cat, 0) + n
+        d["source_breakdown"] = src
         d["sistr_formula"] = d.get("sistr_antigenic_formula")
 
         # Serotype: prefer SISTR, fall back to normalized consensus_serovar
