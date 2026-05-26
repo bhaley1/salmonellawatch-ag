@@ -374,6 +374,17 @@ def get_recent_activity_clusters(
             clean = _re.sub(r"(?i)^salmonella\s+(enterica\s+subsp\.\s+enterica\s+serovar\s+)?", "", raw).strip()
             if clean and not _re.match(r"^[A-Z]", clean):
                 clean = clean.capitalize()
+            # Normalize monophasic Typhimurium variants to canonical form
+            MONOPHASIC_PATTERNS = [
+                "i 4:i:-", "i 4,[5]:i:-", "i 4,5:i:-", "i 4,5,12:i:-",
+                "i 1,4,[5],12:i:-", "4,[5],12:i:-", "1,4,[5],12:i:-",
+                "4:i:-", "4,12:i:-", "4,5,12:i:-", "i 4,[5],12:i:-",
+                "s. 1,4,[5],12:i:-", "o:4,5,12; h:i:-",
+            ]
+            if clean:
+                cl_lower = clean.lower().strip()
+                if any(cl_lower == p for p in MONOPHASIC_PATTERNS) or                    "monophasic" in cl_lower or                    (cl_lower.startswith("i ") and "i:-" in cl_lower):
+                    clean = "I 4,[5],12:i:- (monophasic)"
             d["consensus_serotype"] = clean if clean else None
         d["consensus_serotype_n"] = d.get("consensus_serovar_n")
         d["consensus_serotype_total"] = d.get("consensus_serovar_total")
