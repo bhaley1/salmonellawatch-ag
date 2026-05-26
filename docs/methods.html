@@ -55,10 +55,11 @@
     <li><a href="#acceleration">Acceleration</a></li>
     <li><a href="#deposit-lag">Collection-to-deposit lag</a></li>
     <li><a href="#mlst">MLST and Sequence Types</a></li>
-    <li><a href="#cc">Clonal Complex (CC) and lineage labels</a></li>
     <li><a href="#amr">AMR clinical-importance flag</a></li>
     <li><a href="#ifsac">IFSAC food categorization</a></li>
-    <li><a href="#host-species">Animal host species</a></li>
+    <li><a href="#host-species">Commodity-coded collection histograms
+Serotypes of Concern (SOC)
+Animal host species</a></li>
     <li><a href="#map">Geographic footprint map</a></li>
     <li><a href="#histogram">Isolates-per-year histogram</a></li>
     <li><a href="#oldest">Cluster origins (oldest isolates)</a></li>
@@ -550,7 +551,7 @@
     <code>abcZ</code>, <code>bglA</code>, <code>cat</code>,
     <code>dapE</code>, <code>dat</code>, <code>ldh</code>, and
     <code>lhkA</code>. The canonical reference database is
-    <a href="https://pubmlst.org/organisms/listeria-monocytogenes">PubMLST</a>.
+    <a href="https://pubmlst.org/organisms/salmonella-spp">PubMLST</a>.
   </p>
   <p>
     SalmonellaWatch picks one representative isolate per cluster (preferring
@@ -572,131 +573,32 @@
   </ul>
 </section>
 
-<section id="cc">
-  <h2>Clonal Complex (CC) and lineage labels</h2>
-  <p>
-    A <strong>Clonal Complex (CC)</strong> groups STs that descend from a
-    common ancestor, defined formally by the goeBURST algorithm applied to
-    a population of typed strains. PubMLST publishes canonical CC
-    assignments for <em>L. monocytogenes</em>. SalmonellaWatch derives the CC
-    from the cluster's ST using a curated lookup table (~50 STs mapped to
-    ~30 CCs).
-  </p>
-  <p>
-    The dashboard attaches short summary labels to six CCs that are
-    commonly discussed in <em>Salmonella</em> surveillance literature. These
-    labels reflect <em>observed patterns reported in the literature</em>,
-    not deterministic biological claims about any individual isolate.
-  </p>
-  <dl class="defs cc-defs">
-    <dt>CC1 — "hypervirulent lineage"</dt>
-    <dd>
-      CC1 isolates have been historically over-represented in invasive
-      salmonellosis cases reported in the surveillance literature, and the
-      lineage has been associated with dairy-related outbreaks.
-    </dd>
-    <dt>CC2 — "outbreak-associated lineage"</dt>
-    <dd>
-      CC2 has appeared in multiple large multistate outbreaks reported in
-      the literature and is commonly seen in clinical isolates.
-    </dd>
-    <dt>CC4 — "maternal-fetal lineage"</dt>
-    <dd>
-      Sometimes referred to as the "<em>Salmonella epidemica</em>" lineage in
-      the literature, CC4 has been reported with a strong association with
-      maternal-fetal disease and severe clinical outcomes.
-    </dd>
-    <dt>CC6 — "emerging outbreak lineage"</dt>
-    <dd>
-      CC6 has been associated with several recent deli-meat outbreaks
-      reported in the surveillance literature and has been described as
-      hypervirulent in recent publications.
-    </dd>
-    <dt>CC9 — "food-common, lower-virulence"</dt>
-    <dd>
-      CC9 is frequently isolated from food and food-processing
-      environments. Surveillance reports describe CC9 as appearing less
-      often than expected in clinical cases relative to its food-source
-      prevalence.
-    </dd>
-    <dt>CC121 — "processing-environment persistent"</dt>
-    <dd>
-      CC121 has been well-documented in the literature as persistent in
-      food-processing facilities over years to decades. Recent publications
-      describe increasing clinical relevance.
-    </dd>
-  </dl>
-  <p>
-    <strong>Important caveat.</strong> The author of this dashboard is not
-    a clinical microbiologist or specialist in <em>Salmonella</em> CC
-    epidemiology. These labels are compiled from training-data summaries of
-    public surveillance literature and have not been peer-reviewed. Treat
-    them as <strong>pointers to the literature</strong>, not as
-    authoritative claims. The label on any individual cluster says
-    something about typical patterns reported for that CC, not about the
-    specific cluster being looked at.
-  </p>
-  <p>
-    Clusters whose CC has no curated note display a neutral chip showing
-    just the CC number (e.g. "CC8").
-  </p>
-</section>
+
 
 <section id="amr">
-  <h2>AMR clinical-importance flag</h2>
-  <p>
-    The AMR chip fires when at least one isolate in the cluster carries an
-    acquired resistance gene targeting a drug class used for first-line
-    <em>Salmonella</em> treatment. The first-line treatment regimens are:
-  </p>
-  <ul>
-    <li>Invasive salmonellosis: <strong>ampicillin + gentamicin</strong></li>
-    <li>Penicillin-allergic patients: <strong>trimethoprim-sulfamethoxazole</strong></li>
-  </ul>
-  <p>
-    Acquired resistance to any of these is uncommon in <em>Salmonella</em>
-    and therefore noteworthy when it appears. The dashboard flags these
-    gene families (drawn from AMRFinderPlus output in
-    <code>amr.metadata.tsv</code>):
-  </p>
-  <dl class="defs amr-defs">
-    <dt>Tetracyclines</dt>
-    <dd><code>tet(M)</code>, <code>tet(O)</code>, <code>tet(S)</code>, <code>tet(T)</code>, <code>tet(W)</code>, <code>tet(L)</code>, <code>tet(K)</code></dd>
-    <dt>Macrolides / lincosamides</dt>
-    <dd><code>erm(A)</code>, <code>erm(B)</code>, <code>erm(C)</code>, <code>erm(G)</code>, <code>mef(A)</code>, <code>mef(E)</code>, <code>lnu(A)</code>, <code>lnu(B)</code>, <code>lnu(G)</code></dd>
-    <dt>Aminoglycosides</dt>
-    <dd><code>aph(3')-III</code>, <code>aph(3')-Ia</code>, <code>aph(2'')-Ia</code>, <code>aac(6')-aph(2'')</code>, <code>aac(6')-Ie-aph(2'')-Ia</code>, <code>aadA</code>, <code>aadE</code>, <code>ant(6)-Ia</code></dd>
-    <dt>Trimethoprim / sulfonamides</dt>
-    <dd><code>dfrG</code>, <code>dfrD</code>, <code>dfrK</code>, <code>dfrA</code>, <code>sul1</code>, <code>sul2</code>, <code>sul3</code></dd>
-    <dt>Chloramphenicol / phenicols</dt>
-    <dd><code>cat</code>, <code>catA</code>, <code>catB</code>, <code>fexA</code>, <code>fexB</code></dd>
-    <dt>Penicillins (rare in Salmonella)</dt>
-    <dd><code>blaZ</code>, <code>mecA</code>, <code>mecC</code></dd>
-  </dl>
-  <p>
-    <strong>Critical caveat.</strong> The chip flags <em>gene presence</em>,
-    not <em>confirmed phenotype</em>. An isolate that carries
-    <code>tet(M)</code> in its genome may or may not be clinically
-    resistant to tetracyclines. Phenotypic confirmation requires antibiotic
-    susceptibility testing in a clinical microbiology lab. The chip is a
-    "this cluster has a resistance gene worth looking at" pointer.
-  </p>
-  <p>
-    <strong>Caveat on Salmonella intrinsic resistance.</strong> <em>Salmonella
-    monocytogenes</em> is intrinsically resistant to several antibiotic
-    classes (cephalosporins, fosfomycin, and others). Those resistances
-    are species-level and do not contribute to this signal; we only flag
-    <em>acquired</em> resistance to drugs that would otherwise be used
-    clinically.
-  </p>
-  <p>
-    <strong>Caveat on the curated list.</strong> The gene list above has
-    not been peer-reviewed. The drug-class groupings reflect canonical
-    AMRFinderPlus categorization but the choice of which genes to consider
-    "first-line clinically important" was made by the dashboard author
-    from literature summaries. Domain experts should review before using
-    this signal in any decision-making.
-  </p>
+<h2>AMR genotype flag</h2>
+<p>
+  The <strong>AMR</strong> chip fires when at least one isolate in the cluster carries
+  an acquired antimicrobial resistance gene detected by AMRFinderPlus. The dashboard
+  displays the AMR genotype strings as reported by NCBI Pathogen Detection, organized
+  by country.
+</p>
+<p>
+  For <em>Salmonella enterica</em>, clinically important resistance includes genes
+  conferring resistance to fluoroquinolones (e.g., <em>gyrA</em> point mutations,
+  <em>qnr</em> genes), third-generation cephalosporins (e.g., <em>bla</em><sub>CTX-M</sub>,
+  <em>bla</em><sub>CMY-2</sub>), and azithromycin (<em>mph(A)</em>, <em>erm(B)</em>),
+  as these are the primary treatment options for invasive salmonellosis.
+  Multidrug resistance (MDR, resistance to ≥3 antibiotic classes) and
+  extensively drug-resistant (XDR) phenotypes are of particular concern
+  in serovars Typhi, Typhimurium, and Kentucky.
+</p>
+<p>
+  <strong>Caveat.</strong> The chip flags gene presence, not confirmed phenotype.
+  Phenotypic confirmation requires antibiotic susceptibility testing in a
+  clinical microbiology lab. The AMR genotypes shown are as reported by
+  AMRFinderPlus via NCBI Pathogen Detection.
+</p>
 </section>
 
 <section id="ifsac">
@@ -730,7 +632,9 @@
 </section>
 
 <section id="host-species">
-  <h2>Animal host species</h2>
+  <h2>Commodity-coded collection histograms
+Serotypes of Concern (SOC)
+Animal host species</h2>
   <p>
     For clusters with nonhuman animal isolates, the "Animal hosts" line
     under Top sources of isolation shows the actual host strings as
@@ -788,20 +692,12 @@
 </section>
 
 <section id="histogram">
-  <h2>Isolates-per-year histogram</h2>
-  <p>
-    The histogram bins cluster members by the year of their
-    <code>collection_date</code>. Red = human isolates, teal = nonhuman.
-    Years with no isolates appear as empty slots (no bar). The y-axis
-    auto-scales to the busiest year's count.
-  </p>
-  <p>
-    Use the histogram alongside the acceleration chip: a cluster flagged
-    as accelerating should show an obviously rising recent-years pattern in
-    the histogram. Acceleration triggered without a visible trend in the
-    histogram is a red flag that the signal is a deposition artifact rather
-    than real activity.
-  </p>
+<h2>Isolates-per-year histogram (legacy)</h2>
+<p>
+  See <a href="#commodity-histograms">Commodity-coded collection histograms</a> above
+  for the current implementation, which replaces the simple human/nonhuman split
+  with commodity-level detail.
+</p>
 </section>
 
 <section id="oldest">
@@ -826,6 +722,37 @@
   </p>
 </section>
 
+
+
+<section id="commodity-histograms">
+<h2>Commodity-coded collection histograms</h2>
+<p>
+  Each cluster card displays two stacked-bar histograms showing isolate collection
+  frequency over time, color-coded by source commodity:
+</p>
+<ul>
+  <li><strong>Collection frequency by year</strong> — all-time view showing how the cluster has grown</li>
+  <li><strong>Collection frequency — last 12 months</strong> — monthly resolution for recent activity</li>
+</ul>
+<p>
+  Commodity categories are assigned by keyword matching against the isolate's
+  <code>isolation_source</code> and <code>ifsac_category</code> fields:
+</p>
+<ul>
+  <li><span style="color:#e74c3c;">■</span> <strong>Human</strong> — clinical/human source</li>
+  <li><span style="color:#f39c12;">■</span> <strong>Poultry</strong> — chicken, turkey, broiler, avian, egg</li>
+  <li><span style="color:#8e44ad;">■</span> <strong>Bovine</strong> — beef, cattle, cow, dairy</li>
+  <li><span style="color:#e91e90;">■</span> <strong>Swine</strong> — pork, pig, hog</li>
+  <li><span style="color:#27ae60;">■</span> <strong>Produce</strong> — vegetable, fruit, leafy greens, nuts, herbs</li>
+  <li><span style="color:#2980b9;">■</span> <strong>Water</strong> — surface water, environmental water</li>
+  <li><span style="color:#95a5a6;">■</span> <strong>Other</strong> — all other non-human sources</li>
+</ul>
+<p>
+  Use the histograms alongside the acceleration chip: a cluster flagged as
+  accelerating should show a visibly rising trend in recent bars. Acceleration
+  without a visible trend may indicate a deposition artifact.
+</p>
+</section>
 
 <section id="soc">
 <h2>Serotypes of Concern (SOC)</h2>
@@ -886,7 +813,7 @@
       <strong>PubMLST: <em>Salmonella enterica</em>.</strong>
       Canonical reference for ST assignments and CC groupings used by
       this dashboard.
-      <a href="https://pubmlst.org/organisms/listeria-monocytogenes" target="_blank" rel="noopener">https://pubmlst.org/organisms/listeria-monocytogenes</a>
+      <a href="https://pubmlst.org/organisms/salmonella-spp" target="_blank" rel="noopener">https://pubmlst.org/organisms/salmonella-spp</a>
     </li>
     <li>
       <strong>Torsten Seemann — mlst.</strong>
@@ -965,7 +892,7 @@
       <strong>CDC Salmonella surveillance.</strong>
       U.S. national salmonellosis surveillance, including the Salmonella
       Initiative case investigations.
-      <a href="https://www.cdc.gov/listeria/php/surveillance/index.html" target="_blank" rel="noopener">https://www.cdc.gov/listeria/php/surveillance/index.html</a>
+      <a href="https://www.cdc.gov/salmonella/php/surveillance/index.html" target="_blank" rel="noopener">https://www.cdc.gov/salmonella/php/surveillance/index.html</a>
     </li>
     <li>
       <strong>FoodNet (CDC).</strong>
