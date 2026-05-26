@@ -123,7 +123,7 @@
         <div class="cluster-card-id">
           <span class="badge badge-pathogen-{{ c.pathogen|lower }}">{{ c.pathogen }}</span>
           {% if c.consensus_serotype %}
-            <span class="headline-typing{% if c.is_soc %} headline-soc{% endif %}">serotype {{ c.consensus_serotype }}{% if c.is_soc %} <span class="soc-badge" title="Serotype of Concern — Wheeler et al. 2024, Foodborne Pathog. Dis.">⚠ SOC</span>{% endif %}</span>
+            <span class="headline-typing{% if c.is_soc %} headline-soc{% endif %}">serotype {{ c.consensus_serotype }}{% if c.is_soc %} <span class="soc-badge" title="Serotype of Concern — Katz et al. 2024, Front Microbiol.">⚠ SOC</span>{% endif %}</span>
           {% endif %}
           {% if c.mlst_st and not c.mlst_error %}
             <span class="headline-typing">{{ c.mlst_st }}</span>
@@ -209,7 +209,7 @@
         <span class="typing-field">
           <span class="typing-label">Serotype:</span>
           {% if c.consensus_serotype %}
-            <span class="typing-value{% if c.is_soc %} typing-soc{% endif %}">{{ c.consensus_serotype }}{% if c.is_soc %} <span class="soc-badge" title="Serotype of Concern — Wheeler et al. 2024, Foodborne Pathog. Dis.">⚠ SOC</span>{% endif %}</span>
+            <span class="typing-value{% if c.is_soc %} typing-soc{% endif %}">{{ c.consensus_serotype }}{% if c.is_soc %} <span class="soc-badge" title="Serotype of Concern — Katz et al. 2024, Front Microbiol.">⚠ SOC</span>{% endif %}</span>
             <span class="typing-confidence">({{ c.consensus_serotype_n }} of {{ c.consensus_serotype_total }} agree)</span>
           {% else %}
             <span class="typing-missing">not determined</span>
