@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Use SalmonellaWatch-Ag</title>
+<style>
+  :root { --ink: #1a1a2e; --ink-soft: #555; --link: #2471a3; --bg: #fafafa; --card: #fff; --rule: #e0e0e0; --accent: #1a5276; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.7; max-width: 860px; margin: 0 auto; padding: 24px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  h1 span { font-weight: 400; font-size: 16px; color: var(--ink-soft); }
+  .back { display: inline-block; margin-bottom: 16px; font-size: 13px; color: var(--link); text-decoration: none; }
+  .back:hover { text-decoration: underline; }
+  h2 { font-size: 18px; margin: 32px 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--accent); color: var(--accent); }
+  h3 { font-size: 15px; margin: 20px 0 6px; color: var(--ink); }
+  p, li { font-size: 14px; margin-bottom: 10px; }
+  ul { margin-left: 20px; margin-bottom: 14px; }
+  li { margin-bottom: 6px; }
+  .fig { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; margin: 14px 0; font-size: 13px; }
+  .fig-label { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent); margin-bottom: 6px; }
+  code { background: #eee; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+  .chip { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 700; font-family: monospace; }
+  .chip-red { background: #f8d7da; color: #721c24; }
+  .chip-yellow { background: #fff3cd; color: #856404; }
+  .chip-green { background: #d4edda; color: #155724; }
+  .chip-blue { background: #d1ecf1; color: #0c5460; }
+  .chip-orange { background: #ffeaa7; color: #6c5b00; }
+  .chip-gray { background: #e9ecef; color: #495057; }
+  .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: middle; margin-right: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { padding: 6px 10px; border: 1px solid var(--rule); text-align: left; }
+  th { background: var(--accent); color: #fff; font-size: 12px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .toc { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 20px; margin: 16px 0; }
+  .toc ul { list-style: none; margin: 0; }
+  .toc li { margin-bottom: 4px; }
+  .toc a { color: var(--link); text-decoration: none; font-size: 13px; }
+  .toc a:hover { text-decoration: underline; }
+  .note { background: #fff8e1; border-left: 4px solid #f9a825; padding: 10px 14px; margin: 14px 0; font-size: 13px; border-radius: 0 4px 4px 0; }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back">&larr; Back to dashboard</a>
+
+<h1>How to Use SalmonellaWatch-Ag <span>Quick-start guide for food-safety microbiologists</span></h1>
+
+<div class="toc">
+<strong>Contents</strong>
+<ul>
+  <li><a href="#overview">What this dashboard shows</a></li>
+  <li><a href="#filters">Using the filters</a></li>
+  <li><a href="#stat-tiles">Stat tiles</a></li>
+  <li><a href="#filter-banner">Filter results banner</a></li>
+  <li><a href="#card-anatomy">Anatomy of a cluster card</a></li>
+  <li><a href="#chips">Signal chips reference</a></li>
+  <li><a href="#histograms">Reading the histograms</a></li>
+  <li><a href="#collapsible">Collapsible sections</a></li>
+  <li><a href="#workflows">Example workflows</a></li>
+  <li><a href="#limitations">Key limitations</a></li>
+</ul>
+</div>
+
+<h2 id="overview">What this dashboard shows</h2>
+<p>
+  SalmonellaWatch-Ag displays <strong>SNP clusters</strong> from
+  <a href="https://www.ncbi.nlm.nih.gov/pathogens/" target="_blank">NCBI Pathogen Detection</a>
+  that have at least one <strong>non-human isolate</strong> (food, animal, or environmental)
+  with a collection date in the last <strong>180 days</strong>. Each cluster card
+  summarizes the genomic, epidemiological, and commodity context of that cluster.
+</p>
+<p>
+  The agricultural focus means this dashboard surfaces clusters relevant to
+  pre-harvest food safety, environmental monitoring, and commodity-source tracking —
+  including clusters that may not yet have associated human illness.
+</p>
+
+<h2 id="filters">Using the filters</h2>
+
+<h3>Country filter</h3>
+<p>
+  Restricts the view to clusters with recent non-human isolates from the selected country.
+  When a country is selected, human case counts and isolate lists within each card
+  are also filtered to that country.
+</p>
+
+<h3>Serotype filter</h3>
+<p>
+  The dropdown lists every serotype present among active clusters, sorted alphabetically.
+  Two special options appear at the top:
+</p>
+<ul>
+  <li><strong>⚠ Serotypes of Concern (SOC) only</strong> — filters to the 21 serotypes
+    identified by <a href="https://doi.org/10.3389/fmicb.2024.1307563" target="_blank">Katz et al. (2024)</a>
+    as high priority for reducing salmonellosis risk. SOC serotypes are marked with
+    <span class="chip chip-yellow">⚠ SOC</span> throughout the dashboard.</li>
+</ul>
+
+<h3>ST filter</h3>
+<p>
+  Type a sequence type number (e.g., <code>152</code> or <code>ST152</code>) to show only
+  clusters with that MLST type. MLST was run on one representative assembly per cluster
+  using the Achtman 7-gene scheme for <em>Salmonella enterica</em>.
+</p>
+
+<h3>Sort options</h3>
+<table>
+  <tr><th>Option</th><th>What it does</th></tr>
+  <tr><td>New human cases &darr;</td><td>Clusters with the most recent human illness first</td></tr>
+  <tr><td>Acceleration rate &darr;</td><td>Fastest-growing clusters first (by detection rate ratio)</td></tr>
+  <tr><td>Most recent case &darr;</td><td>Clusters with the most recently collected isolate first</td></tr>
+  <tr><td>Cluster span &darr;</td><td>Longest-running clusters first</td></tr>
+  <tr><td>🔺 Emerging only</td><td>Shows only clusters with the EMERGING signal (food/environment &rarr; human shift)</td></tr>
+</table>
+
+<h2 id="stat-tiles">Stat tiles</h2>
+<p>The four tiles at the top update dynamically as you filter:</p>
+<table>
+  <tr><th>Tile</th><th>Meaning</th></tr>
+  <tr><td><strong>Active Clusters</strong></td><td>Number of clusters matching your current filters</td></tr>
+  <tr><td><strong>New Non-Human Isolates (180d)</strong></td><td>Total non-human isolates across filtered clusters in the last 180 days</td></tr>
+  <tr><td><strong>Human-Containing Clusters</strong></td><td>Total clusters in the entire database with &ge;1 human isolate (static)</td></tr>
+  <tr><td><strong>Mixed Clusters</strong></td><td>Filtered clusters that contain both human and non-human isolates</td></tr>
+</table>
+
+<h2 id="filter-banner">Filter results banner</h2>
+<p>
+  When any filter is active, a blue banner appears showing the count of matching clusters
+  and which filters are applied. For example:
+</p>
+<div class="fig">
+  <div class="fig-label">Example</div>
+  <span style="font-size:24px;font-weight:800;">45</span> clusters matching
+  <span class="chip chip-blue">United States</span>
+  <span class="chip chip-blue">Infantis</span>
+</div>
+
+<h2 id="card-anatomy">Anatomy of a cluster card</h2>
+<p>Each cluster card contains these sections, top to bottom:</p>
+
+<h3>Header row</h3>
+<p>
+  <span class="chip chip-red">SALMONELLA</span>
+  <span class="chip chip-gray">serotype Infantis</span>
+  <span class="chip chip-gray">ST32</span>
+  <code>PDS000027464.84</code> &mdash; the NCBI SNP cluster accession and version.
+  On the right: human case counts for the 180d, 30d, and 15d windows.
+</p>
+
+<h3>Signal chips</h3>
+<p>
+  Colored badges below the header flag noteworthy epidemiological signals.
+  <strong>Click any chip</strong> to open its definition on the Methods page in a new tab.
+  See the <a href="#chips">chip reference table</a> below.
+</p>
+
+<h3>Typing strip</h3>
+<p>
+  Shows the consensus serotype, MLST sequence type, cluster age (span),
+  cumulative isolate counts, and collection-to-deposit lag.
+</p>
+
+<h3>Source profile (last 180d)</h3>
+<p>
+  Badges showing how many recent non-human isolates fall into each commodity category:
+  <span class="chip chip-orange">Poultry 557</span>
+  <span class="chip chip-gray">Bovine 9</span>
+  <span class="chip chip-gray">Swine 6</span>
+  <span class="chip chip-gray">Water 485</span>
+  with a total count.
+</p>
+
+<h3>Metadata summary</h3>
+<p>
+  One-line summary: cluster age, total isolates, human/nonhuman split, ST, and countries represented.
+</p>
+
+<h2 id="chips">Signal chips reference</h2>
+<table>
+  <tr><th>Chip</th><th>Meaning</th><th>Why it matters</th></tr>
+  <tr>
+    <td><span class="chip chip-yellow">EMERGING</span></td>
+    <td>Cluster shifting from food/environment-dominated to human cases</td>
+    <td>Early warning that a known contamination source is now causing illness</td>
+  </tr>
+  <tr>
+    <td><span class="chip chip-blue">MULTI HEMISPHERE</span></td>
+    <td>Isolates from both Northern and Southern hemispheres</td>
+    <td>Globally distributed strain — possible international trade link</td>
+  </tr>
+  <tr>
+    <td><span class="chip chip-blue">MULTI CONTINENT</span></td>
+    <td>&ge;2 continents represented</td>
+    <td>Strain circulating across continental boundaries</td>
+  </tr>
+  <tr>
+    <td><span class="chip chip-blue">MULTI STATE</span></td>
+    <td>&ge;2 U.S. states represented</td>
+    <td>Potential multistate outbreak or widespread distribution</td>
+  </tr>
+  <tr>
+    <td><span class="chip chip-green">IMPORT SIGNAL</span></td>
+    <td>Human cases in one country, food isolates in another</td>
+    <td>Possible imported food vehicle</td>
+  </tr>
+  <tr>
+    <td><span class="chip chip-green">TRAVEL SIGNAL</span></td>
+    <td>At least one isolate annotated as travel-associated</td>
+    <td>Case-patient may have been exposed abroad</td>
+  </tr>
+  <tr>
+    <td><span class="chip chip-blue">MULTI-SUBMITTER</span></td>
+    <td>&ge;5 distinct BioProjects contributed isolates</td>
+    <td>Multiple independent labs detecting this strain</td>
+  </tr>
+  <tr>
+    <td><span class="chip chip-red">ACCELERATING (Nx)</span></td>
+    <td>Detection rate &ge;2&times; the historical baseline</td>
+    <td>Cluster growing faster than expected — possible active outbreak</td>
+  </tr>
+  <tr>
+    <td><span class="chip chip-gray">AMR</span></td>
+    <td>Acquired resistance genes detected by AMRFinderPlus</td>
+    <td>May complicate treatment if human cases occur</td>
+  </tr>
+  <tr>
+    <td><span class="chip chip-gray">IFSAC</span></td>
+    <td>IFSAC food category assigned to non-human isolates</td>
+    <td>Standardized food-source attribution</td>
+  </tr>
+</table>
+
+<h2 id="histograms">Reading the histograms</h2>
+<p>Each card has two stacked-bar charts:</p>
+<ul>
+  <li><strong>Collection frequency by year</strong> — the full history of the cluster, showing growth over time</li>
+  <li><strong>Collection frequency — last 12 months</strong> — monthly resolution for recent trends</li>
+</ul>
+<p>Bars are color-coded by commodity source:</p>
+<table>
+  <tr>
+    <td><span class="swatch" style="background:#e74c3c;"></span> Human</td>
+    <td><span class="swatch" style="background:#f39c12;"></span> Poultry</td>
+    <td><span class="swatch" style="background:#8e44ad;"></span> Bovine</td>
+    <td><span class="swatch" style="background:#e91e90;"></span> Swine</td>
+    <td><span class="swatch" style="background:#27ae60;"></span> Produce</td>
+    <td><span class="swatch" style="background:#2980b9;"></span> Water</td>
+    <td><span class="swatch" style="background:#95a5a6;"></span> Other</td>
+  </tr>
+</table>
+<div class="note">
+  <strong>Tip:</strong> Compare the histograms with the ACCELERATING chip. If a cluster is flagged
+  as accelerating, the yearly histogram should show a visible uptick in recent years. If it
+  doesn't, the signal may reflect a batch deposition rather than real-world acceleration.
+</div>
+
+<h2 id="collapsible">Collapsible sections</h2>
+<p>Click the &#9654; triangles to expand detailed data within each card:</p>
+<ul>
+  <li><strong>Poultry Isolates (N)</strong>, <strong>Bovine Isolates (N)</strong>, etc. — individual isolate
+    records with PDT accession links to NCBI, collection dates, and geographic origin</li>
+  <li><strong>Human cases (N)</strong> — recent human clinical isolates in the cluster</li>
+  <li><strong>Geographic footprint</strong> — SVG world map showing where isolates have been collected.
+    Red dots = human, teal = non-human. Dot size scales with count; opacity fades with age.</li>
+</ul>
+
+<h2 id="workflows">Example workflows</h2>
+
+<h3>1. "What Infantis clusters are active in the U.S.?"</h3>
+<p>
+  Set Country &rarr; <strong>United States</strong>, Serotype &rarr; <strong>Infantis</strong>.
+  The banner shows the count. Sort by <strong>Acceleration rate</strong> to see the
+  fastest-growing clusters first. Check the source profile badges to identify
+  which commodities are involved.
+</p>
+
+<h3>2. "Are any clusters transitioning from food to human?"</h3>
+<p>
+  Set Sort &rarr; <strong>🔺 Emerging only</strong>. This filters to clusters with the
+  EMERGING chip — those where the human-case fraction has recently increased
+  significantly above the historical baseline. These represent the highest-priority
+  signals for food-safety intervention.
+</p>
+
+<h3>3. "Show me all SOC serotype clusters with poultry isolates"</h3>
+<p>
+  Set Serotype &rarr; <strong>⚠ Serotypes of Concern (SOC) only</strong>.
+  Scan the source profile badges for <strong>Poultry</strong> counts. Expand the
+  Poultry Isolates section for individual sample details.
+</p>
+
+<h3>4. "What ST is associated with this serotype?"</h3>
+<p>
+  Select a serotype from the dropdown. The ST appears in each cluster's header
+  (e.g., <span class="chip chip-gray">ST32</span>) and in the typing strip.
+  Use the ST filter to cross-reference: type the ST number to find all clusters
+  of that sequence type regardless of serotype.
+</p>
+
+<h3>5. "Is this cluster internationally distributed?"</h3>
+<p>
+  Look for <span class="chip chip-blue">MULTI HEMISPHERE</span> or
+  <span class="chip chip-blue">MULTI CONTINENT</span> chips. Expand
+  <strong>Geographic footprint</strong> to see the map. Check whether
+  non-human isolates come from different countries than the human cases
+  (look for the <span class="chip chip-green">IMPORT SIGNAL</span> chip).
+</p>
+
+<h2 id="limitations">Key limitations</h2>
+<ul>
+  <li><strong>Genomic relatedness &ne; outbreak.</strong> Clusters are computational predictions.
+    Confirming a foodborne link requires epidemiological investigation.</li>
+  <li><strong>Data lags real-time by hours to days.</strong> The ingest runs nightly from NCBI.</li>
+  <li><strong>Commodity classification is keyword-based.</strong> Isolates with vague or missing
+    <code>isolation_source</code> fields may be classified as "Other."</li>
+  <li><strong>Not all isolates have collection dates.</strong> Undated isolates are excluded from
+    time-based filters and histograms.</li>
+  <li><strong>MLST covers active clusters only.</strong> Clusters outside the 180-day window
+    may show "pending" for their sequence type.</li>
+  <li><strong>This is a personal research project.</strong> It is not an official USDA, CDC, or FDA
+    surveillance system. Do not use for regulatory decisions without independent verification.</li>
+</ul>
+
+<p style="margin-top:40px; font-size:13px; color:var(--ink-soft);">
+  SalmonellaWatch-Ag &middot; <a href="index.html">Dashboard</a> &middot;
+  <a href="methods.html">Methods &amp; definitions</a> &middot;
+  Data from <a href="https://www.ncbi.nlm.nih.gov/pathogens/" target="_blank">NCBI Pathogen Detection</a>
+</p>
+
+</body>
+</html>
