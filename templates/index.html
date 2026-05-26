@@ -798,7 +798,8 @@
     chip.title = chip.title || 'Click to see definition on methods page';
     chip.addEventListener('click', function(e) {
       e.stopPropagation();
-      window.location.href = 'methods.html#' + anchor;
+      e.preventDefault();
+      window.open('methods.html#' + anchor, '_blank');
     });
   });
 
