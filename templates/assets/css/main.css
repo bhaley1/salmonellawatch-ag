@@ -1025,3 +1025,41 @@ details.card-detail-section li {
 @media (max-width: 700px) {
   .histogram-container { flex-direction: column; }
 }
+
+/* ── Filter results banner ────────────────────────── */
+.filter-banner {
+  margin: 12px 0;
+  padding: 12px 16px;
+  background: #1a5276;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.filter-banner .filter-count {
+  font-size: 28px;
+  font-weight: 800;
+  margin-right: 4px;
+}
+.filter-banner .filter-label {
+  font-weight: 400;
+  opacity: 0.85;
+  font-size: 14px;
+}
+.filter-banner .filter-chips {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.filter-banner .filter-chip {
+  background: rgba(255,255,255,0.15);
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+}

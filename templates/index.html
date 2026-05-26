@@ -85,7 +85,7 @@
         <option value="{{ country }}">{{ country }}</option>
         {% endfor %}
       </select>
-      <span class="filter-status" id="filter-status"></span>
+      <div class="filter-banner" id="filter-status" style="display:none;"></div>
     </div>
     <div class="filter-controls" style="margin-top:8px; gap:12px; flex-wrap:wrap;">
       <label for="serotype-filter">Serotype:</label>
@@ -751,7 +751,21 @@
       if (wantSerotype !== 'all') parts.push(wantSerotype === 'soc' ? '⚠ SOC only' : wantSerotype);
       if (wantST) parts.push('ST' + wantST);
       var filterDesc = parts.length ? ' · filters: ' + parts.join(', ') : '';
-      status.textContent = visible + ' cluster' + (visible !== 1 ? 's' : '') + ' shown' + filterDesc;
+      // Build prominent filter banner
+      if (wantCountry !== 'all' || wantSerotype !== 'all' || wantST || sortBy === 'emerging') {
+        var chips = [];
+        if (wantCountry !== 'all') chips.push(wantCountry);
+        if (wantSerotype === 'soc') chips.push('SOC only');
+        else if (wantSerotype !== 'all') chips.push(wantSerotype);
+        if (wantST) chips.push('ST' + wantST);
+        if (sortBy === 'emerging') chips.push('Emerging only');
+        var chipHtml = chips.map(function(c) { return '<span class="filter-chip">' + c + '</span>'; }).join('');
+        status.innerHTML = '<span class="filter-count">' + visible + '</span> cluster' + (visible !== 1 ? 's' : '') + ' matching <span class="filter-chips">' + chipHtml + '</span>';
+        status.style.display = '';
+      } else {
+        status.innerHTML = '<span class="filter-count">' + visible + '</span> <span class="filter-label">of ' + total + ' active clusters</span>';
+        status.style.display = '';
+      }
     }
 
     // Update stat tiles
