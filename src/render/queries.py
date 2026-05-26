@@ -454,7 +454,7 @@ def get_recent_activity_clusters(
         s = d.get("consensus_serotype")
         if s and s not in ('pending', 'unknown', 'Needs further review'):
             _sero_counts[s] = _sero_counts.get(s, 0) + 1
-    serotypes_for_dropdown = sorted(_sero_counts.keys(), key=lambda x: -_sero_counts[x])
+    serotypes_for_dropdown = sorted(_sero_counts.keys(), key=lambda x: x.lower())
 
     return out, serotypes_for_dropdown
 
