@@ -154,51 +154,51 @@
       {% if gs.get('label') or imp.get('flag') or trv.get('flag') or sub.get('flag') or hemerg.get('flag') or amr.get('flag') or acc.get('flag') or ifs.get('top') or ccx.get('label') %}
       <div class="cluster-signals">
         {% if hemerg.get('flag') %}
-          <span onclick="window.open('methods.html#human-emergence', '_blank')" style="cursor:pointer;" class="signal-chip signal-emergence"
+          <span onclick="event.preventDefault();event.stopPropagation();window.open('methods.html#human-emergence','_blank');return false;" style="cursor:pointer;" class="signal-chip signal-emergence"
                 title="Cluster transitioning from food/environment to human cases. Recent human ratio {{ (hemerg.recent_ratio*100)|round(0)|int }}% vs. baseline {{ (hemerg.baseline_ratio*100)|round(0)|int }}%. See methods."
                 >EMERGING ({{ (hemerg.recent_ratio*100)|round(0)|int }}% human, up from {{ (hemerg.baseline_ratio*100)|round(0)|int }}%)</span>
         {% endif %}
         {% if gs.get('label') %}
-          <span onclick="window.open('methods.html#geographic-spread', '_blank')" style="cursor:pointer;" class="signal-chip signal-geo signal-geo-{{ gs.label|replace('-','_') }}"
+          <span onclick="event.preventDefault();event.stopPropagation();window.open('methods.html#geographic-spread','_blank');return false;" style="cursor:pointer;" class="signal-chip signal-geo signal-geo-{{ gs.label|replace('-','_') }}"
                 title="{{ gs.n_countries }} countries · {{ gs.n_continents }} continents · {{ gs.n_us_states }} US states"
                 >{{ gs.label|replace('-',' ')|upper }}</span>
         {% endif %}
         {% if imp.get('flag') %}
-          <span onclick="window.open('methods.html#import-signal', '_blank')" style="cursor:pointer;" class="signal-chip signal-import"
+          <span onclick="event.preventDefault();event.stopPropagation();window.open('methods.html#import-signal','_blank');return false;" style="cursor:pointer;" class="signal-chip signal-import"
                 title="Import (food vehicle may have crossed border) — pointer signal, not confirmation. Evidence: {{ imp.evidence }}. Can co-fire with travel signal; see methods."
                 >IMPORT SIGNAL</span>
         {% endif %}
         {% if trv.get('flag') %}
-          <span onclick="window.open('methods.html#travel-signal', '_blank')" style="cursor:pointer;" class="signal-chip signal-travel"
+          <span onclick="event.preventDefault();event.stopPropagation();window.open('methods.html#travel-signal','_blank');return false;" style="cursor:pointer;" class="signal-chip signal-travel"
                 title="Travel-associated (person may have crossed border) — pointer signal, not confirmation. {{ trv.n_annotated }} annotated case(s). Under-detected; can co-fire with import signal. See methods."
                 >TRAVEL SIGNAL</span>
         {% endif %}
         {% if sub.get('flag') %}
-          <span onclick="window.open('methods.html#submitter-diversity', '_blank')" style="cursor:pointer;" class="signal-chip signal-submitter"
+          <span onclick="event.preventDefault();event.stopPropagation();window.open('methods.html#submitter-diversity','_blank');return false;" style="cursor:pointer;" class="signal-chip signal-submitter"
                 title="{{ sub.n_bioprojects }} distinct BioProjects detecting this strain. Many independent submitters is harder to explain as cohort effect. See methods."
                 >MULTI-SUBMITTER ({{ sub.n_bioprojects }} BioProjects)</span>
         {% endif %}
         {% if acc.get('flag') %}
-          <span onclick="window.open('methods.html#acceleration', '_blank')" style="cursor:pointer;" class="signal-chip signal-accel"
+          <span onclick="event.preventDefault();event.stopPropagation();window.open('methods.html#acceleration','_blank');return false;" style="cursor:pointer;" class="signal-chip signal-accel"
                 title="Recent rate {{ acc.ratio }}× baseline ({{ acc.n_recent }} new of {{ acc.n_recent + acc.n_baseline }} total). Uses target_creation_date — see methods."
                 >ACCELERATING ({{ acc.ratio }}×)</span>
         {% endif %}
         {% if amr.get('flag') %}
-          <span onclick="window.open('methods.html#amr', '_blank')" style="cursor:pointer;" class="signal-chip signal-amr"
+          <span onclick="event.preventDefault();event.stopPropagation();window.open('methods.html#amr','_blank');return false;" style="cursor:pointer;" class="signal-chip signal-amr"
                 title="First-line resistance gene detected: {{ amr.classes_present|join('; ') }}. Gene presence — NOT confirmed phenotype. See methods."
                 >AMR: {{ amr.classes_present|join(', ') }}</span>
         {% endif %}
         {% if ifs.get('top') %}
-          <span onclick="window.open('methods.html#ifsac', '_blank')" style="cursor:pointer;" class="signal-chip signal-ifsac"
+          <span onclick="event.preventDefault();event.stopPropagation();window.open('methods.html#ifsac','_blank');return false;" style="cursor:pointer;" class="signal-chip signal-ifsac"
                 title="IFSAC food categories from nonhuman isolates: {{ ifs.categories|map(attribute='category')|join(', ') }}"
                 >IFSAC: {{ ifs.top.category }} ({{ ifs.top.n }})</span>
         {% endif %}
         {% if ccx.get('label') %}
-          <span onclick="window.open('methods.html#cc', '_blank')" style="cursor:pointer;" class="signal-chip signal-cc"
+          <span onclick="event.preventDefault();event.stopPropagation();window.open('methods.html#cc','_blank');return false;" style="cursor:pointer;" class="signal-chip signal-cc"
                 title="{{ ccx.tooltip }} (Draft label — see methods page for caveats.)"
                 >{{ ccx.cc }}: {{ ccx.label }}</span>
         {% elif ccx.get('cc') %}
-          <span onclick="window.open('methods.html#cc', '_blank')" style="cursor:pointer;" class="signal-chip signal-cc-neutral"
+          <span onclick="event.preventDefault();event.stopPropagation();window.open('methods.html#cc','_blank');return false;" style="cursor:pointer;" class="signal-chip signal-cc-neutral"
                 title="Clonal complex assigned from MLST; no curated note for this CC"
                 >{{ ccx.cc }}</span>
         {% endif %}
