@@ -65,7 +65,7 @@ def render() -> int:
     env.filters["map_svg"] = _map
 
     with db.connect() as conn:
-        clusters = queries.get_recent_activity_clusters(conn)
+        clusters, serotypes_for_dropdown = queries.get_recent_activity_clusters(conn)
         totals = queries.get_totals(conn)
         pathogen_counts = queries.get_pathogen_counts(conn)
         latest_release = queries.get_latest_release(conn)
@@ -113,8 +113,17 @@ def render() -> int:
     }
 
     # ---- Render index.html ----
+    soc_serotypes = {
+        'Enteritidis', 'Typhimurium', 'I 4,[5],12:i:-', 'Heidelberg',
+        'Infantis', 'Newport', 'Uganda', 'Braenderup', 'Muenchen',
+        'Montevideo', 'Javiana', 'Reading', 'Dublin', 'Oranienburg',
+        'Potsdam', 'Thompson', 'Saintpaul', 'Hadar', 'Schwarzengrund',
+        'Anatum', 'Berta',
+    }
     rendered = env.get_template("index.html").render(
         clusters=clusters,
+        serotypes_for_dropdown=serotypes_for_dropdown,
+        soc_serotypes=soc_serotypes,
         **common,
     )
     (site_dir / "index.html").write_text(rendered)

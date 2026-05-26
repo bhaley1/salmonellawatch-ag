@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+site/
+*.backup*
+db/
+cache/
+*.fna
+*.tsv

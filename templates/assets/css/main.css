@@ -834,3 +834,194 @@ footer a { color: var(--teal-deep); }
   transform: rotate(180deg);
   font-size: 9px;
 }
+
+/* ── Source category filter checkboxes ─────────────────── */
+.source-filter-row {
+  margin-top: 8px;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.source-filter-row .filter-label {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.src-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--paper);
+  user-select: none;
+}
+.src-check:hover { background: var(--paper-2); }
+.src-check input { margin: 0; cursor: pointer; }
+.src-filter-btn {
+  font-size: 12px;
+  padding: 3px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--paper);
+  cursor: pointer;
+}
+.src-filter-btn:hover { background: var(--paper-2); }
+
+/* ── Per-category recent isolates (AgWatch) ──────────────── */
+.recent-category {
+  margin-bottom: 16px;
+}
+.recent-category .category-header {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.category-isolates-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.category-isolates-list li {
+  margin-bottom: 2px;
+}
+
+/* ── Simplified card layout ──────────────────────────── */
+.source-profile-summary {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.source-profile-summary strong {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.src-badge {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 2px 6px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  font-size: 12px;
+}
+.src-total {
+  color: var(--ink-soft);
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.metadata-summary {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 13px;
+  line-height: 1.6;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.meta-item {
+  white-space: nowrap;
+}
+.meta-item strong {
+  font-weight: 600;
+}
+
+.card-details-container {
+  padding-top: 8px;
+}
+
+details.card-detail-section {
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+details.card-detail-section summary {
+  padding: 8px 0;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  user-select: none;
+}
+
+details.card-detail-section summary:hover {
+  color: var(--link);
+}
+
+details.card-detail-section[open] summary {
+  margin-bottom: 6px;
+}
+
+details.card-detail-section ul,
+details.card-detail-section .amr-scrollable,
+details.card-detail-section .geo-detail-wrapper {
+  padding: 6px 0 12px 0;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+details.card-detail-section li {
+  margin-bottom: 4px;
+}
+
+.geo-detail-wrapper {
+  margin: 0;
+}
+
+
+/* ── Commodity histograms ────────────────────────── */
+.histogram-container {
+  display: flex;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.histogram-panel {
+  flex: 1;
+  min-width: 0;
+}
+.histogram-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.histogram-svg svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.histogram-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 6px 0 10px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.legend-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+@media (max-width: 700px) {
+  .histogram-container { flex-direction: column; }
+}

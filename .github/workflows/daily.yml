@@ -1,0 +1,91 @@
+name: Daily build
+
+# Runs nightly at 08:00 UTC (after NCBI's daily processing finishes).
+# Also runs on push to main (so code changes deploy immediately) and on
+# manual workflow_dispatch (so we can re-run when needed).
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel an in-progress build if a new one starts.
+concurrency:
+  group: daily-build
+  cancel-in-progress: false  # don't cancel in-flight builds; they may be ingesting
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # for pushing rendered site to gh-pages branch
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Install mlst (Torsten Seemann). This is a Perl script with BLAST+
+      # dependency. Skipping mlst-related steps would lose ST/CC typing
+      # on the dashboard.
+      - name: Install BLAST+
+        run: sudo apt-get update && sudo apt-get install -y ncbi-blast+
+
+      - name: Install mlst
+        run: |
+          git clone https://github.com/tseemann/mlst /opt/mlst
+          echo "/opt/mlst/bin" >> $GITHUB_PATH
+
+      # Cache the SQLite database, NCBI download cache, and assembly cache.
+      # If the cache hits, we resume from previous state and the ingest is
+      # incremental. If it misses, we rebuild from scratch (~30 min).
+      - name: Restore caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            db/pathogen-watch.sqlite
+            cache/
+          key: lw-state-${{ github.run_id }}
+          restore-keys: |
+            lw-state-
+
+      - name: Run ingest
+        run: python -m src.ingest.run -v
+
+      - name: Run subtyping (MLST + CC)
+        run: python -m src.subtyping.run -v --mlst-budget 200
+        # Cap typing at 200 new clusters per day to keep CI under ~30 min.
+
+      - name: Run summarization
+        run: |
+          python -c "
+          from src import db
+          from src.ingest import summarize
+          import datetime
+          with db.connect() as conn:
+              summarize.materialize_cluster_summary(conn, today=datetime.date.today())
+          "
+
+      - name: Render site
+        env:
+          LW_REVIEW_MODE: "1"   # set to "0" when ready to go public
+        run: python -m src.render.run -v
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          publish_branch: gh-pages
+          force_orphan: true   # keep gh-pages branch clean — no history bloat
+          commit_message: "deploy: ${{ github.event.head_commit.message || 'scheduled build' }}"

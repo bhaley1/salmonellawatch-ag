@@ -57,7 +57,7 @@ PATHOGENS: dict[str, PathogenConfig] = {
 # labs to NCBI. Cases visible in the last 60 days of target_creation_date
 # correspond to exposures roughly 3-8 weeks ago. CDC uses 60-day windows
 # for Salmonella outbreak investigation.
-RECENT_WINDOW_DAYS = 60
+RECENT_WINDOW_DAYS = 180
 
 # How far back the per-cluster geographic-footprint map looks. Longer than
 # the recent-cases window because the map shows the cluster's broader

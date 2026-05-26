@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SalmonellaWatch — daily Salmonella enterica cluster surveillance</title>
+  <title>SalmonellaWatch-Ag — daily Salmonella pre-harvest & food surveillance</title>
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
 
 <header class="masthead">
   <div class="container">
-    <h1>SalmonellaWatch <span class="version">v2 · beta</span></h1>
+    <h1>SalmonellaWatch-Ag <span class="version">v1 · beta</span></h1>
     <p class="lede">
       A daily-updated digest of <em>Salmonella enterica</em> genomic clusters with recent
       human cases, sourced from NCBI Pathogen Detection. Each cluster card shows the
@@ -39,7 +39,7 @@
 
 <div class="beta-banner">
   <div class="container">
-    <strong>Beta.</strong> SalmonellaWatch is a personal research project, not an official
+    <strong>Beta.</strong> SalmonellaWatch-Ag is a personal research project, not an official
     surveillance system. Data lags real-time deposits by hours to days. Clusters are
     computational predictions of genomic relatedness; they don't prove a foodborne link.
   </div>
@@ -51,10 +51,10 @@
   <div class="tile">
     <div class="tile-label">Active clusters</div>
     <div class="tile-value" id="stat-active-clusters">{{ totals.n_active or 0 }}</div>
-    <div class="tile-sub" id="stat-active-sub">≥1 new human in last {{ window_days }}d</div>
+    <div class="tile-sub" id="stat-active-sub">≥1 new non-human isolate in last {{ window_days }}d</div>
   </div>
   <div class="tile">
-    <div class="tile-label">New human cases ({{ window_days }}d)</div>
+    <div class="tile-label">New non-human isolates ({{ window_days }}d)</div>
     <div class="tile-value" id="stat-new-humans">{{ totals.n_new_humans_window or 0 }}</div>
     <div class="tile-sub" id="stat-human-sub">across all active clusters</div>
   </div>
@@ -73,12 +73,12 @@
 <section>
   <div class="section-head">
     <h2>
-      Recent human cluster activity
+      Recent agricultural cluster activity
       <a href="methods.html" class="help-link" title="What do the signal chips mean?">what's this?</a>
     </h2>
     {% if countries_for_dropdown %}
     <div class="filter-controls">
-      <label for="country-filter">Filter by country of recent human cases:</label>
+      <label for="country-filter">Filter by country of recent non-human isolates:</label>
       <select id="country-filter" aria-label="Filter clusters by country">
         <option value="all">All countries</option>
         {% for country in countries_for_dropdown %}
@@ -92,29 +92,9 @@
       <select id="serotype-filter">
         <option value="all">All serotypes</option>
         <option value="soc">⚠ SOC serotypes only</option>
-        <optgroup label="Serotypes of Concern (Wheeler et al. 2024)">
-        <option value="Enteritidis">Enteritidis</option>
-        <option value="Typhimurium">Typhimurium</option>
-        <option value="monophasic">I,4,[5],12:i:- (monophasic)</option>
-        <option value="Heidelberg">Heidelberg</option>
-        <option value="Infantis">Infantis</option>
-        <option value="Newport">Newport</option>
-        <option value="Uganda">Uganda</option>
-        <option value="Braenderup">Braenderup</option>
-        <option value="Muenchen">Muenchen</option>
-        <option value="Montevideo">Montevideo</option>
-        <option value="Javiana">Javiana</option>
-        <option value="Reading">Reading</option>
-        <option value="Dublin">Dublin</option>
-        <option value="Oranienburg">Oranienburg</option>
-        <option value="Potsdam">Potsdam</option>
-        <option value="Thompson">Thompson</option>
-        <option value="Saintpaul">Saintpaul</option>
-        <option value="Hadar">Hadar</option>
-        <option value="Schwarzengrund">Schwarzengrund</option>
-        <option value="Anatum">Anatum</option>
-        <option value="Berta">Berta</option>
-        </optgroup>
+        {% for sero in serotypes_for_dropdown %}
+        <option value="{{ sero }}"{% if sero in soc_serotypes %} class="soc-option"{% endif %}>{{ sero }}{% if sero in soc_serotypes %} ⚠{% endif %}</option>
+        {% endfor %}
       </select>
       <label for="st-filter">ST:</label>
       <input id="st-filter" type="text" placeholder="e.g. ST11" style="width:80px; padding:3px 6px; border:1px solid var(--rule); border-radius:3px; font-size:13px;">
@@ -124,19 +104,20 @@
         <option value="accel">Acceleration rate ↓</option>
         <option value="date">Most recent case ↓</option>
         <option value="span">Cluster span ↓</option>
+              <option value="emerging">🔺 Emerging only</option>
       </select>
     </div>
     {% endif %}
   </div>
   <p class="muted">
-    Clusters with at least one human isolate created in NCBI in the last {{ window_days }} days.
-    Sorted by number of new cases.
+    Clusters with at least one non-human isolate created in NCBI in the last {{ window_days }} days. Includes pre-harvest, food production, and environmental samples.
+    Sorted by most recent isolate.
   </p>
 
   {% if clusters %}
     <div id="cluster-list">
     {% for c in clusters %}
-    <article class="cluster-card" data-human-countries="{{ c.human_countries_attr }}" data-serotype="{{ c.consensus_serotype or '' }}" data-soc="{{ '1' if c.is_soc else '0' }}" data-st="{{ c.mlst_st or '' }}" data-accel="{{ ((c.signals or {}).get('acceleration') or {}).get('ratio') or 0 }}" data-latest="{{ c.latest_target_creation_date or '' }}" data-span="{{ c.temporal_span_days or 0 }}" data-new-humans="{{ c.new_humans_in_window }}" data-mixed="{{ '1' if c.n_human > 0 and c.n_nonhuman > 0 else '0' }}" data-country-humans='{{ c.country_human_cases|tojson }}' data-country-amr='{{ c.country_amr|tojson }}' data-country-src='{{ c.country_src|tojson }}'>
+    <article class="cluster-card" data-human-countries="{{ c.human_countries_attr }}" data-serotype="{{ c.consensus_serotype or '' }}" data-soc="{{ '1' if c.is_soc else '0' }}" data-st="{{ c.mlst_st or '' }}" data-accel="{{ ((c.signals or {}).get('acceleration') or {}).get('ratio') or 0 }}" data-latest="{{ c.latest_target_creation_date or '' }}" data-span="{{ c.temporal_span_days or 0 }}" data-age-days="{{ c.temporal_span_days or 99999 }}" data-emerging="{{ '1' if ((c.signals or {}).get('human_emergence') or {}).get('flag') else '0' }}" data-new-humans="{{ c.new_humans_in_window }}" data-n-total="{{ c.n_total }}" data-mixed="{{ '1' if c.n_human > 0 and c.n_nonhuman > 0 else '0' }}" data-country-humans='{{ c.country_human_cases|tojson }}' data-country-amr='{{ c.country_amr|tojson }}' data-country-src='{{ c.country_src|tojson }}'>
 
       <header class="cluster-card-head">
         <div class="cluster-card-id">
@@ -284,195 +265,169 @@
 
       <div class="cluster-card-body">
 
-        <!-- WHAT'S NEW: the activity that brought this cluster onto the page -->
-        <div class="card-row card-row-top">
-          <div class="recent-humans">
-            <h4 class="human-cases-header">New human cases (last {{ window_days }}d)</h4>
+        <!-- SOURCE PROFILE SUMMARY -->
+        <div class="source-profile-summary">
+          {% set total_src = c.source_breakdown.beef|default(0) + c.source_breakdown.poultry|default(0) + c.source_breakdown.swine|default(0) + c.source_breakdown.produce|default(0) + c.source_breakdown.water|default(0) + c.source_breakdown.rte|default(0) %}
+          <strong>SOURCE PROFILE (last {{ window_days }}d):</strong>
+          {% if c.source_breakdown.poultry %}
+            <span class="src-badge">Poultry {{ c.source_breakdown.poultry }}</span>
+          {% endif %}
+          {% if c.source_breakdown.beef %}
+            <span class="src-badge">Bovine {{ c.source_breakdown.beef }}</span>
+          {% endif %}
+          {% if c.source_breakdown.swine %}
+            <span class="src-badge">Swine {{ c.source_breakdown.swine }}</span>
+          {% endif %}
+          {% if c.source_breakdown.produce %}
+            <span class="src-badge">Produce {{ c.source_breakdown.produce }}</span>
+          {% endif %}
+          {% if c.source_breakdown.water %}
+            <span class="src-badge">Water {{ c.source_breakdown.water }}</span>
+          {% endif %}
+          {% if c.source_breakdown.rte %}
+            <span class="src-badge">RTE {{ c.source_breakdown.rte }}</span>
+          {% endif %}
+          {% if total_src > 0 %}
+            <span class="src-total">({{ total_src }} total non-human isolates)</span>
+          {% endif %}
+        </div>
+
+        <!-- METADATA SUMMARY -->
+        <div class="metadata-summary">
+          <span class="meta-item">
+            {% if c.temporal_span_days %}
+              <strong>{{ c.temporal_span_days|span_label }}</strong> old
+            {% else %}
+              age <span class="typing-missing">unknown</span>
+            {% endif %}
+          </span>
+          <span class="meta-item">
+            <strong>{{ c.n_total }}</strong> total isolates · <strong>{{ c.n_human }}</strong> human / <strong>{{ c.n_nonhuman }}</strong> nonhuman
+            {% if c.earliest_collection_date %}
+              since {{ c.earliest_collection_date[:4] }}
+            {% endif %}
+          </span>
+          {% if c.mlst_st and not c.mlst_error %}
+            <span class="meta-item"><strong>{{ c.mlst_st }}</strong></span>
+          {% endif %}
+          {% if c.human_countries_attr %}
+            <span class="meta-item">
+              {% set country_list = c.human_countries_attr.split(',') %}
+              {% if country_list|length <= 3 %}
+                {{ country_list|join(', ') }}
+              {% else %}
+                {{ country_list[0] }} + {{ country_list|length - 1 }} more
+              {% endif %}
+            </span>
+          {% endif %}
+        </div>
+
+        <!-- COMMODITY HISTOGRAMS -->
+        <div class="histogram-container">
+          <div class="histogram-panel">
+            <div class="histogram-title">Collection frequency by year</div>
+            <div class="histogram-svg" data-hist-years='{{ c.commodity_hist_years }}' data-hist-type="years"></div>
+          </div>
+          <div class="histogram-panel">
+            <div class="histogram-title">Collection frequency — last 12 months</div>
+            <div class="histogram-svg" data-hist-months='{{ c.commodity_hist_months }}' data-hist-type="months"></div>
+          </div>
+        </div>
+        <div class="histogram-legend">
+          <span class="legend-item"><span class="legend-swatch" style="background:#e74c3c;"></span>Human</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#f39c12;"></span>Poultry</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#8e44ad;"></span>Bovine</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#e91e90;"></span>Swine</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#27ae60;"></span>Produce</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#2980b9;"></span>Water</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#95a5a6;"></span>Other</span>
+        </div>
+
+        <!-- COLLAPSIBLE SECTIONS -->
+        <div class="card-details-container">
+
+          <!-- Per-category isolates -->
+          {% set cat_labels = {
+            'poultry': 'poultry isolates',
+            'bovine': 'bovine isolates',
+            'swine': 'swine isolates',
+            'produce': 'produce isolates',
+            'water': 'surface water isolates'
+          } %}
+          {% for cat_key, cat_label in cat_labels.items() %}
+            {% set cat_data = c.recent_by_category.get(cat_key, {}) %}
+            {% set cat_total = cat_data.values()|map('length')|sum %}
+            {% if cat_total > 0 %}
+            <details class="card-detail-section">
+              <summary>{{ cat_label|title }} ({{ cat_total }})</summary>
+              <ul class="category-isolates-list" data-category="{{ cat_key }}">
+                {% for country, isolates in cat_data.items() %}
+                  {% for iso in isolates %}
+                  <li data-geo-country="{{ iso.geo_country or '' }}" data-category="{{ cat_key }}">
+                    {% if iso.biosample %}
+                    <a href="https://www.ncbi.nlm.nih.gov/biosample/{{ iso.biosample }}"
+                       class="pdt-acc pdt-link" target="_blank" rel="noopener">{{ iso.pdt }}</a>
+                    {% else %}
+                    <a href="https://www.ncbi.nlm.nih.gov/pathogens/isolates/#{{ iso.pdt }}"
+                       class="pdt-acc pdt-link" target="_blank" rel="noopener">{{ iso.pdt }}</a>
+                    {% endif %}
+                    · {{ iso.collection_date or '—' }} · {{ iso.geo or '—' }}
+                  </li>
+                  {% endfor %}
+                {% endfor %}
+              </ul>
+            </details>
+            {% endif %}
+          {% endfor %}
+
+          <!-- Human cases -->
+          {% if c.new_humans_in_window > 0 %}
+          <details class="card-detail-section">
+            <summary>Human cases ({{ c.new_humans_in_window }})</summary>
             <ul class="human-cases-list">
               {% for h in c.new_humans_dates %}
               <li data-geo-country="{{ h.get('geo_country', '') or (h.geo.split(':')[0].strip() if h.geo else '') }}">
                 {% if h.biosample %}
                 <a href="https://www.ncbi.nlm.nih.gov/biosample/{{ h.biosample }}"
-                   class="pdt-acc pdt-link"
-                   title="View BioSample {{ h.biosample }} on NCBI"
-                   target="_blank" rel="noopener">{{ h.pdt }}</a>
+                   class="pdt-acc pdt-link" target="_blank" rel="noopener">{{ h.pdt }}</a>
                 {% else %}
                 <a href="https://www.ncbi.nlm.nih.gov/pathogens/isolates/#{{ h.pdt }}"
-                   class="pdt-acc pdt-link"
-                   title="View isolate {{ h.pdt }} on NCBI Pathogen Detection"
-                   target="_blank" rel="noopener">{{ h.pdt }}</a>
+                   class="pdt-acc pdt-link" target="_blank" rel="noopener">{{ h.pdt }}</a>
                 {% endif %}
-                · collected {{ h.collection_date or '—' }}
-                · {{ h.geo or '—' }}
+                · {{ h.collection_date or '—' }} · {{ h.geo or '—' }}
               </li>
               {% endfor %}
             </ul>
-            <p class="human-cases-more" style="display:none"></p>
-            <!-- Non-human isolates last 60d -->
-            <div class="recent-nonhuman">
-              <h4>New non-human isolates (last {{ window_days }}d)</h4>
-              {% if c.recent_nonhuman %}
-                <ul>
-                {% for nh in c.recent_nonhuman[:8] %}
-                  <li>
-                    <span class="nh-source">{{ nh.ifsac_category or nh.isolation_source or 'unknown source' }}</span>
-                    {% if nh.geo_country %}· <span class="nh-country">{{ nh.geo_country }}</span>{% endif %}
-                    <span class="count">×{{ nh.n }}</span>
-                  </li>
-                {% endfor %}
-                {% if c.recent_nonhuman|length > 8 %}
-                  <li class="more">+ {{ c.recent_nonhuman|length - 8 }} more</li>
-                {% endif %}
-                </ul>
+          </details>
+          {% endif %}
+
+          <!-- AMR genotypes -->
+          {% set amr = (c.signals or {}).get('amr_critical') or {} %}
+          {% if amr.get('flag') and c.amr_chips %}
+          <details class="card-detail-section">
+            <summary>AMR genotypes ({{ c.amr_chips|length }} variants)</summary>
+            <div class="amr-scrollable" data-amr-genes="{{ c.amr_genes_json or '{}' }}">
+              {% for chip in c.amr_chips %}
+                <span class="amr-chip">{{ chip }}</span>
+              {% endfor %}
+            </div>
+          </details>
+          {% endif %}
+
+          <!-- Geographic footprint -->
+          <details class="card-detail-section">
+            <summary>Geographic footprint</summary>
+            <div class="geo-detail-wrapper">
+              {% if c.map_svg %}
+                {{ c.map_svg|safe }}
               {% else %}
-                <p class="muted">No non-human isolates in last {{ window_days }}d</p>
+                <p class="muted">Map data not available</p>
               {% endif %}
             </div>
-          </div>
+          </details>
 
-          <div class="cluster-map-block">
-            <h4>Geographic footprint</h4>
-            {{ c|map_svg|safe }}
-            <div class="map-legend">
-              <span class="legend-swatch swatch-human"></span> human
-              <span class="legend-swatch swatch-nonhuman"></span> nonhuman
-              <span class="legend-swatch swatch-mixed"></span> mixed
-              <span class="map-legend-note">· faded dots = older</span>
-            </div>
-          </div>
         </div>
 
-        <!-- AMR GENOTYPES -->
-        {% if c.amr_genotype_list %}
-        <div class="card-row card-row-amr">
-          <div class="amr-section">
-            <h4>AMR genotypes observed in cluster <span class="amr-country-note"></span></h4>
-            <div class="amr-genotype-list amr-scrollable">
-              {% for amr in c.amr_genotype_list %}
-                <span class="amr-chip" data-amr="{{ amr }}">{{ amr }}</span>
-              {% endfor %}
-            </div>
-          </div>
-          <!-- SOURCE BREAKDOWN -->
-          <div class="source-breakdown">
-            <h4>Isolation source breakdown</h4>
-            <div class="source-breakdown-grid">
-              {% if c.source_breakdown.beef %}
-                <div class="src-item"><span class="src-label">Beef/Bovine</span><span class="src-count">{{ c.source_breakdown.beef }}</span></div>
-              {% endif %}
-              {% if c.source_breakdown.poultry %}
-                <div class="src-item"><span class="src-label">Poultry/Avian</span><span class="src-count">{{ c.source_breakdown.poultry }}</span></div>
-              {% endif %}
-              {% if c.source_breakdown.swine %}
-                <div class="src-item"><span class="src-label">Swine/Pork</span><span class="src-count">{{ c.source_breakdown.swine }}</span></div>
-              {% endif %}
-              {% if c.source_breakdown.produce %}
-                <div class="src-item"><span class="src-label">Produce</span><span class="src-count">{{ c.source_breakdown.produce }}</span></div>
-              {% endif %}
-              {% if c.source_breakdown.rte %}
-                <div class="src-item"><span class="src-label">RTE Foods</span><span class="src-count">{{ c.source_breakdown.rte }}</span></div>
-              {% endif %}
-              {% if c.source_breakdown.water %}
-                <div class="src-item"><span class="src-label">Water</span><span class="src-count">{{ c.source_breakdown.water }}</span></div>
-              {% endif %}
-              {% for cat, n in c.source_breakdown.other.items() %}
-                {% if n >= 5 %}
-                  <div class="src-item"><span class="src-label">{{ cat }}</span><span class="src-count">{{ n }}</span></div>
-                {% endif %}
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-        {% endif %}
-
-        <!-- WHAT THE CLUSTER LOOKS LIKE OVERALL: sources + histogram -->
-        <div class="card-row card-row-mid">
-          {% if c.source_summary %}
-          <div class="sources">
-            <h4>Top sources of isolation</h4>
-            <ul>
-              {% for s in c.source_summary[:5] %}
-              <li>
-                <span class="source-category source-category-{{ s.category|lower }}">{{ s.category }}</span>
-                {{ s.source }} <span class="count">×{{ s.n }}</span>
-              </li>
-              {% endfor %}
-            </ul>
-            {% if c.host_summary %}
-            <div class="host-species">
-              <span class="host-species-label">Animal hosts:</span>
-              {% for h in c.host_summary[:5] %}<span class="host-species-item">{{ h.host }} ({{ h.n }})</span>{% if not loop.last %}, {% endif %}{% endfor %}
-              {% if c.host_summary|length > 5 %}<span class="host-species-item host-more">+{{ c.host_summary|length - 5 }} more</span>{% endif %}
-            </div>
-            {% endif %}
-          </div>
-          {% endif %}
-
-          <div class="histogram-block">
-            <h4>Isolates per year</h4>
-            <div class="histogram-wrap">
-              {{ c|histogram_svg|safe }}
-            </div>
-            <div class="histogram-legend">
-              <span class="legend-swatch swatch-human"></span> human
-              <span class="legend-swatch swatch-nonhuman"></span> nonhuman
-            </div>
-          </div>
-        </div>
-
-        <!-- HISTORICAL REFERENCE: how this cluster started -->
-        <div class="card-row card-row-bottom">
-          <div class="oldest-isolates">
-            <h4>Cluster origins (historical reference)</h4>
-            <dl class="oldest-list">
-              <dt>Oldest isolate (any source)</dt>
-              <dd>
-                {% if c.oldest_any %}
-                  {{ c.oldest_any.date_raw or c.oldest_any.date or 'date unknown' }} ·
-                  {{ c.oldest_any.geo or 'location unknown' }} ·
-                  {{ c.oldest_any.source or 'source unknown' }}
-                  (<a href="{{ ncbi_link_for(c.oldest_any.pdt, c.oldest_any.biosample) }}"
-                      class="pdt-link" target="_blank" rel="noopener"
-                      title="View {{ c.oldest_any.pdt }} on NCBI">{{ c.oldest_any.pdt }}</a>)
-                {% else %}—{% endif %}
-              </dd>
-              <dt>Oldest human isolate</dt>
-              <dd>
-                {% if c.oldest_human %}
-                  {{ c.oldest_human.date_raw or c.oldest_human.date or 'date unknown' }} ·
-                  {{ c.oldest_human.geo or 'location unknown' }} ·
-                  {{ c.oldest_human.source or 'source unknown' }}
-                  (<a href="{{ ncbi_link_for(c.oldest_human.pdt, c.oldest_human.biosample) }}"
-                      class="pdt-link" target="_blank" rel="noopener"
-                      title="View {{ c.oldest_human.pdt }} on NCBI">{{ c.oldest_human.pdt }}</a>)
-                {% else %}—{% endif %}
-              </dd>
-              <dt>Oldest nonhuman isolate</dt>
-              <dd>
-                {% if c.oldest_nonhuman %}
-                  {{ c.oldest_nonhuman.date_raw or c.oldest_nonhuman.date or 'date unknown' }} ·
-                  {{ c.oldest_nonhuman.geo or 'location unknown' }} ·
-                  {{ c.oldest_nonhuman.source or 'source unknown' }}
-                  (<a href="{{ ncbi_link_for(c.oldest_nonhuman.pdt, c.oldest_nonhuman.biosample) }}"
-                      class="pdt-link" target="_blank" rel="noopener"
-                      title="View {{ c.oldest_nonhuman.pdt }} on NCBI">{{ c.oldest_nonhuman.pdt }}</a>)
-                {% else %}—{% endif %}
-              </dd>
-            </dl>
-          </div>
-        </div>
-
-        <div class="cluster-card-foot">
-          {% if c.latest_assembly %}
-          <a href="https://www.ncbi.nlm.nih.gov/datasets/genome/{{ c.latest_assembly.asm_acc }}/"
-             class="ext-link"
-             title="View NCBI Datasets page for {{ c.latest_assembly.asm_acc }} — most-recently-deposited assembled isolate in this cluster (collected {{ c.latest_assembly.collection_date or 'unknown' }})"
-             target="_blank" rel="noopener">Latest assembly: {{ c.latest_assembly.asm_acc }} →</a>
-          {% endif %}
-          <a href="https://www.ncbi.nlm.nih.gov/pathogens/isolates/#{{ c.pds_acc }}"
-             class="ext-link"
-             target="_blank" rel="noopener">View cluster on NCBI →</a>
-        </div>
       </div>
     </article>
     {% endfor %}
@@ -489,7 +444,7 @@
 <footer>
   <div class="container">
     <p>
-      SalmonellaWatch v2 · daily surveillance digest · Data from
+      SalmonellaWatch-Ag v1 · daily pre-harvest surveillance digest · USDA ARS Emerging Foodborne Contaminants of Concern Working Group · Data from
       <a href="https://www.ncbi.nlm.nih.gov/pathogens/">NCBI Pathogen Detection</a>
     </p>
   </div>
@@ -503,7 +458,41 @@
   var sortSelect      = document.getElementById('sort-select');
   var status          = document.getElementById('filter-status');
   var list            = document.getElementById('cluster-list');
+  var srcChecks       = Array.from(document.querySelectorAll('.src-filter-chk'));
+  var srcAllBtn       = document.getElementById('src-filter-all');
   if (!countryFilter) return;
+
+  // Keyword sets for each source category
+  var SRC_KEYWORDS = {
+    'human':   ['human', 'clinical', 'stool', 'blood', 'feces', 'csf', 'urine'],
+    'poultry': ['chicken', 'turkey', 'poultry', 'broiler', 'avian', 'duck', 'goose', 'gallus'],
+    'bovine':  ['beef', 'bovine', 'cattle', 'cow', 'calf', 'veal', 'dairy'],
+    'swine':   ['pork', 'swine', 'pig', 'sow', 'boar', 'piglet', 'hog'],
+    'produce': ['vegetable', 'fruit', 'leafy', 'lettuce', 'spinach', 'tomato', 'sprout', 'herb', 'nut', 'produce', 'melon', 'onion', 'pepper', 'cucumber'],
+    'water':   ['water', 'aquatic', 'stream', 'river', 'lake', 'pond', 'surface water', 'environmental-water'],
+  };
+
+  function clusterHasSource(card, srcKey) {
+    // Check if any isolate in the cluster matches the source keywords.
+    // Uses the data-country-src JSON which contains all isolation sources
+    // organized by country.
+    var keywords = SRC_KEYWORDS[srcKey] || [];
+    try {
+      var countrySrc = JSON.parse(card.getAttribute('data-country-src') || '{}');
+      for (var country in countrySrc) {
+        var items = countrySrc[country] || [];
+        for (var i = 0; i < items.length; i++) {
+          var srcStr = (items[i].src || '').toLowerCase();
+          var catStr = (items[i].cat || '').toLowerCase();
+          if (srcKey === 'human' && catStr === 'human') return true;
+          for (var k = 0; k < keywords.length; k++) {
+            if (srcStr.indexOf(keywords[k]) >= 0) return true;
+          }
+        }
+      }
+    } catch (e) { /* fall through */ }
+    return false;
+  }
 
   var cards = Array.from(document.querySelectorAll('#cluster-list .cluster-card'));
   var total = cards.length;
@@ -561,6 +550,30 @@
         }
       }
     }
+
+    // --- Per-category isolates (AgWatch) ---
+    var categoryLists = card.querySelectorAll('.category-isolates-list');
+    categoryLists.forEach(function(catList) {
+      var items = Array.from(catList.querySelectorAll('li'));
+      if (country === 'all') {
+        items.forEach(function(li) { li.style.display = ''; });
+      } else {
+        items.forEach(function(li) {
+          var geoCountry = (li.getAttribute('data-geo-country') || '').trim();
+          var geoKey2 = geoKey(country);
+          var show = geoCountry === geoKey2 || geoCountry === country ||
+                     li.textContent.toLowerCase().includes(country.toLowerCase()) ||
+                     li.textContent.toLowerCase().includes(geoKey2.toLowerCase());
+          li.style.display = show ? '' : 'none';
+        });
+      }
+      // Hide entire category section if no items visible
+      var visibleCount = items.filter(function(li) { return li.style.display !== 'none'; }).length;
+      var categoryDiv = catList.closest('.recent-category');
+      if (categoryDiv) {
+        categoryDiv.style.display = visibleCount > 0 ? '' : 'none';
+      }
+    });
 
     // --- AMR genotypes ---
     var amrList = card.querySelector('.amr-scrollable');
@@ -680,12 +693,28 @@
 
       var show = true;
       if (wantCountry !== 'all' && countries.indexOf(wantCountry) === -1) show = false;
+
+      // Source category filter: cluster must have at least one isolate
+      // from at least one of the checked categories (OR logic)
+      var checkedSrc = srcChecks.filter(function(cb){ return cb.checked; }).map(function(cb){ return cb.value; });
+      if (checkedSrc.length > 0 && checkedSrc.length < srcChecks.length) {
+        var hasAny = false;
+        for (var si = 0; si < checkedSrc.length; si++) {
+          if (clusterHasSource(card, checkedSrc[si])) { hasAny = true; break; }
+        }
+        if (!hasAny) show = false;
+      }
       if (wantSerotype === 'soc' && !soc) show = false;
       else if (wantSerotype === 'monophasic') {
         if (!serotype.includes('i,4') && !serotype.includes('monophasic') && !serotype.includes('1,4,[5],12:i')) show = false;
       }
       else if (wantSerotype !== 'all' && wantSerotype !== 'soc' && serotype !== wantSerotype.toLowerCase()) show = false;
       if (wantST && st !== wantST) show = false;
+
+      // Emerging filter: only show clusters with the EMERGING signal chip
+      if (sortBy === 'emerging') {
+        if (card.getAttribute('data-emerging') !== '1') show = false;
+      }
 
       card.style.display = show ? '' : 'none';
       if (show) {
@@ -730,7 +759,7 @@
       if (tileActive) tileActive.textContent = globalActive;
       if (tileHuman)  tileHuman.textContent  = globalHuman;
       if (tileMixed)  tileMixed.textContent  = globalMixed;
-      if (tileSub0)   tileSub0.textContent   = '≥1 new human in last 60d';
+      if (tileSub0)   tileSub0.textContent   = '≥1 new non-human isolate in last 180d';
       if (tileSub1)   tileSub1.textContent   = 'across all active clusters';
     } else {
       if (tileActive) tileActive.textContent = visible;
@@ -745,6 +774,13 @@
   if (serotypeFilter) serotypeFilter.addEventListener('change', applyAll);
   if (stFilter)       stFilter.addEventListener('input', applyAll);
   if (sortSelect)     sortSelect.addEventListener('change', applyAll);
+  srcChecks.forEach(function(cb) { cb.addEventListener('change', applyAll); });
+  if (srcAllBtn) {
+    srcAllBtn.addEventListener('click', function() {
+      srcChecks.forEach(function(cb) { cb.checked = true; });
+      applyAll();
+    });
+  }
   applyAll();
 
   // Chip links to methods page
@@ -765,6 +801,101 @@
       window.location.href = 'methods.html#' + anchor;
     });
   });
+
+  // ── Render commodity histograms as SVG ──────────────────
+  var HIST_COLORS = {
+    Human: '#e74c3c', Poultry: '#f39c12', Bovine: '#8e44ad',
+    Swine: '#e91e90', Produce: '#27ae60', Water: '#2980b9', Other: '#95a5a6'
+  };
+  var HIST_CATS = ['Human','Poultry','Bovine','Swine','Produce','Water','Other'];
+
+  function renderHistogram(container, dataAttr, labelKey) {
+    var raw = container.getAttribute(dataAttr);
+    if (!raw) return;
+    var data;
+    try { data = JSON.parse(raw); } catch(e) { return; }
+    if (!data || data.length === 0) {
+      container.innerHTML = '<span style="font-size:12px;color:var(--ink-faint);">No data</span>';
+      return;
+    }
+
+    var W = 400, H = 160, PAD_L = 40, PAD_R = 10, PAD_T = 10, PAD_B = 36;
+    var plotW = W - PAD_L - PAD_R;
+    var plotH = H - PAD_T - PAD_B;
+
+    // Find max stacked total
+    var maxTotal = 0;
+    data.forEach(function(d) {
+      var total = 0;
+      HIST_CATS.forEach(function(c) { total += (d[c] || 0); });
+      if (total > maxTotal) maxTotal = total;
+    });
+    if (maxTotal === 0) { container.innerHTML = '<span style="font-size:12px;color:var(--ink-faint);">No data</span>'; return; }
+
+    var barW = Math.max(4, Math.min(24, Math.floor(plotW / data.length) - 2));
+    var gap = Math.max(1, Math.floor((plotW - barW * data.length) / Math.max(1, data.length)));
+    var totalBarSpace = data.length * (barW + gap);
+    var offsetX = PAD_L + Math.max(0, (plotW - totalBarSpace) / 2);
+
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="font-family:system-ui,sans-serif;">';
+
+    // Y axis ticks
+    var nTicks = 4;
+    for (var t = 0; t <= nTicks; t++) {
+      var val = Math.round(maxTotal * t / nTicks);
+      var y = PAD_T + plotH - (plotH * t / nTicks);
+      svg += '<line x1="' + PAD_L + '" y1="' + y + '" x2="' + (W - PAD_R) + '" y2="' + y + '" stroke="#e0e0e0" stroke-width="0.5"/>';
+      svg += '<text x="' + (PAD_L - 4) + '" y="' + (y + 3) + '" text-anchor="end" font-size="9" fill="#888">' + val + '</text>';
+    }
+
+    // Bars
+    data.forEach(function(d, i) {
+      var x = offsetX + i * (barW + gap);
+      var yOffset = 0;
+      HIST_CATS.forEach(function(cat) {
+        var v = d[cat] || 0;
+        if (v > 0) {
+          var barH = (v / maxTotal) * plotH;
+          var y = PAD_T + plotH - yOffset - barH;
+          svg += '<rect x="' + x + '" y="' + y + '" width="' + barW + '" height="' + barH + '" fill="' + HIST_COLORS[cat] + '" opacity="0.85">';
+          svg += '<title>' + cat + ': ' + v + ' (' + (d[labelKey] || '') + ')</title></rect>';
+          yOffset += barH;
+        }
+      });
+
+      // X-axis label
+      var label = String(d[labelKey] || '');
+      var showLabel = false;
+      if (labelKey === 'year') {
+        showLabel = (data.length <= 15) || (i % Math.ceil(data.length / 10) === 0) || (i === data.length - 1);
+      } else {
+        showLabel = true;
+        label = label.substring(5); // MM from YYYY-MM
+      }
+      if (showLabel) {
+        svg += '<text x="' + (x + barW/2) + '" y="' + (H - PAD_B + 14) + '" text-anchor="middle" font-size="8" fill="#666" transform="rotate(-45,' + (x + barW/2) + ',' + (H - PAD_B + 14) + ')">' + label + '</text>';
+      }
+    });
+
+    // Axes
+    svg += '<line x1="' + PAD_L + '" y1="' + (PAD_T + plotH) + '" x2="' + (W - PAD_R) + '" y2="' + (PAD_T + plotH) + '" stroke="#333" stroke-width="1"/>';
+    svg += '<line x1="' + PAD_L + '" y1="' + PAD_T + '" x2="' + PAD_L + '" y2="' + (PAD_T + plotH) + '" stroke="#333" stroke-width="1"/>';
+
+    // Y-axis label
+    svg += '<text x="12" y="' + (PAD_T + plotH/2) + '" text-anchor="middle" font-size="9" fill="#666" transform="rotate(-90,12,' + (PAD_T + plotH/2) + ')">Isolates</text>';
+
+    svg += '</svg>';
+    container.innerHTML = svg;
+  }
+
+  // Render all histograms
+  document.querySelectorAll('.histogram-svg[data-hist-years]').forEach(function(el) {
+    renderHistogram(el, 'data-hist-years', 'year');
+  });
+  document.querySelectorAll('.histogram-svg[data-hist-months]').forEach(function(el) {
+    renderHistogram(el, 'data-hist-months', 'month');
+  });
+
 })();
 </script>
 

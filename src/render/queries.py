@@ -10,6 +10,8 @@ from __future__ import annotations
 import json
 import sqlite3
 from typing import Any
+import datetime
+from . import map as _map
 
 
 def get_recent_activity_clusters(
@@ -24,7 +26,20 @@ def get_recent_activity_clusters(
     summary plus the typed/decoded JSON payloads, and (where available)
     the cluster's consensus serovar and MLST sequence type.
     """
-    where = "cs.new_humans_in_window > 0"
+    # AgWatch: active = ≥1 non-human isolate in last window_days days.
+    # Computed inline via subquery on isolates table; cluster_summary doesn't
+    # carry this count so we compute it here. window_days resolved from config.
+    from .. import config as _config
+    cutoff_iso = "date('now', '-" + str(_config.RECENT_WINDOW_DAYS) + " days')"
+    where = """
+        EXISTS (
+            SELECT 1 FROM isolates i
+            WHERE i.pds_acc = cs.pds_acc
+              AND i.source_category != 'Human'
+              AND i.collection_date >= """ + cutoff_iso + """
+            LIMIT 1
+        )
+    """
     params: list[Any] = []
     if pathogen:
         where += " AND cs.pathogen = ?"
@@ -128,6 +143,19 @@ def get_recent_activity_clusters(
                 source_by_cluster[pds] = {}
             source_by_cluster[pds][sr["ifsac_category"]] = sr["n"]
 
+    # Pre-fetch recent non-human count per cluster for AgWatch headline
+    from .. import config as _config
+    cutoff_iso = (datetime.date.today() - datetime.timedelta(days=_config.RECENT_WINDOW_DAYS)).isoformat()
+    nonhuman_counts = conn.execute(f"""
+        SELECT pds_acc, COUNT(*) as n
+        FROM isolates
+        WHERE pds_acc IN ({placeholders})
+        AND source_category != 'Human'
+        AND collection_date >= ?
+        GROUP BY pds_acc
+    """, pds_accs + [cutoff_iso]).fetchall()
+    new_nonhumans_by_pds = {r["pds_acc"]: r["n"] for r in nonhuman_counts}
+
     # Pre-fetch country-keyed human cases for filtering
     country_human_by_cluster: dict[str, dict] = {}
     if pds_accs:
@@ -156,6 +184,56 @@ def get_recent_activity_clusters(
                 "geo": cr["geo_loc_name"],
                 "geo_country": cr["geo_country"] or "",
             })
+
+    # Pre-fetch recent non-human isolates by category for AgWatch
+    from .. import config as _config
+    cutoff_ag = (datetime.date.today() - datetime.timedelta(days=_config.RECENT_WINDOW_DAYS)).isoformat()
+    
+    # Category keyword sets (must match template JS)
+    CAT_KEYWORDS = {
+        'poultry': ['chicken', 'turkey', 'poultry', 'broiler', 'avian', 'duck', 'goose', 'gallus'],
+        'bovine':  ['beef', 'bovine', 'cattle', 'cow', 'calf', 'veal', 'dairy'],
+        'swine':   ['pork', 'swine', 'pig', 'sow', 'boar', 'piglet', 'hog'],
+        'produce': ['vegetable', 'fruit', 'leafy', 'lettuce', 'spinach', 'tomato', 'sprout', 'herb', 'nut', 'produce', 'melon', 'onion', 'pepper', 'cucumber'],
+        'water':   ['water', 'aquatic', 'stream', 'river', 'lake', 'pond', 'surface water', 'environmental-water'],
+    }
+    
+    recent_nh_rows = conn.execute(f"""
+        SELECT pds_acc, pdt_acc, biosample_acc, geo_country, geo_loc_name,
+               collection_date, collection_date_raw, isolation_source, ifsac_category
+        FROM isolates
+        WHERE pds_acc IN ({placeholders})
+        AND source_category != 'Human'
+        AND collection_date >= ?
+        ORDER BY pds_acc, collection_date DESC
+    """, pds_accs + [cutoff_ag]).fetchall()
+    
+    # Bucket by cluster, country, and category
+    recent_by_cat: dict[str, dict] = {}  # {pds_acc: {category: {country: [isolates]}}}
+    for r in recent_nh_rows:
+        pds = r["pds_acc"]
+        country = r["geo_country"] or "Not Provided"
+        src_str = (r["isolation_source"] or "").lower()
+        ifsac_str = (r["ifsac_category"] or "").lower()
+        combined = src_str + " " + ifsac_str
+        
+        # Categorize
+        for cat, keywords in CAT_KEYWORDS.items():
+            if any(kw in combined for kw in keywords):
+                if pds not in recent_by_cat:
+                    recent_by_cat[pds] = {}
+                if cat not in recent_by_cat[pds]:
+                    recent_by_cat[pds][cat] = {}
+                if country not in recent_by_cat[pds][cat]:
+                    recent_by_cat[pds][cat][country] = []
+                recent_by_cat[pds][cat][country].append({
+                    "pdt": r["pdt_acc"],
+                    "biosample": r["biosample_acc"],
+                    "collection_date": r["collection_date_raw"] or r["collection_date"],
+                    "geo": r["geo_loc_name"],
+                    "geo_country": r["geo_country"] or "",
+                })
+                break  # Only assign to first matching category
 
     # Pre-fetch country-keyed AMR genotypes
     country_amr_by_cluster: dict[str, dict] = {}
@@ -216,6 +294,7 @@ def get_recent_activity_clusters(
         d["oldest_nonhuman"] = json.loads(d.pop("oldest_nonhuman_json") or "null")
         d["histogram"] = json.loads(d.pop("histogram_json") or "[]")
         d["map_locations"] = json.loads(d.pop("map_locations_json") or "[]")
+        d["map_svg"] = _map.render_cluster_map_svg(d["map_locations"]) if d["map_locations"] else ""
         d["latest_assembly"] = json.loads(d.pop("latest_assembly_json") or "null")
         d["host_summary"] = json.loads(d.pop("host_summary_json") or "[]")
         d["signals"] = json.loads(d.pop("signals_json") or "{}")
@@ -258,6 +337,8 @@ def get_recent_activity_clusters(
         d["country_human_cases"] = country_human_by_cluster.get(pds, {})
         d["country_amr"] = country_amr_by_cluster.get(pds, {})
         d["country_src"] = country_src_by_cluster.get(pds, {})
+        d["new_nonhumans_in_window"] = new_nonhumans_by_pds.get(pds, 0)
+        d["recent_by_category"] = recent_by_cat.get(pds, {})
         d["recent_nonhuman"] = nonhuman_by_cluster.get(pds, [])
 
         # Source breakdown bucketed for display
@@ -297,19 +378,104 @@ def get_recent_activity_clusters(
         d["consensus_serotype_n"] = d.get("consensus_serovar_n")
         d["consensus_serotype_total"] = d.get("consensus_serovar_total")
         out.append(d)
-    return out
+
+    pds_list = [d['pds_acc'] for d in out]
+
+    # ── Commodity-coded histograms per cluster ──────────────────
+    COMMODITY_KW = {
+        'Poultry': ['chicken', 'turkey', 'poultry', 'broiler', 'avian', 'duck',
+                     'goose', 'gallus', 'hen', 'egg'],
+        'Bovine':  ['beef', 'bovine', 'cattle', 'cow', 'calf', 'veal', 'dairy',
+                     'ruminant'],
+        'Swine':   ['pork', 'swine', 'pig', 'sow', 'boar', 'piglet', 'hog'],
+        'Produce': ['vegetable', 'fruit', 'leafy', 'lettuce', 'spinach', 'tomato',
+                     'sprout', 'herb', 'nut', 'produce', 'melon', 'onion',
+                     'pepper', 'cucumber'],
+        'Water':   ['water', 'aquatic', 'stream', 'river', 'lake', 'pond'],
+    }
+
+    def _classify_commodity(src_cat, iso_src, ifsac):
+        if src_cat == 'Human':
+            return 'Human'
+        s = ((iso_src or '') + ' ' + (ifsac or '')).lower()
+        for commodity, kws in COMMODITY_KW.items():
+            for kw in kws:
+                if kw in s:
+                    return commodity
+        return 'Other'
+
+    from collections import defaultdict as _defaultdict
+    _iso_rows = conn.execute("""
+        SELECT pds_acc, collection_date, source_category,
+               isolation_source, ifsac_category
+        FROM isolates
+        WHERE pds_acc IN ({})
+          AND collection_date IS NOT NULL AND collection_date != ''
+    """.format(','.join('?' * len(pds_list))), pds_list).fetchall()
+
+    _year_hists = _defaultdict(lambda: _defaultdict(lambda: _defaultdict(int)))
+    _month_hists = _defaultdict(lambda: _defaultdict(lambda: _defaultdict(int)))
+    import datetime as _dt
+    _twelve_months_ago = (_dt.date.today() - _dt.timedelta(days=365)).isoformat()
+
+    for _r in _iso_rows:
+        _pds = _r[0]
+        _cd = _r[1]
+        try:
+            _year = int(_cd[:4])
+        except (ValueError, TypeError):
+            continue
+        _com = _classify_commodity(_r[2], _r[3], _r[4])
+        _year_hists[_pds][_year][_com] += 1
+        if _cd >= _twelve_months_ago:
+            _ym = _cd[:7]  # YYYY-MM
+            _month_hists[_pds][_ym][_com] += 1
+
+    for d in out:
+        _pds = d["pds_acc"]
+        # Year histogram: list of {year, Human, Poultry, Bovine, Swine, Produce, Water, Other}
+        _yh = _year_hists.get(_pds, {})
+        d["commodity_hist_years"] = json.dumps([
+            {"year": y, **{c: _yh[y].get(c, 0)
+             for c in ["Human","Poultry","Bovine","Swine","Produce","Water","Other"]}}
+            for y in sorted(_yh.keys())
+        ])
+        # Month histogram (last 12 months)
+        _mh = _month_hists.get(_pds, {})
+        d["commodity_hist_months"] = json.dumps([
+            {"month": m, **{c: _mh[m].get(c, 0)
+             for c in ["Human","Poultry","Bovine","Swine","Produce","Water","Other"]}}
+            for m in sorted(_mh.keys())
+        ])
+
+    # Collect distinct serotypes for dropdown
+    _sero_counts = {}
+    for d in out:
+        s = d.get("consensus_serotype")
+        if s and s not in ('pending', 'unknown', 'Needs further review'):
+            _sero_counts[s] = _sero_counts.get(s, 0) + 1
+    serotypes_for_dropdown = sorted(_sero_counts.keys(), key=lambda x: -_sero_counts[x])
+
+    return out, serotypes_for_dropdown
 
 
 def get_totals(conn: sqlite3.Connection) -> dict[str, Any]:
     """Site-wide totals shown in tiles."""
-    row = conn.execute("""
+    # AgWatch: count clusters with ≥1 non-human isolate in last window_days
+    from .. import config as _config
+    cutoff_iso = "date('now', '-" + str(_config.RECENT_WINDOW_DAYS) + " days')"
+    row = conn.execute(f"""
         SELECT
             COUNT(*) AS n_clusters,
-            SUM(CASE WHEN n_human > 0 THEN 1 ELSE 0 END) AS n_human_clusters,
-            SUM(CASE WHEN n_human > 0 AND n_nonhuman > 0 THEN 1 ELSE 0 END) AS n_mixed,
-            SUM(CASE WHEN new_humans_in_window > 0 THEN 1 ELSE 0 END) AS n_active,
-            SUM(new_humans_in_window) AS n_new_humans_window
-        FROM cluster_summary
+            SUM(CASE WHEN cs.n_human > 0 THEN 1 ELSE 0 END) AS n_human_clusters,
+            SUM(CASE WHEN cs.n_human > 0 AND cs.n_nonhuman > 0 THEN 1 ELSE 0 END) AS n_mixed,
+            (SELECT COUNT(DISTINCT i.pds_acc) FROM isolates i
+             WHERE i.source_category != 'Human'
+             AND i.collection_date >= {cutoff_iso}) AS n_active,
+            (SELECT COUNT(*) FROM isolates i
+             WHERE i.source_category != 'Human'
+             AND i.collection_date >= {cutoff_iso}) AS n_new_humans_window
+        FROM cluster_summary cs
     """).fetchone()
     return dict(row) if row else {}
 
