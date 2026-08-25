@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS isolates (
     food_origin             TEXT,              -- food's country of origin (when populated by submitter)
     ifsac_category          TEXT,              -- IFSAC food category
     host_disease            TEXT,              -- NCBI host_disease field; sometimes contains travel notes
+    amr_genotypes           TEXT,              -- AMRFinderPlus calls, raw AMR_genotypes column
     bioproject_acc          TEXT,              -- BioProject accession (PRJNA…); submitter diversity proxy
     pdg_release             TEXT NOT NULL,     -- which NCBI release we last saw this in
     last_seen_at            TIMESTAMP NOT NULL -- updated every ingest run
