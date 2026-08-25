@@ -6,8 +6,6 @@ name: Daily build
 on:
   schedule:
     - cron: "0 8 * * *"
-  push:
-    branches: [main]
   workflow_dispatch:
 
 # Cancel an in-progress build if a new one starts.
