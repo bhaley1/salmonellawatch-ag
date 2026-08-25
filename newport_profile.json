@@ -1,0 +1,411 @@
+{
+  "assembly": "GCA_011456015.1.fna",
+  "sections": {
+    "cluster": {
+      "status": "ok",
+      "raw": "chewBBACA version: 3.5.4\nAuthors: Rafael Mamede, Pedro Cerqueira, Mickael Silva, Jo\u00e3o Carri\u00e7o, M\u00e1rio Ramirez\nGithub: https://github.com/B-UMMI/chewBBACA\nDocumentation: https://chewbbaca.readthedocs.io/en/latest/index.html\nContacts: imm-bioinfo@medicina.ulisboa.pt\n\n==========================\n  chewBBACA - AlleleCall\n==========================\nStarted at: 2026-06-11T11:25:13\n\n Configuration values \n======================\nMinimum sequence length: 0\nSize threshold: 0.05\nTranslation table: 11\nBLAST Score Ratio: 0.6\nWord size: 5\nWindow size: 5\nClustering similarity: 0.2\nProdigal training file: cache/schema_frozen/Salmonella_enterica.trn\nCPU cores: 14\nBLAST path: /Users/braddhaley/miniforge3/envs/listeriawatch/bin\nCDS input: False\nProdigal mode: single\nMode: 4\nNumber of inputs: 1\nNumber of loci: 2956\nIntermediate files will be stored in /var/folders/qk/17x4fp3x0p735572rx131cm40000gr/T/tmp4tayfb1b/out/temp\n\n Pre-computed data \n===================\nLoci allele size mode values stored in cache/schema_frozen/loci_modes\nHash tables stored in cache/schema_frozen/pre_computed\n\n CDS prediction \n================\nPredicting CDSs for 1 inputs...\n\n [                    ] 0%\n [====================] 100%\nExtracted a total of 4618 CDSs from 1 inputs.\n\n CDS deduplication \n===================\nIdentifying distinct CDSs...\nIdentified 4618 distinct CDSs.\n\n CDS exact matching \n====================\nSearching for CDS exact matches...\nFound 2952 exact matches (2952 distinct schema alleles).\nUnclassified CDSs: 1666\n\n CDS translation \n=================\nTranslating 1666 CDSs...\n\n [                    ] 0%\n [====================] 100%\n0 CDSs could not be translated.\nUnclassified CDSs: 1666\n\n Protein deduplication \n=======================\nIdentifying distinct proteins...\nIdentified 1664 distinct proteins.\n\n Protein exact matching \n========================\nSearching for Protein exact matches...\nFound 0 exact matches (0 distinct CDSs, 0 total CDSs).\nUnclassified proteins: 1664\n\n Protein clustering \n====================\nTranslating schema representative alleles...\nRepresentative BLASTp self-scores stored in cache/schema_frozen/short/self_scores\nCreating minimizer index for representative alleles...\nCreated index with 241263 distinct minimizers for 2956 loci.\nClustering proteins...\n\n [                    ] 0%\n [=                   ] 7%\n [====                ] 21%\n [========            ] 42%\n [==========          ] 50%\n [============        ] 64%\n [=================   ] 85%\n [====================] 100%\nClustered 18 proteins into 17 clusters.\n1646 proteins were not added to any cluster.\nAligning cluster representatives against clustered proteins...\n\n [                    ] 0%\n [================    ] 80%\n [====================] 100%\nClassifying high-scoring matches...\n\n [                    ] 0%\n [====================] 100%\nClassified 4 distinct proteins.\nUnclassified proteins: 1660\n\n Representative determination \n==============================\nAligning representative alleles against unclassified proteins...\n===========================================================================\n Iteration    Loci     High-Scoring   Classified   Selected   Unclassified \n===========================================================================\n\n 1\t...\n      1        2956         ...      \n      1        2956          4            ...     \n      1        2956          4             5          ...    \n      1        2956          4             5           0           ...      \n      1        2956          4             5           0           1655     \n===========================================================================\n\n Wrapping up \n=============\nCreating file with genome coordinates profiles (results_contigsInfo.tsv)...\nIdentifying paralogous loci and creating files with the list of paralogous loci (paralogous_counts.tsv & paralogous_loci.tsv)...\nIdentified 0 paralogous loci.\nAssigning allele identifiers to inferred alleles...\nAssigned identifiers to 0 new alleles for 0 loci.\nGetting original sequence identifiers for new alleles...\nGetting data for new representative alleles...\nCreating file with the allelic profiles (results_alleles.tsv)...\nCreating file with class counts per input (results_statistics.tsv)...\nCreating file with class counts per locus (loci_summary_stats.tsv)...\nCreating file with the coordinates of CDSs identified in inputs (cds_coordinates.tsv)...\nCreating file with invalid CDSs (invalid_cds.txt)...\nCounting number of classified CDSs...\nClassified a total of 2961 CDSs.\n=========================================================================================\n  EXC      INF     PLOT3    PLOT5    LOTSC     NIPH    NIPHEM    ALM      ASM      PAMA  \n=========================================================================================\n  2950      0        0        1        0        2        0        0        2        0    \n=========================================================================================\nUser passed \"--no-inferred\". No alleles added to the schema.\nRemoving temporary directory with intermediate files...\nCreating log file (logging_info.txt)...\n\nResults available in /var/folders/qk/17x4fp3x0p735572rx131cm40000gr/T/tmp4tayfb1b/out\n\nFinished at: 2026-06-11T11:26:11\nTook  0m 58s.\nquery: GCA_011456015.1.fna   core loci: 2956\n\nrank genome                        cluster           dist  shared   frac\n1    GCA_011456115.1               PDS000029625.684     0    2947   1.00\n2    GCA_011456135.1               PDS000029625.684     0    2947   1.00\n3    GCA_011456335.1               PDS000029625.684     0    2947   1.00\n4    GCA_011455715.1               PDS000029625.684    11    2947   1.00\n5    GCA_005630215.1               PDS000038749.73     21    2937   0.99\n6    GCA_005410465.1               PDS000038749.73     21    2931   0.99\n7    GCA_005559355.1               PDS000038749.73     21    2928   0.99\n8    GCA_011519465.1               PDS000038749.73     21    2928   0.99\n9    GCA_009189445.1               PDS000029648.53     23    2938   0.99\n10   GCA_005958405.1               PDS000027978.370    25    2944   1.00\n\nnearest cluster: PDS000029625.684  dist=0  (nearest member GCA_011456115.1)\nnext cluster:    PDS000038749.73  dist=21  margin=21\n\n--- PDS000029625.684 ---\nserovar: Newport   MLST ST: ST5\nisolates: 1882 (human 1682, non-human 200; food 5, animal 0, env 163)\nspan: 2006-06-23 to 2026-01-01 (7132 days)\ntop countries: USA (1814), Canada (16), Not Provided (14)\nsignals: import_signal, submitter_diversity",
+      "pds": "PDS000029625.684",
+      "distance": 0,
+      "next_pds": "PDS000038749.73",
+      "next_distance": 21,
+      "margin": 21,
+      "ambiguous": false,
+      "no_close_match": false,
+      "low_overlap": false,
+      "enrich": {
+        "serovar": "Newport",
+        "mlst_st_cluster": "ST5"
+      }
+    },
+    "sistr": {
+      "status": "ok",
+      "serovar": "Newport|Bardo|Ferruch|Kottbus",
+      "serogroup": "C2-C3",
+      "h1": "e,h",
+      "h2": "1,2",
+      "antigenic_formula": "Newport|Bardo|Ferruch|Kottbus",
+      "qc_status": null,
+      "qc_messages": null
+    },
+    "mlst": {
+      "status": "ok",
+      "scheme": "senterica",
+      "st": "5",
+      "alleles": [
+        "aroC(16)",
+        "dnaN(43)",
+        "hemD(45)",
+        "hisD(43)",
+        "purE(36)",
+        "sucA(39)",
+        "thrA(42)"
+      ]
+    },
+    "plasmid": {
+      "status": "ok",
+      "n_replicons": 0,
+      "replicons": []
+    },
+    "pesi": {
+      "status": "ok",
+      "markers_present": [],
+      "n_present": 0,
+      "n_markers_in_panel": 4,
+      "n_total_possible": 7,
+      "verdict": "no pESI markers detected",
+      "caveat": "marker-supported inference on draft assembly; manual review required"
+    },
+    "amrfinder": {
+      "status": "ok",
+      "amr": [
+        {
+          "gene": "mdsA",
+          "name": "multidrug efflux RND transporter periplasmic adaptor subunit MdsA",
+          "subtype": "AMR",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 98.04,
+          "contig": "AAQBIG010000009.1"
+        },
+        {
+          "gene": "mdsB",
+          "name": "multidrug efflux RND transporter permease subunit MdsB",
+          "subtype": "AMR",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.81,
+          "contig": "AAQBIG010000009.1"
+        }
+      ],
+      "virulence": [
+        {
+          "gene": "envF",
+          "name": "putative envelope lipoprotein EnvF",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.24,
+          "contig": "AAQBIG010000001.1"
+        },
+        {
+          "gene": "pagO",
+          "name": "PhoPQ-activated DMT family transporter PagO",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.34,
+          "contig": "AAQBIG010000001.1"
+        },
+        {
+          "gene": "pagK",
+          "name": "vesicle-borne virulence factor PagK",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 96.97,
+          "contig": "AAQBIG010000001.1"
+        },
+        {
+          "gene": "ripR",
+          "name": "itaconate degradation transcriptional regulator RipR",
+          "subtype": "VIRULENCE",
+          "method": "EXACTX",
+          "pct_cov": 100.0,
+          "pct_id": 100.0,
+          "contig": "AAQBIG010000002.1"
+        },
+        {
+          "gene": "sseK3",
+          "name": "type III secretion system effector arginine glycosyltransferase SseK3",
+          "subtype": "VIRULENCE",
+          "method": "EXACTX",
+          "pct_cov": 100.0,
+          "pct_id": 100.0,
+          "contig": "AAQBIG010000003.1"
+        },
+        {
+          "gene": "sseK2",
+          "name": "type III secretion system effector arginine glycosyltransferase SseK2",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 98.56,
+          "contig": "AAQBIG010000003.1"
+        },
+        {
+          "gene": "stcD",
+          "name": "Stc fimbria adhesin StcD",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.7,
+          "contig": "AAQBIG010000003.1"
+        },
+        {
+          "gene": "stcA",
+          "name": "Stc fimbria major subunit StcA",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 98.86,
+          "contig": "AAQBIG010000003.1"
+        },
+        {
+          "gene": "sspH2",
+          "name": "SPI-2 type III secretion system effector E3 ubiquitin transferase SspH2",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.62,
+          "contig": "AAQBIG010000003.1"
+        },
+        {
+          "gene": "lpfB",
+          "name": "long polar fimbrial chaperone LpfB",
+          "subtype": "VIRULENCE",
+          "method": "EXACTX",
+          "pct_cov": 100.0,
+          "pct_id": 100.0,
+          "contig": "AAQBIG010000004.1"
+        },
+        {
+          "gene": "sinH",
+          "name": "intimin-like inverse autotransporter SinH",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.73,
+          "contig": "AAQBIG010000005.1"
+        },
+        {
+          "gene": "gogB",
+          "name": "type III secretion effector GogB",
+          "subtype": "VIRULENCE",
+          "method": "EXACTX",
+          "pct_cov": 100.0,
+          "pct_id": 100.0,
+          "contig": "AAQBIG010000005.1"
+        },
+        {
+          "gene": "sarA",
+          "name": "anti-inflammatory response activator SarA",
+          "subtype": "VIRULENCE",
+          "method": "EXACTX",
+          "pct_cov": 100.0,
+          "pct_id": 100.0,
+          "contig": "AAQBIG010000005.1"
+        },
+        {
+          "gene": "pagK",
+          "name": "vesicle-borne virulence factor PagK",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 96.97,
+          "contig": "AAQBIG010000005.1"
+        },
+        {
+          "gene": "hscC",
+          "name": "molecular chaperone HscC",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.64,
+          "contig": "AAQBIG010000006.1"
+        },
+        {
+          "gene": "xis",
+          "name": "excisionase Xis",
+          "subtype": "VIRULENCE",
+          "method": "EXACTX",
+          "pct_cov": 100.0,
+          "pct_id": 100.0,
+          "contig": "AAQBIG010000007.1"
+        },
+        {
+          "gene": "int",
+          "name": "FimB-specific integrase",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.53,
+          "contig": "AAQBIG010000007.1"
+        },
+        {
+          "gene": "stm0859",
+          "name": "STM0859 family transcriptional regulator",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.32,
+          "contig": "AAQBIG010000007.1"
+        },
+        {
+          "gene": "stm0854",
+          "name": "STM0854 family CoA ester lyase",
+          "subtype": "VIRULENCE",
+          "method": "EXACTX",
+          "pct_cov": 100.0,
+          "pct_id": 100.0,
+          "contig": "AAQBIG010000007.1"
+        },
+        {
+          "gene": "stjB",
+          "name": "StjB fimbria biogenesis outer membrane usher protein StjB",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.88,
+          "contig": "AAQBIG010000010.1"
+        },
+        {
+          "gene": "lsrF",
+          "name": "3-hydroxy-5-phosphonooxypentane-2,4-dione thiolase LsrF",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.66,
+          "contig": "AAQBIG010000011.1"
+        },
+        {
+          "gene": "iroB",
+          "name": "salmochelin biosynthesis C-glycosyltransferase IroB",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 86.52,
+          "contig": "AAQBIG010000012.1"
+        },
+        {
+          "gene": "iroC",
+          "name": "salmochelin/enterobactin export ABC transporter IroC",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 98.85,
+          "pct_id": 80.18,
+          "contig": "AAQBIG010000012.1"
+        },
+        {
+          "gene": "avrA",
+          "name": "type III secretion system YopJ family effector AvrA",
+          "subtype": "VIRULENCE",
+          "method": "PARTIALX",
+          "pct_cov": 75.83,
+          "pct_id": 99.13,
+          "contig": "AAQBIG010000012.1"
+        },
+        {
+          "gene": "invA",
+          "name": "type III secretion system export apparatus protein InvA",
+          "subtype": "VIRULENCE",
+          "method": "EXACTX",
+          "pct_cov": 100.0,
+          "pct_id": 100.0,
+          "contig": "AAQBIG010000012.1"
+        },
+        {
+          "gene": "stfA",
+          "name": "Stf fimbria major subunit StfA",
+          "subtype": "VIRULENCE",
+          "method": "EXACTX",
+          "pct_cov": 100.0,
+          "pct_id": 100.0,
+          "contig": "AAQBIG010000013.1"
+        },
+        {
+          "gene": "stiA",
+          "name": "Sti fimbria major subunit StiA",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.44,
+          "contig": "AAQBIG010000013.1"
+        },
+        {
+          "gene": "sseI",
+          "name": "SPI-2 type III secretion system effector SseI",
+          "subtype": "VIRULENCE",
+          "method": "EXACTX",
+          "pct_cov": 100.0,
+          "pct_id": 100.0,
+          "contig": "AAQBIG010000017.1"
+        },
+        {
+          "gene": "pipA",
+          "name": "type III secretion system effector protease PipA",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 97.79,
+          "contig": "AAQBIG010000017.1"
+        },
+        {
+          "gene": "gip",
+          "name": "hydroxypyruvate isomerase Gip",
+          "subtype": "VIRULENCE",
+          "method": "EXACTX",
+          "pct_cov": 100.0,
+          "pct_id": 100.0,
+          "contig": "AAQBIG010000021.1"
+        },
+        {
+          "gene": "allD",
+          "name": "ureidoglycolate dehydrogenase AllD",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.71,
+          "contig": "AAQBIG010000021.1"
+        },
+        {
+          "gene": "fljA",
+          "name": "phase 1 flagellin gene repressor FljA",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 97.21,
+          "contig": "AAQBIG010000024.1"
+        },
+        {
+          "gene": "icmF",
+          "name": "type VI secretion protein IcmF",
+          "subtype": "VIRULENCE",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.69,
+          "contig": "AAQBIG010000026.1"
+        },
+        {
+          "gene": "sciR",
+          "name": "Shiga-like toxin A subunit SciR",
+          "subtype": "VIRULENCE",
+          "method": "EXACTX",
+          "pct_cov": 100.0,
+          "pct_id": 100.0,
+          "contig": "AAQBIG010000026.1"
+        }
+      ],
+      "stress": [
+        {
+          "gene": "golS",
+          "name": "Au(I) sensor transcriptional regulator GolS",
+          "subtype": "METAL",
+          "method": "EXACTX",
+          "pct_cov": 100.0,
+          "pct_id": 100.0,
+          "contig": "AAQBIG010000009.1"
+        },
+        {
+          "gene": "golT",
+          "name": "gold/copper-translocating P-type ATPase GolT",
+          "subtype": "METAL",
+          "method": "BLASTX",
+          "pct_cov": 100.0,
+          "pct_id": 99.61,
+          "contig": "AAQBIG010000009.1"
+        }
+      ],
+      "point_mutations": []
+    }
+  }
+}

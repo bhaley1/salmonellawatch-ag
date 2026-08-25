@@ -12,8 +12,9 @@
   <div class="container">
     <h1>SalmonellaWatch-Ag <span class="version">v1 · beta</span></h1>
     <p class="lede">
-      A daily-updated digest of <em>Salmonella enterica</em> genomic clusters with recent
-      human cases, sourced from NCBI Pathogen Detection. Each cluster card shows the
+      A daily-updated digest of <em>Salmonella enterica</em> genomic clusters with at least one
+      recent non-human isolate, from food, animal, or environmental sources, sourced from
+      NCBI Pathogen Detection. Built for pre-harvest and agricultural food safety surveillance. Each cluster card shows the
       isolates that started the cluster, the cluster's typing, and how the cluster has
       grown year over year.
     </p>
@@ -39,9 +40,11 @@
 
 <div class="beta-banner">
   <div class="container">
-    <strong>Beta.</strong> SalmonellaWatch-Ag is a personal research project, not an official
-    surveillance system. Data lags real-time deposits by hours to days. Clusters are
-    computational predictions of genomic relatedness; they don't prove a foodborne link.
+    <strong>Beta.</strong> SalmonellaWatch-Ag is a personal research project. It is not an
+    official surveillance system and is not affiliated with, endorsed by, or representing
+    USDA, ARS, FDA, CDC, or any other agency; the analysis and views here are the author's
+    own. Data currency depends on the generation timestamp above. Clusters are computational
+    predictions of genomic relatedness; they don't prove a foodborne link.
   </div>
 </div>
 
@@ -51,7 +54,7 @@
   <div class="tile">
     <div class="tile-label">Active clusters</div>
     <div class="tile-value" id="stat-active-clusters">{{ totals.n_active or 0 }}</div>
-    <div class="tile-sub" id="stat-active-sub">≥1 new non-human isolate in last {{ window_days }}d</div>
+    <div class="tile-sub" id="stat-active-sub">≥1 new non-human isolate in last {{ window_days }}d · top 500 shown below</div>
   </div>
   <div class="tile">
     <div class="tile-label">New non-human isolates ({{ window_days }}d)</div>
@@ -100,6 +103,7 @@
       <input id="st-filter" type="text" placeholder="e.g. ST11" style="width:80px; padding:3px 6px; border:1px solid var(--rule); border-radius:3px; font-size:13px;">
       <label for="sort-select">Sort:</label>
       <select id="sort-select">
+        <option value="agri">Recent agricultural activity ↓</option>
         <option value="cases">New human cases ↓</option>
         <option value="accel">Acceleration rate ↓</option>
         <option value="date">Most recent case ↓</option>
@@ -110,8 +114,9 @@
     {% endif %}
   </div>
   <p class="muted">
-    Clusters with at least one non-human isolate created in NCBI in the last {{ window_days }} days. Includes pre-harvest, food production, and environmental samples.
-    Sorted by most recent isolate.
+    Clusters with at least one non-human isolate deposited in NCBI in the last {{ window_days }} days. Includes pre-harvest, food production, and environmental samples.
+    Recency is keyed to NCBI deposit date rather than sample collection date, because agricultural isolates are commonly deposited months after collection.
+    Showing the 500 clusters with the most recent non-human deposits, ranked by volume of recent non-human isolates.
   </p>
 
   {% if clusters %}
@@ -679,7 +684,7 @@
     var wantCountry  = countryFilter.value;
     var wantSerotype = serotypeFilter ? serotypeFilter.value : 'all';
     var wantST       = stFilter ? stFilter.value.trim().toUpperCase().replace('ST','') : '';
-    var sortBy       = sortSelect ? sortSelect.value : 'cases';
+    var sortBy       = sortSelect ? sortSelect.value : 'agri';
 
     var visible = 0, newHumans = 0, mixed = 0;
 
@@ -736,6 +741,7 @@
     // Sort
     var visibleCards = cards.filter(function(c){ return c.style.display !== 'none'; });
     visibleCards.sort(function(a, b) {
+      if (sortBy === 'agri')   return 0;
       if (sortBy === 'cases')  return parseInt(b.getAttribute('data-new-humans')||0) - parseInt(a.getAttribute('data-new-humans')||0);
       if (sortBy === 'accel')  return parseFloat(b.getAttribute('data-accel')||0) - parseFloat(a.getAttribute('data-accel')||0);
       if (sortBy === 'date')   return (b.getAttribute('data-latest')||'').localeCompare(a.getAttribute('data-latest')||'');
@@ -763,7 +769,7 @@
         status.innerHTML = '<span class="filter-count">' + visible + '</span> cluster' + (visible !== 1 ? 's' : '') + ' matching <span class="filter-chips">' + chipHtml + '</span>';
         status.style.display = '';
       } else {
-        status.innerHTML = '<span class="filter-count">' + visible + '</span> <span class="filter-label">of ' + total + ' active clusters</span>';
+        status.innerHTML = '<span class="filter-count">' + visible + '</span> <span class="filter-label">of ' + total + ' shown</span>';
         status.style.display = '';
       }
     }
@@ -773,7 +779,7 @@
       if (tileActive) tileActive.textContent = globalActive;
       if (tileHuman)  tileHuman.textContent  = globalHuman;
       if (tileMixed)  tileMixed.textContent  = globalMixed;
-      if (tileSub0)   tileSub0.textContent   = '≥1 new non-human isolate in last 180d';
+      if (tileSub0)   tileSub0.textContent   = '≥1 new non-human isolate in last 180d · top 500 shown below';
       if (tileSub1)   tileSub1.textContent   = 'across all active clusters';
     } else {
       if (tileActive) tileActive.textContent = visible;

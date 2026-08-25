@@ -36,7 +36,7 @@ def get_recent_activity_clusters(
             SELECT 1 FROM isolates i
             WHERE i.pds_acc = cs.pds_acc
               AND i.source_category != 'Human'
-              AND i.collection_date >= """ + cutoff_iso + """
+              AND i.target_creation_date >= """ + cutoff_iso + """
             LIMIT 1
         )
     """
@@ -83,7 +83,12 @@ def get_recent_activity_clusters(
         LEFT JOIN cluster_typing ct
                ON cs.pathogen = ct.pathogen AND cs.pds_acc = ct.pds_acc
         WHERE {where}
-        ORDER BY cs.new_humans_in_window DESC, cs.latest_target_creation_date DESC
+        ORDER BY (
+            SELECT COUNT(*) FROM isolates i
+            WHERE i.pds_acc = cs.pds_acc
+              AND i.source_category != 'Human'
+              AND i.target_creation_date >= {cutoff_iso}
+        ) DESC, cs.latest_target_creation_date DESC
         LIMIT ?
     """, params).fetchall()
 
@@ -151,7 +156,7 @@ def get_recent_activity_clusters(
         FROM isolates
         WHERE pds_acc IN ({placeholders})
         AND source_category != 'Human'
-        AND collection_date >= ?
+        AND target_creation_date >= ?
         GROUP BY pds_acc
     """, pds_accs + [cutoff_iso]).fetchall()
     new_nonhumans_by_pds = {r["pds_acc"]: r["n"] for r in nonhuman_counts}
@@ -167,7 +172,7 @@ def get_recent_activity_clusters(
             FROM isolates
             WHERE pds_acc IN ({placeholders})
             AND source_category = 'Human'
-            AND collection_date >= date('now', '-60 days')
+            AND target_creation_date >= date('now', '-60 days')
             ORDER BY pds_acc, collection_date DESC
         """, pds_accs).fetchall()
         for cr in ch_rows:
@@ -204,7 +209,7 @@ def get_recent_activity_clusters(
         FROM isolates
         WHERE pds_acc IN ({placeholders})
         AND source_category != 'Human'
-        AND collection_date >= ?
+        AND target_creation_date >= ?
         ORDER BY pds_acc, collection_date DESC
     """, pds_accs + [cutoff_ag]).fetchall()
     
@@ -482,10 +487,10 @@ def get_totals(conn: sqlite3.Connection) -> dict[str, Any]:
             SUM(CASE WHEN cs.n_human > 0 AND cs.n_nonhuman > 0 THEN 1 ELSE 0 END) AS n_mixed,
             (SELECT COUNT(DISTINCT i.pds_acc) FROM isolates i
              WHERE i.source_category != 'Human'
-             AND i.collection_date >= {cutoff_iso}) AS n_active,
+             AND i.target_creation_date >= {cutoff_iso}) AS n_active,
             (SELECT COUNT(*) FROM isolates i
              WHERE i.source_category != 'Human'
-             AND i.collection_date >= {cutoff_iso}) AS n_new_humans_window
+             AND i.target_creation_date >= {cutoff_iso}) AS n_new_humans_window
         FROM cluster_summary cs
     """).fetchone()
     return dict(row) if row else {}

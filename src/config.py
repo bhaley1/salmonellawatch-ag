@@ -79,7 +79,7 @@ CACHE_MAX_AGE_HOURS = 3
 # before public release. Toggle to False when ready to go public.
 #
 # Override via environment variable LW_REVIEW_MODE=0 or =1.
-REVIEW_MODE = os.environ.get("LW_REVIEW_MODE", "1") == "1"
+REVIEW_MODE = os.environ.get("LW_REVIEW_MODE", "0") == "1"
 
 
 # ---------------------------------------------------------------------------

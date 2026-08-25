@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Methods — SalmonellaWatch</title>
+  <title>Methods — SalmonellaWatch-Ag</title>
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
@@ -11,8 +11,8 @@
 <header class="masthead">
   <div class="container">
     <h1>
-      <a href="index.html" class="masthead-home">SalmonellaWatch</a>
-      <span class="version">v2 · beta</span>
+      <a href="index.html" class="masthead-home">SalmonellaWatch-Ag</a>
+      <span class="version">v1 · beta</span>
     </h1>
     <p class="lede">
       Methods, definitions, and caveats — what the signals on the dashboard actually mean.
@@ -23,18 +23,13 @@
   </div>
 </header>
 
-<div class="review-banner">
-  <div class="container">
-    <strong>⚠ Private review.</strong> This page is shared for colleague feedback only.
-    Do not circulate the URL publicly. Send corrections to Bradd Haley.
-  </div>
-</div>
 
 <div class="beta-banner">
   <div class="container">
-    <strong>Beta.</strong> SalmonellaWatch is a personal research project, not an official
-    surveillance system. The documentation below reflects the author's interpretation
-    of public surveillance literature and is not peer-reviewed.
+    <strong>Beta.</strong> SalmonellaWatch-Ag is a personal research project. It is not an
+    official surveillance system and is not affiliated with, endorsed by, or representing
+    USDA, ARS, FDA, CDC, or any other agency. The documentation below reflects the author's
+    interpretation of public surveillance literature and is not peer-reviewed.
   </div>
 </div>
 
@@ -46,7 +41,7 @@
     <li><a href="#data-sources">Data sources and update cadence</a></li>
     <li><a href="#clusters">What a "cluster" is</a></li>
     <li><a href="#dates">Date semantics: collection_date vs. target_creation_date</a></li>
-    <li><a href="#new-cases">"New human cases" and the 60d / 30d / 15d windows</a></li>
+    <li><a href="#new-cases">Cluster inclusion, the 180d window, and human case counts</a></li>
     <li><a href="#geographic-spread">Geographic spread tiers</a></li>
     <li><a href="#import-signal">Import signal</a></li>
     <li><a href="#travel-signal">Travel signal</a></li>
@@ -78,7 +73,7 @@ Animal host species</a></li>
     daily SNP-based clustering to identify genomically related isolates.
   </p>
   <p>
-    SalmonellaWatch ingests three files per pathogen per release from the NCBI
+    SalmonellaWatch-Ag ingests three files per pathogen per release from the NCBI
     PD FTP site:
   </p>
   <ul>
@@ -113,9 +108,9 @@ Animal host species</a></li>
     exposure histories, food sampling, and so on.
   </p>
   <p>
-    On the dashboard, "cluster card" and "active cluster" both refer to a
-    cluster currently displayed: one with at least one human isolate whose
-    collection_date is within the last 60 days.
+    On this dashboard, "cluster card" and "active cluster" both refer to a
+    cluster currently displayed: one with at least one non-human isolate whose
+    target_creation_date is within the last 180 days.
   </p>
 </section>
 
@@ -131,14 +126,14 @@ Animal host species</a></li>
     <dd>
       When the sample was physically collected from the patient, food,
       animal, or environment. Reflects when illness or contamination
-      occurred in the world. Used by SalmonellaWatch for the "New human cases
-      in last 60d/30d/15d" filter and counts.
+      occurred in the world. Used by SalmonellaWatch-Ag for the human case
+      counts shown on cluster cards and for the collection-frequency histograms.
     </dd>
     <dt><code>target_creation_date</code></dt>
     <dd>
       When NCBI's pathogen detection pipeline first processed the isolate
       and added it to the cluster manifest. Reflects when the genomic
-      surveillance system first "saw" the case. Used by SalmonellaWatch for
+      surveillance system first "saw" the case. Used by SalmonellaWatch-Ag for
       the acceleration signal because that signal is asking "is this
       cluster being detected at an accelerating pace right now?"
     </dd>
@@ -147,34 +142,41 @@ Animal host species</a></li>
     These can diverge dramatically. A lab may collect samples in 2019, sit
     on them for years, and finally upload sequence data in 2026 — those
     will show recent target_creation_dates but old collection_dates.
-    SalmonellaWatch's "new cases" framing intentionally uses collection_date
-    so that <em>actually-recent illness</em>, not <em>backlogged
-    deposits</em>, drives the headline number.
+    SalmonellaWatch-Ag keys cluster inclusion and ranking to
+    target_creation_date. For agricultural surveillance, a recently deposited
+    isolate is actionable regardless of when it was collected, and filtering on
+    collection date would discard most of it. The companion human-clinical
+    dashboard makes the opposite choice for the opposite reason.
   </p>
 </section>
 
 <section id="new-cases">
-  <h2>"New human cases" and the 60d / 30d / 15d windows</h2>
+  <h2>Cluster inclusion, the 180d window, and human case counts</h2>
   <p>
-    The headline "N new human cases in last 60d" counts cluster members with
+    Cluster cards show human case counts alongside agricultural activity. These count cluster members with
     <code>source_category = "Human"</code> AND <code>collection_date</code>
-    within the last 60 days. The 30d and 15d sub-counts apply progressively
-    tighter windows.
+    within the last 180 days. The 30d and 15d sub-counts apply progressively
+    tighter windows. They are context for interpreting a cluster, not the
+    basis for its inclusion.
   </p>
   <p>
-    A cluster appears on the dashboard if and only if it has at least one
-    human case with a recent collection_date. Clusters that received new
-    food or environmental isolates but no recent human cases are NOT shown,
-    by design — the dashboard's purpose is to flag clusters where human
-    illness is currently being detected.
+    A cluster appears on this dashboard if and only if it has at least one
+    <em>non-human</em> isolate — food, animal, or environmental — whose
+    <code>target_creation_date</code> falls within the last 180 days. Recent
+    human cases are neither required nor sufficient for inclusion. Human case
+    counts are shown on cluster cards as context, not as the inclusion criterion.
   </p>
   <p>
-    The "Salmonella" choice of 60 days for the primary window is wider than
-    you would use for Salmonella (where 30 days is typical). It reflects
-    Salmonella's epidemiology — long incubation periods (up to 70 days for
-    invasive disease) and slower laboratory characterization mean a tighter
-    window would miss many cases that are still part of an active outbreak
-    in epidemiological terms.
+    Recency is keyed to NCBI deposit date rather than sample collection date.
+    Agricultural and environmental isolates are commonly deposited months after
+    collection — median deposit lags of 130 to 290 days are routine on the clusters
+    shown here. Filtering on collection date would discard exactly the recently
+    deposited material that pre-harvest surveillance exists to surface.
+  </p>
+  <p>
+    The 180-day window is wider than the 60-day window used for human clinical
+    surveillance, for the same reason: it is sized to the deposit lag of
+    non-human submissions rather than to the incubation period of human illness.
   </p>
 </section>
 
@@ -554,7 +556,7 @@ Animal host species</a></li>
     <a href="https://pubmlst.org/organisms/salmonella-spp">PubMLST</a>.
   </p>
   <p>
-    SalmonellaWatch picks one representative isolate per cluster (preferring
+    SalmonellaWatch-Ag picks one representative isolate per cluster (preferring
     Complete Genome &gt; Chromosome &gt; Scaffold &gt; Contig, then highest
     contig N50, then earliest collection date), downloads its assembly from
     NCBI, and runs
@@ -593,6 +595,12 @@ Animal host species</a></li>
   extensively drug-resistant (XDR) phenotypes are of particular concern
   in serovars Typhi, Typhimurium, and Kentucky.
 </p>
+<p class="caveat">
+  <strong>Temporarily unavailable.</strong> NCBI changed the format of the AMR
+  sidecar file in mid-2026, replacing per-gene rows with summary columns. The
+  parser has not yet been updated, so gene-level AMR chips are not currently
+  displayed. Cluster data is otherwise unaffected. This is being restored.
+</p>
 <p>
   <strong>Caveat.</strong> The chip flags gene presence, not confirmed phenotype.
   Phenotypic confirmation requires antibiotic susceptibility testing in a
@@ -624,7 +632,7 @@ Animal host species</a></li>
     category X."
   </p>
   <p>
-    <strong>Caveat.</strong> SalmonellaWatch displays whatever string the
+    <strong>Caveat.</strong> SalmonellaWatch-Ag displays whatever string the
     submitter entered. Inconsistencies in submitter labeling (e.g., "BEEF"
     vs. "beef" vs. "Beef products") will produce inconsistent category
     labels.
@@ -915,7 +923,7 @@ Animal host species</h2>
   <h2>Top-level caveats</h2>
   <ol>
     <li>
-      <strong>SalmonellaWatch is a personal research project, not an official
+      <strong>SalmonellaWatch-Ag is a personal research project, not an official
       surveillance system.</strong> It is not authorized to issue health
       advisories, food recalls, or outbreak declarations. CDC, FDA, and
       USDA do that, with the benefit of epidemiological and laboratory
@@ -953,7 +961,7 @@ Animal host species</h2>
     </li>
     <li>
       <strong>Missing data is silent.</strong> An isolate without a
-      <code>collection_date</code> doesn't appear in "new cases" counts;
+      <code>target_creation_date</code> doesn't appear in active-cluster counts;
       an isolate without a geocodable location doesn't appear on the map;
       an isolate without an <code>IFSAC_category</code> doesn't contribute
       to the IFSAC chip. These are common.
@@ -972,7 +980,7 @@ Animal host species</h2>
 <footer>
   <div class="container">
     <p>
-      SalmonellaWatch v2 · daily surveillance digest · Data from
+      SalmonellaWatch-Ag v1 · daily surveillance digest · Data from
       <a href="https://www.ncbi.nlm.nih.gov/pathogens/">NCBI Pathogen Detection</a>
     </p>
   </div>
