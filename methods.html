@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Methods — SalmonellaWatch-Ag</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="container">
+    <h1>
+      <a href="index.html" class="masthead-home">SalmonellaWatch-Ag</a>
+      <span class="version">v1 · beta</span>
+    </h1>
+    <p class="lede">
+      Methods, definitions, and caveats — what the signals on the dashboard actually mean.
+    </p>
+    <p class="meta">
+      <a href="index.html">← Back to dashboard</a>
+    </p>
+  </div>
+</header>
+
+<div class="review-banner">
+  <div class="container">
+    <strong>⚠ Private review.</strong> This page is shared for colleague feedback only.
+    Do not circulate the URL publicly. Send corrections to Bradd Haley.
+  </div>
+</div>
+
+<div class="beta-banner">
+  <div class="container">
+    <strong>Beta.</strong> SalmonellaWatch-Ag is a personal research project. It is not an
+    official surveillance system and is not affiliated with, endorsed by, or representing
+    USDA, ARS, FDA, CDC, or any other agency. The documentation below reflects the author's
+    interpretation of public surveillance literature and is not peer-reviewed.
+  </div>
+</div>
+
+<main class="container methods-page">
+
+<nav class="methods-toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#data-sources">Data sources and update cadence</a></li>
+    <li><a href="#clusters">What a "cluster" is</a></li>
+    <li><a href="#dates">Date semantics: collection_date vs. target_creation_date</a></li>
+    <li><a href="#new-cases">Cluster inclusion, the 180d window, and human case counts</a></li>
+    <li><a href="#geographic-spread">Geographic spread tiers</a></li>
+    <li><a href="#import-signal">Import signal</a></li>
+    <li><a href="#travel-signal">Travel signal</a></li>
+    <li><a href="#submitter-diversity">Submitter diversity (multi-BioProject)</a></li>
+    <li><a href="#human-emergence">Human emergence signal</a></li>
+    <li><a href="#acceleration">Acceleration</a></li>
+    <li><a href="#deposit-lag">Collection-to-deposit lag</a></li>
+    <li><a href="#mlst">MLST and Sequence Types</a></li>
+    <li><a href="#amr">AMR clinical-importance flag</a></li>
+    <li><a href="#ifsac">IFSAC food categorization</a></li>
+    <li><a href="#host-species">Commodity-coded collection histograms
+Serotypes of Concern (SOC)
+Animal host species</a></li>
+    <li><a href="#map">Geographic footprint map</a></li>
+    <li><a href="#histogram">Isolates-per-year histogram</a></li>
+    <li><a href="#oldest">Cluster origins (oldest isolates)</a></li>
+    <li><a href="#references">References</a></li>
+    <li><a href="#caveats">Top-level caveats</a></li>
+  </ol>
+</nav>
+
+<section id="data-sources">
+  <h2>Data sources and update cadence</h2>
+  <p>
+    All cluster, isolate, and AMR data are sourced from
+    <a href="https://www.ncbi.nlm.nih.gov/pathogens/">NCBI Pathogen Detection</a>
+    (NCBI PD). NCBI PD is a public, FDA/CDC/USDA-collaborative platform that
+    receives bacterial isolate genomes from labs around the world and runs
+    daily SNP-based clustering to identify genomically related isolates.
+  </p>
+  <p>
+    SalmonellaWatch-Ag ingests three files per pathogen per release from the NCBI
+    PD FTP site:
+  </p>
+  <ul>
+    <li><code>metadata.tsv</code> — per-isolate metadata (host, source, geography, dates, assembly references, IFSAC category, food_origin, host_disease)</li>
+    <li><code>cluster_list.tsv</code> — the per-cluster isolate membership manifest (Salmonella, STEC, and Campylobacter only; Salmonella's cluster info is delivered differently)</li>
+    <li><code>amr.metadata.tsv</code> — AMRFinderPlus output (resistance gene calls per isolate)</li>
+  </ul>
+  <p>
+    The ingest runs nightly. NCBI itself updates files in place within a
+    release accession, so even between Salmonella release bumps, individual
+    files may pick up new isolates.
+  </p>
+</section>
+
+<section id="clusters">
+  <h2>What a "cluster" is</h2>
+  <p>
+    A <strong>SNP cluster</strong> (NCBI PDS_acc, e.g. <code>PDS000024682.215</code>)
+    is a group of bacterial isolates whose whole-genome sequences are
+    genomically close enough to plausibly share a recent common contamination
+    source. NCBI computes these clusters daily using a SNP-based whole-genome
+    MLST approach with hierarchical clustering thresholds.
+  </p>
+  <p>
+    <strong>What clustering does NOT prove.</strong> Genomic relatedness is
+    necessary but not sufficient evidence of a foodborne outbreak. Two
+    isolates in the same cluster may share an outbreak source, may share a
+    common environmental reservoir, or may simply both descend from a
+    persistent clone that has been circulating for years. The cluster is a
+    <em>signal worth investigating</em>, not a confirmed outbreak. Outbreak
+    confirmation requires epidemiological investigation: case interviews,
+    exposure histories, food sampling, and so on.
+  </p>
+  <p>
+    On this dashboard, "cluster card" and "active cluster" both refer to a
+    cluster currently displayed: one with at least one non-human isolate whose
+    target_creation_date is within the last 180 days.
+  </p>
+</section>
+
+<section id="dates">
+  <h2>Date semantics: collection_date vs. target_creation_date</h2>
+  <p>
+    Every isolate in NCBI has at least two dates and they can differ by
+    months or years. Knowing which is which matters because most signals on
+    the dashboard depend on one specific choice.
+  </p>
+  <dl class="defs">
+    <dt><code>collection_date</code></dt>
+    <dd>
+      When the sample was physically collected from the patient, food,
+      animal, or environment. Reflects when illness or contamination
+      occurred in the world. Used by SalmonellaWatch-Ag for the human case
+      counts shown on cluster cards and for the collection-frequency histograms.
+    </dd>
+    <dt><code>target_creation_date</code></dt>
+    <dd>
+      When NCBI's pathogen detection pipeline first processed the isolate
+      and added it to the cluster manifest. Reflects when the genomic
+      surveillance system first "saw" the case. Used by SalmonellaWatch-Ag for
+      the acceleration signal because that signal is asking "is this
+      cluster being detected at an accelerating pace right now?"
+    </dd>
+  </dl>
+  <p>
+    These can diverge dramatically. A lab may collect samples in 2019, sit
+    on them for years, and finally upload sequence data in 2026 — those
+    will show recent target_creation_dates but old collection_dates.
+    SalmonellaWatch-Ag keys cluster inclusion and ranking to
+    target_creation_date. For agricultural surveillance, a recently deposited
+    isolate is actionable regardless of when it was collected, and filtering on
+    collection date would discard most of it. The companion human-clinical
+    dashboard makes the opposite choice for the opposite reason.
+  </p>
+</section>
+
+<section id="new-cases">
+  <h2>Cluster inclusion, the 180d window, and human case counts</h2>
+  <p>
+    Cluster cards show human case counts alongside agricultural activity. These count cluster members with
+    <code>source_category = "Human"</code> AND <code>collection_date</code>
+    within the last 180 days. The 30d and 15d sub-counts apply progressively
+    tighter windows. They are context for interpreting a cluster, not the
+    basis for its inclusion.
+  </p>
+  <p>
+    A cluster appears on this dashboard if and only if it has at least one
+    <em>non-human</em> isolate — food, animal, or environmental — whose
+    <code>target_creation_date</code> falls within the last 180 days. Recent
+    human cases are neither required nor sufficient for inclusion. Human case
+    counts are shown on cluster cards as context, not as the inclusion criterion.
+  </p>
+  <p>
+    Recency is keyed to NCBI deposit date rather than sample collection date.
+    Agricultural and environmental isolates are commonly deposited months after
+    collection — median deposit lags of 130 to 290 days are routine on the clusters
+    shown here. Filtering on collection date would discard exactly the recently
+    deposited material that pre-harvest surveillance exists to surface.
+  </p>
+  <p>
+    The 180-day window is wider than the 60-day window used for human clinical
+    surveillance, for the same reason: it is sized to the deposit lag of
+    non-human submissions rather than to the incubation period of human illness.
+  </p>
+</section>
+
+<section id="geographic-spread">
+  <h2>Geographic spread tiers</h2>
+  <p>
+    The cluster card may show one of four mutually exclusive geographic
+    spread chips. They are computed from the canonical country and U.S.
+    state of every isolate in the cluster (not just recent ones). Only the
+    strongest applicable tier displays.
+  </p>
+  <dl class="defs">
+    <dt>MULTI-STATE</dt>
+    <dd>
+      ≥2 distinct U.S. states are represented and no isolates from outside
+      the U.S. Detected only for U.S.-only clusters because NCBI's
+      <code>geo_admin1</code> field is reliably populated for U.S. isolates
+      but inconsistently for most other countries.
+    </dd>
+    <dt>MULTI-COUNTRY</dt>
+    <dd>
+      ≥2 distinct countries on the same continent. A single-state U.S.
+      cluster with one Mexican isolate triggers this, not multi-state.
+    </dd>
+    <dt>MULTI-CONTINENT</dt>
+    <dd>
+      ≥2 distinct continents (out of North America, South America, Europe,
+      Asia, Africa, Oceania). A cluster with isolates from the U.S. and
+      Japan would trigger this even if only two countries are involved.
+    </dd>
+    <dt>MULTI-HEMISPHERE</dt>
+    <dd>
+      Isolates from both Northern and Southern hemispheres, classified by
+      country population centroid. Indonesia is classified Southern;
+      Tanzania Southern; Kenya Southern (by population centroid, despite
+      crossing the equator); most other equator-straddling countries
+      similarly assigned by population.
+    </dd>
+  </dl>
+  <p>
+    <strong>Caveat.</strong> Two-country clusters and 50-country clusters
+    receive the same MULTI-COUNTRY chip. The label is a <em>tier</em>, not
+    a strength-of-spread metric. To see the actual scope, hover the chip
+    for the numeric counts (e.g., "12 countries · 4 continents · 8 US
+    states"), or look at the map.
+  </p>
+  <p>
+    Country names are canonicalized to ISO names ("USA" → "United States";
+    "UK" → "United Kingdom"; etc.) before being compared. Countries not in
+    the lookup table (~200 covered) are passed through unchanged and may
+    not contribute to continent or hemisphere classification.
+  </p>
+</section>
+
+<section id="import-signal">
+  <h2>Import signal</h2>
+  <p>
+    The IMPORT SIGNAL chip is a <strong>pointer signal</strong> that the
+    <em>contaminated food vehicle may have crossed an international border
+    before being consumed</em>. In standard foodborne disease classification,
+    an imported case is one in which the food vehicle traveled, not the
+    person. Two ways this signal triggers:
+  </p>
+  <ol>
+    <li>
+      <strong>Country mismatch.</strong> The cluster contains human
+      isolates from one country and food isolates from a different country.
+      Example: U.S. human cases in the same cluster as Mexican food
+      isolates suggests an imported food vector.
+    </li>
+    <li>
+      <strong><code>food_origin</code> field populated.</strong> NCBI's
+      <code>food_origin</code> column, when filled in, records the
+      country where the food was produced (separate from where the isolate
+      was collected). Any mismatch between food_origin and
+      <code>geo_country</code> triggers the signal.
+    </li>
+  </ol>
+  <p>
+    <strong>What this signal does not establish.</strong> Co-occurrence of
+    human and food isolates from different countries in a genomic cluster
+    does not prove that imported food caused the human cases. The strain
+    may simply circulate internationally. The chip is a pointer to clusters
+    worth investigating, not a confirmation of imported-food etiology.
+    Distinguishing import from non-import requires the standard
+    public-health workflow: case interviews, food traceback, supplier
+    investigation.
+  </p>
+  <p>
+    <strong>Relationship to the travel signal.</strong> A cluster may fire
+    the IMPORT SIGNAL and the TRAVEL SIGNAL simultaneously, and they are
+    not mutually exclusive. Each is computed independently from different
+    NCBI metadata fields and answers a different question. See the
+    <a href="#travel-signal">travel signal section below</a> for the
+    distinction.
+  </p>
+</section>
+
+<section id="travel-signal">
+  <h2>Travel signal</h2>
+  <p>
+    The TRAVEL SIGNAL chip is a <strong>pointer signal</strong> that
+    <em>the case-patient may have been exposed to the pathogen while
+    traveling outside their country of residence</em>. In standard
+    foodborne disease classification, a travel-associated case is one in
+    which the person traveled, not the food vehicle. The two surveillance
+    bodies most cited in this dashboard's literature — CDC and ECDC — both
+    treat "travel-associated" as a distinct case classification from
+    "imported food vehicle".
+  </p>
+  <h3>The scientific distinction from import signal</h3>
+  <dl class="defs">
+    <dt>Import (food vehicle crossed border)</dt>
+    <dd>
+      The contaminated food was produced in country B, distributed to
+      country A, and consumed by a case-patient who never left country A.
+      Vehicle traveled; person did not.
+    </dd>
+    <dt>Travel-associated (person crossed border)</dt>
+    <dd>
+      The case-patient was exposed to the pathogen while in country B
+      (typically through food consumed there) and was diagnosed after
+      returning to country A. Person traveled; vehicle did not.
+    </dd>
+  </dl>
+  <p>
+    These are <strong>different epidemiological phenomena with different
+    public-health responses</strong>. Import cases drive food recalls and
+    trade investigations. Travel cases drive traveler advisories and
+    surveillance of foreign food systems. The signals are not redundant.
+  </p>
+
+  <h3>How this signal is detected</h3>
+  <p>
+    The TRAVEL SIGNAL chip fires when at least one human cluster member's
+    <code>host_disease</code> or <code>isolation_source</code> field
+    contains submitter-annotated text indicating travel association.
+    Recognized phrases (case-insensitive substring match):
+  </p>
+  <ul class="keyword-list">
+    <li>"travel-associated", "travel associated", "travel-related", "travel related"</li>
+    <li>"traveler", "traveller", "returning traveler", "returning traveller"</li>
+    <li>"imported case", "imported salmonellosis", "imported infection"</li>
+  </ul>
+  <p>
+    Note that several of those keywords contain the word "imported" — these
+    refer to an <em>imported case</em> (the person was infected abroad),
+    not to imported food. The TRAVEL SIGNAL is still the correct chip
+    semantically.
+  </p>
+
+  <h3>Important limitations</h3>
+  <p>
+    <strong>NCBI Pathogen Detection has no dedicated travel-history field.</strong>
+    Travel association is detectable here <em>only when the submitter
+    happened to annotate it</em> in free-text fields. The vast majority of
+    travel-associated cases are NOT annotated this way — they appear as
+    ordinary domestic cases.
+  </p>
+  <p>
+    This signal therefore has a very high false-negative rate. Treat the
+    chip as "this cluster contains at least one known travel case worth
+    investigating" — not as a measure of how travel-associated the cluster
+    actually is. <strong>Absence of the chip does NOT mean the cluster is
+    domestic.</strong>
+  </p>
+
+  <h3>Co-firing with import signal</h3>
+  <p>
+    A cluster can fire both the IMPORT SIGNAL and the TRAVEL SIGNAL at the
+    same time, because they are computed independently from different
+    NCBI metadata. Possible interpretations of co-firing:
+  </p>
+  <ul>
+    <li>
+      <strong>Both genuinely apply.</strong> An imported food vehicle is
+      causing domestic cases, and there are independent travel-associated
+      cases linked to the food's country of origin. Genuinely informative
+      pattern.
+    </li>
+    <li>
+      <strong>Only the import signal reflects reality.</strong> A
+      travel-annotated isolate landed in a cluster whose true significance
+      is an imported food vector unrelated to the traveler.
+    </li>
+    <li>
+      <strong>Only the travel signal reflects reality.</strong> The
+      country mismatch driving the import signal may reflect that the
+      strain circulates internationally rather than that any food was
+      actually imported.
+    </li>
+    <li>
+      <strong>Both could be coincidental.</strong> The chips flag
+      configurations worth investigating; they do not confirm either
+      etiology.
+    </li>
+  </ul>
+  <p>
+    Distinguishing these requires <strong>epidemiological case
+    investigation</strong> — case interviews about food exposure history,
+    food traceback, supplier-level investigation — which this dashboard
+    cannot perform. The signals are pointer tools for surveillance
+    professionals, not diagnostic tools.
+  </p>
+</section>
+
+<section id="submitter-diversity">
+  <h2>Submitter diversity (multi-BioProject)</h2>
+  <p>
+    The MULTI-SUBMITTER chip fires when ≥5 distinct NCBI BioProject
+    accessions contributed isolates to the cluster. A second tier ("very
+    strong") is noted at ≥10 distinct BioProjects.
+  </p>
+  <h3>What this signal means</h3>
+  <p>
+    A BioProject (e.g., <code>PRJNA001234</code>) is NCBI's grouping for
+    related sequence submissions, usually one organization's surveillance
+    program or research study. When the same SNP cluster contains
+    contributions from many distinct BioProjects, that indicates
+    <strong>independent laboratories or organizations are each detecting
+    related isolates</strong> — a much stronger surveillance signal than
+    one lab repeatedly finding closely-related strains in their own
+    collection (which could be cohort contamination or a single facility's
+    persistent strain).
+  </p>
+  <h3>Caveat on this proxy</h3>
+  <p>
+    BioProject does not map 1:1 to "independent lab." Some large public-
+    health agencies use a single BioProject for years of submissions
+    (under-counting their independence); some studies span multiple
+    BioProjects (over-counting). The signal is therefore a useful proxy
+    for submitter diversity, not an exact measure. Interpret as "this
+    cluster has caught the attention of many different submitters", not
+    as a precise count of independent labs.
+  </p>
+</section>
+
+<section id="human-emergence">
+  <h2>Human emergence signal</h2>
+  <p>
+    The EMERGING chip fires when a previously food- or
+    environment-dominated cluster is now seeing human cases. The chip
+    shows the percentage shift, e.g., "EMERGING (40% human, up from 5%)".
+  </p>
+  <h3>Epidemiological rationale</h3>
+  <p>
+    The canonical "outbreak emerging" pattern for foodborne pathogens is:
+    a contaminated food source persists (often in a processing
+    environment) and accumulates many food/environmental isolates over
+    months or years. When that contamination finally causes detected
+    human illness, the cluster's source-mix shifts from food-dominant to
+    increasingly human-dominant. This shift is one of the earliest
+    actionable surveillance signals — it indicates a known contamination
+    source has now been linked to disease, and the source itself is often
+    already identifiable in the food/environment isolates.
+  </p>
+  <h3>Detection criteria</h3>
+  <p>
+    The signal fires when ALL of the following hold:
+  </p>
+  <ul>
+    <li>The cluster has ≥10 baseline isolates older than 365 days</li>
+    <li>The cluster has ≥3 isolates collected in the last 365 days</li>
+    <li>The recent human-fraction is at least 30%</li>
+    <li>The recent human-fraction is at least 20 percentage points higher than the baseline human-fraction</li>
+    <li>The baseline was less than 50% human (otherwise this isn't "emergence" — the cluster was always mostly human)</li>
+  </ul>
+  <p>
+    Thresholds are calibrated to flag meaningful shifts (e.g., 5% → 30%)
+    while ignoring small fluctuations (e.g., 40% → 45%).
+  </p>
+  <h3>Caveat</h3>
+  <p>
+    Like all signals on this dashboard, this is a pointer. A real
+    investigation requires confirming the source-mix shift reflects a
+    real change in case detection rather than a sampling artifact (e.g.,
+    a state suddenly increasing clinical surveillance).
+  </p>
+</section>
+
+<section id="acceleration">
+  <h2>Acceleration</h2>
+  <p>
+    The ACCELERATING (Nx) chip fires when a cluster is gaining new isolates
+    faster than its historical baseline. Formally:
+  </p>
+  <ol>
+    <li>
+      The cluster must be at least 180 days old (by earliest
+      target_creation_date). Younger clusters cannot form a meaningful
+      baseline.
+    </li>
+    <li>
+      Per-day rate over the last 60 days =
+      <code>n_recent / 60</code>, where <code>n_recent</code> is the count
+      of cluster members whose <code>target_creation_date</code> falls in
+      the last 60 days.
+    </li>
+    <li>
+      Per-day baseline rate =
+      <code>n_baseline / (age_days − 60)</code>, where
+      <code>n_baseline</code> is the count of cluster members older than
+      that.
+    </li>
+    <li>
+      Chip fires when <code>recent_rate / baseline_rate ≥ 2.0</code> AND
+      <code>n_recent ≥ 2</code>. The "(2.5×)" number in the chip is the
+      ratio.
+    </li>
+  </ol>
+  <h3>Relationship to standard outbreak-detection algorithms</h3>
+  <p>
+    The general approach — flagging unusual increases in case counts
+    relative to a baseline — is foundational to public-health surveillance
+    and is implemented in mature, peer-reviewed algorithms such as CUSUM,
+    EARS (CDC), Farrington (ECDC), and SaTScan. <strong>This dashboard's
+    implementation is a simplified ratio, not a calibrated statistical
+    test.</strong> Specifically:
+  </p>
+  <ul>
+    <li>The standard algorithms model expected count variance and provide a calibrated false-positive rate (e.g., flag at α=0.05). This implementation uses a fixed 2× threshold with no statistical calibration.</li>
+    <li>The standard algorithms account for seasonality. <em>Salmonella</em> has summer peaks; this implementation does not adjust for them.</li>
+    <li>The standard algorithms use guard bands to avoid baseline contamination by the very recent past. This implementation simply splits at 60 days.</li>
+  </ul>
+  <p>
+    For production surveillance, refer to the dedicated tools listed in
+    the <a href="#references">references</a>. The chip on this dashboard
+    is a "look at this cluster" pointer, not a substitute for proper
+    outbreak detection methodology.
+  </p>
+  <h3>Why <code>target_creation_date</code> and not <code>collection_date</code>?</h3>
+  <p>
+    The acceleration signal is asking "is this cluster being detected by
+    surveillance at an accelerating pace?" That maps to ingestion date,
+    not sampling date. A lab dumping a long backlog into NCBI in one week
+    can trigger this signal even when real-world illness is not actually
+    accelerating. This is a known limitation; the chip should always be
+    interpreted alongside the histogram to check the trend.
+  </p>
+</section>
+
+<section id="deposit-lag">
+  <h2>Collection-to-deposit lag</h2>
+  <p>
+    The "Deposit lag" field in the typing strip shows the median number of
+    days between when cluster isolates were collected and when they were
+    deposited in NCBI Pathogen Detection. Lower numbers mean the
+    surveillance pipeline is delivering near-real-time information; higher
+    numbers mean the data largely reflects backlogged deposits.
+  </p>
+  <p>
+    When the mean and median diverge by more than 30 days, the typing
+    strip notes the mean as "skewed" — this indicates the cluster has a
+    bimodal lag distribution (some recently-deposited fresh data plus
+    some long-backlogged historical data).
+  </p>
+  <p>
+    <strong>How to interpret.</strong>
+  </p>
+  <ul>
+    <li><strong>&lt;30 days median:</strong> Active surveillance pipeline, deposits keeping up with collection.</li>
+    <li><strong>30–180 days median:</strong> Typical for academic and federal surveillance — sequencing and metadata review takes time.</li>
+    <li><strong>&gt;180 days median:</strong> The cluster's signal is heavily backlog-driven. Recent "new" deposits may reflect old cases. Acceleration signals on such clusters should be viewed skeptically.</li>
+  </ul>
+</section>
+
+<section id="mlst">
+  <h2>MLST and Sequence Types</h2>
+  <p>
+    <strong>MLST</strong> (Multi-Locus Sequence Typing) classifies bacterial
+    isolates by sequencing seven specific housekeeping genes and
+    concatenating their allele numbers into a Sequence Type (ST). For
+    <em>Salmonella enterica</em>, the loci are
+    <code>abcZ</code>, <code>bglA</code>, <code>cat</code>,
+    <code>dapE</code>, <code>dat</code>, <code>ldh</code>, and
+    <code>lhkA</code>. The canonical reference database is
+    <a href="https://pubmlst.org/organisms/salmonella-spp">PubMLST</a>.
+  </p>
+  <p>
+    SalmonellaWatch-Ag picks one representative isolate per cluster (preferring
+    Complete Genome &gt; Chromosome &gt; Scaffold &gt; Contig, then highest
+    contig N50, then earliest collection date), downloads its assembly from
+    NCBI, and runs
+    <a href="https://github.com/tseemann/mlst">Torsten Seemann's mlst tool</a>
+    on it. Because cluster members are by definition genomically tight, we
+    assume the resulting ST applies to all members of the cluster. In
+    practice this holds for >99% of clusters.
+  </p>
+  <p>
+    The dashboard shows:
+  </p>
+  <ul>
+    <li><strong>ST<em>n</em></strong> — e.g. ST6, ST121: the assigned sequence type.</li>
+    <li><strong>"pending"</strong> — the cluster's representative has not been typed yet (MLST runs incrementally with a per-day budget).</li>
+    <li><strong>"untypeable"</strong> — the genome failed MLST, typically because of poor assembly quality or unusual allele combinations not in the PubMLST scheme.</li>
+  </ul>
+</section>
+
+
+
+<section id="amr">
+<h2>AMR genotype flag</h2>
+<p>
+  The <strong>AMR</strong> chip fires when at least one isolate in the cluster carries
+  an acquired antimicrobial resistance gene detected by AMRFinderPlus. The dashboard
+  displays the AMR genotype strings as reported by NCBI Pathogen Detection, organized
+  by country.
+</p>
+<p>
+  For <em>Salmonella enterica</em>, clinically important resistance includes genes
+  conferring resistance to fluoroquinolones (e.g., <em>gyrA</em> point mutations,
+  <em>qnr</em> genes), third-generation cephalosporins (e.g., <em>bla</em><sub>CTX-M</sub>,
+  <em>bla</em><sub>CMY-2</sub>), and azithromycin (<em>mph(A)</em>, <em>erm(B)</em>),
+  as these are the primary treatment options for invasive salmonellosis.
+  Multidrug resistance (MDR, resistance to ≥3 antibiotic classes) and
+  extensively drug-resistant (XDR) phenotypes are of particular concern
+  in serovars Typhi, Typhimurium, and Kentucky.
+</p>
+<p class="caveat">
+  <strong>Temporarily unavailable.</strong> NCBI changed the format of the AMR
+  sidecar file in mid-2026, replacing per-gene rows with summary columns. The
+  parser has not yet been updated, so gene-level AMR chips are not currently
+  displayed. Cluster data is otherwise unaffected. This is being restored.
+</p>
+<p>
+  <strong>Caveat.</strong> The chip flags gene presence, not confirmed phenotype.
+  Phenotypic confirmation requires antibiotic susceptibility testing in a
+  clinical microbiology lab. The AMR genotypes shown are as reported by
+  AMRFinderPlus via NCBI Pathogen Detection.
+</p>
+</section>
+
+<section id="ifsac">
+  <h2>IFSAC food categorization</h2>
+  <p>
+    The IFSAC chip shows the most common food category among nonhuman
+    isolates in the cluster, as recorded in NCBI's
+    <code>IFSAC_category</code> field.
+  </p>
+  <p>
+    <strong>IFSAC</strong> (Interagency Food Safety Analytics Collaboration)
+    is a federal interagency group — CDC, FDA, and USDA-FSIS — that
+    publishes a standardized food categorization scheme for foodborne
+    illness attribution. The canonical scheme is published by
+    <a href="https://www.cdc.gov/ifsac/overview/index.html">CDC IFSAC</a>.
+    Common categories include Dairy, Vegetable Row Crops, Meat-Poultry,
+    Beef, Pork, Chicken, Turkey, Fish, and so on.
+  </p>
+  <p>
+    Human isolates are excluded from the IFSAC count — their IFSAC field,
+    when populated, describes the patient's reported food exposure, which
+    is a different epidemiological semantic from "isolate sourced from food
+    category X."
+  </p>
+  <p>
+    <strong>Caveat.</strong> SalmonellaWatch-Ag displays whatever string the
+    submitter entered. Inconsistencies in submitter labeling (e.g., "BEEF"
+    vs. "beef" vs. "Beef products") will produce inconsistent category
+    labels.
+  </p>
+</section>
+
+<section id="host-species">
+  <h2>Commodity-coded collection histograms
+Serotypes of Concern (SOC)
+Animal host species</h2>
+  <p>
+    For clusters with nonhuman animal isolates, the "Animal hosts" line
+    under Top sources of isolation shows the actual host strings as
+    submitted to NCBI — e.g., <em>Bos taurus</em> (cattle), <em>Sus
+    scrofa</em> (pig), <em>Gallus gallus</em> (chicken). Counts are the
+    number of cluster isolates with each host string.
+  </p>
+  <p>
+    This information is hidden behind the broader "Animal" source category
+    in most surveillance views. Surfacing it directly helps investigators
+    quickly identify the species reservoir of a cluster.
+  </p>
+  <h3>Caveat</h3>
+  <p>
+    NCBI host strings are inconsistently submitted. The same species may
+    appear as "Bos taurus", "bovine", "cattle", or "cow" depending on the
+    submitter. This dashboard does not canonicalize — strings are
+    displayed as submitted. When interpreting host counts, mentally
+    collapse synonyms.
+  </p>
+</section>
+
+<section id="map">
+  <h2>Geographic footprint map</h2>
+  <p>
+    The per-cluster map shows the cluster's full geographic footprint
+    across all isolates with a known <code>collection_date</code> and a
+    geocodable location. There is no time-window filter on the map (the
+    "1-year window" was removed because <em>Salmonella</em> clusters span
+    decades). Recency is encoded as <strong>dot opacity</strong> instead:
+  </p>
+  <ul>
+    <li>Most-recent isolate at the location is ≤365 days old → full opacity</li>
+    <li>Most-recent isolate is 1–5 years old → progressively faded (linear interpolation)</li>
+    <li>Most-recent isolate is &gt;5 years old → minimum opacity (0.35)</li>
+  </ul>
+  <p>
+    <strong>Location aggregation:</strong> U.S. isolates with a known
+    <code>geo_admin1</code> (state) aggregate to state centroids; all
+    other isolates aggregate to country centroids. Isolates with no
+    geocodable location are dropped silently (not counted on the map).
+  </p>
+  <p>
+    <strong>Dot color:</strong> red = human cases at that location, teal =
+    nonhuman, split red/teal = mixed location. Dot radius scales with
+    sqrt(total count), clamped at a maximum.
+  </p>
+  <p>
+    <strong>Caveat on map outlines.</strong> The continent silhouettes are
+    hand-drawn approximations, not Natural Earth-quality data. They
+    provide geographic context at the small inset size; they are not
+    cartographically precise. Small islands, archipelagos, and minor
+    coastline features are omitted or compressed.
+  </p>
+</section>
+
+<section id="histogram">
+<h2>Isolates-per-year histogram (legacy)</h2>
+<p>
+  See <a href="#commodity-histograms">Commodity-coded collection histograms</a> above
+  for the current implementation, which replaces the simple human/nonhuman split
+  with commodity-level detail.
+</p>
+</section>
+
+<section id="oldest">
+  <h2>Cluster origins (oldest isolates)</h2>
+  <p>
+    The "Cluster origins" panel shows three reference points for when the
+    cluster was first detected:
+  </p>
+  <dl class="defs">
+    <dt>Oldest isolate (any source)</dt>
+    <dd>The earliest-collected isolate in the cluster regardless of source category. Tells you when the cluster's genomic signal first appeared at all.</dd>
+    <dt>Oldest human isolate</dt>
+    <dd>The earliest-collected human isolate. Tells you when this cluster first caused detected disease.</dd>
+    <dt>Oldest nonhuman isolate</dt>
+    <dd>The earliest-collected food, animal, or environmental isolate. Tells you when a (potential) source first showed up in surveillance.</dd>
+  </dl>
+  <p>
+    Each panel displays the collection date, geographic location, and
+    isolation source (when available), plus the PDT accession. Ties broken
+    by preferring more-specific geography (admin1 over country) and then
+    by alphabetical PDT.
+  </p>
+</section>
+
+
+
+<section id="commodity-histograms">
+<h2>Commodity-coded collection histograms</h2>
+<p>
+  Each cluster card displays two stacked-bar histograms showing isolate collection
+  frequency over time, color-coded by source commodity:
+</p>
+<ul>
+  <li><strong>Collection frequency by year</strong> — all-time view showing how the cluster has grown</li>
+  <li><strong>Collection frequency — last 12 months</strong> — monthly resolution for recent activity</li>
+</ul>
+<p>
+  Commodity categories are assigned by keyword matching against the isolate's
+  <code>isolation_source</code> and <code>ifsac_category</code> fields:
+</p>
+<ul>
+  <li><span style="color:#e74c3c;">■</span> <strong>Human</strong> — clinical/human source</li>
+  <li><span style="color:#f39c12;">■</span> <strong>Poultry</strong> — chicken, turkey, broiler, avian, egg</li>
+  <li><span style="color:#8e44ad;">■</span> <strong>Bovine</strong> — beef, cattle, cow, dairy</li>
+  <li><span style="color:#e91e90;">■</span> <strong>Swine</strong> — pork, pig, hog</li>
+  <li><span style="color:#27ae60;">■</span> <strong>Produce</strong> — vegetable, fruit, leafy greens, nuts, herbs</li>
+  <li><span style="color:#2980b9;">■</span> <strong>Water</strong> — surface water, environmental water</li>
+  <li><span style="color:#95a5a6;">■</span> <strong>Other</strong> — all other non-human sources</li>
+</ul>
+<p>
+  Use the histograms alongside the acceleration chip: a cluster flagged as
+  accelerating should show a visibly rising trend in recent bars. Acceleration
+  without a visible trend may indicate a deposition artifact.
+</p>
+</section>
+
+<section id="soc">
+<h2>Serotypes of Concern (SOC)</h2>
+<p>
+  Clusters whose consensus serotype matches a <strong>Serotype of Concern (SOC)</strong>
+  are flagged with a <span style="background:#fff3cd;color:#856404;padding:1px 5px;border-radius:3px;font-size:12px;font-weight:600;">⚠ SOC</span> badge.
+  SOC designations follow the prioritization framework of
+  <strong>Katz et al. (2024)</strong>, which identified <em>Salmonella</em>
+  serotypes of concern for reducing risk of salmonellosis using
+  criteria including incidence, severity, outbreak potential,
+  antimicrobial resistance, and association with specific food commodities.
+</p>
+<p>
+  The 21 serotypes classified as SOC in SalmonellaWatch-Ag are:
+  Enteritidis, Typhimurium, I&nbsp;4,[5],12:i:- (monophasic),
+  Heidelberg, Infantis, Newport, Uganda, Braenderup, Muenchen,
+  Montevideo, Javiana, Reading, Dublin, Oranienburg, Potsdam,
+  Thompson, Saintpaul, Hadar, Schwarzengrund, Anatum, and Berta.
+</p>
+<p class="ref">
+  Katz TS, Harhay DM, Schmidt JW, Wheeler TL.
+  &ldquo;Identifying a list of <em>Salmonella</em> serotypes of concern to target
+  for reducing risk of salmonellosis.&rdquo;
+  <em>Front Microbiol.</em> 2024 Feb 12;15:1307563.
+  <a href="https://doi.org/10.3389/fmicb.2024.1307563" target="_blank" rel="noopener">doi:10.3389/fmicb.2024.1307563</a>
+</p>
+</section>
+
+<section id="references">
+  <h2>References</h2>
+  <p>
+    The methods and definitions on this page draw on the following
+    sources. Where a primary source is available the link points there;
+    otherwise the canonical project URL.
+  </p>
+
+  <h3>Surveillance data and tools</h3>
+  <ul>
+    <li>
+      <strong>NCBI Pathogen Detection.</strong>
+      Primary data source for all clusters, isolate metadata, and AMR calls
+      on this dashboard.
+      <a href="https://www.ncbi.nlm.nih.gov/pathogens/" target="_blank" rel="noopener">https://www.ncbi.nlm.nih.gov/pathogens/</a>
+    </li>
+    <li>
+      <strong>NCBI Pathogen Detection — about.</strong>
+      Description of the SNP clustering, AMR, and submission workflows.
+      <a href="https://www.ncbi.nlm.nih.gov/pathogens/about/" target="_blank" rel="noopener">https://www.ncbi.nlm.nih.gov/pathogens/about/</a>
+    </li>
+    <li>
+      <strong>AMRFinderPlus.</strong>
+      Tool used by NCBI to identify AMR, stress response, and virulence
+      genes in submitted isolates. Source of the gene calls referenced by
+      the AMR signal.
+      <a href="https://github.com/ncbi/amr/wiki" target="_blank" rel="noopener">https://github.com/ncbi/amr/wiki</a>
+    </li>
+    <li>
+      <strong>PubMLST: <em>Salmonella enterica</em>.</strong>
+      Canonical reference for ST assignments and CC groupings used by
+      this dashboard.
+      <a href="https://pubmlst.org/organisms/salmonella-spp" target="_blank" rel="noopener">https://pubmlst.org/organisms/salmonella-spp</a>
+    </li>
+    <li>
+      <strong>Torsten Seemann — mlst.</strong>
+      Command-line MLST typing tool, run by this dashboard to type each
+      cluster's representative assembly.
+      <a href="https://github.com/tseemann/mlst" target="_blank" rel="noopener">https://github.com/tseemann/mlst</a>
+    </li>
+    <li>
+      <strong>CDC IFSAC.</strong>
+      Interagency Food Safety Analytics Collaboration — source of the
+      standardized IFSAC food category labels.
+      <a href="https://www.cdc.gov/ifsac/overview/index.html" target="_blank" rel="noopener">https://www.cdc.gov/ifsac/overview/index.html</a>
+    </li>
+    <li>
+      <strong>Natural Earth.</strong>
+      Public-domain reference geographic data. The world map outlines on
+      this dashboard are simplified approximations inspired by but not
+      directly derived from Natural Earth data.
+      <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">https://www.naturalearthdata.com/</a>
+    </li>
+  </ul>
+
+  <h3>Outbreak-detection methodology (acceleration signal)</h3>
+  <p>
+    The acceleration signal on this dashboard is a simplified ratio-based
+    flag. Mature outbreak-detection algorithms are referenced below for
+    surveillance professionals who need properly calibrated statistical
+    tests:
+  </p>
+  <ul>
+    <li>
+      <strong>Farrington algorithm (1996).</strong>
+      Farrington, C.P., Andrews, N.J., Beale, A.D., &amp; Catchpole, M.A.
+      "A Statistical Algorithm for the Early Detection of Outbreaks of
+      Infectious Disease." <em>Journal of the Royal Statistical Society:
+      Series A</em>, 159(3): 547–563.
+      <a href="https://doi.org/10.2307/2983331" target="_blank" rel="noopener">https://doi.org/10.2307/2983331</a>
+    </li>
+    <li>
+      <strong>Farrington Flexible (Noufaily et al., 2013).</strong>
+      Improved version of the Farrington algorithm with reweighting for
+      past aberrations and better seasonality handling. Used by ECDC and
+      UKHSA for routine outbreak detection.
+    </li>
+    <li>
+      <strong>CUSUM (Cumulative Sum Control Chart).</strong>
+      Page, E.S. (1954). "Continuous Inspection Schemes." <em>Biometrika</em>,
+      41(1/2): 100–115. The classic foundation for cumulative-sum
+      change-detection used widely in public-health surveillance.
+      <a href="https://doi.org/10.2307/2333009" target="_blank" rel="noopener">https://doi.org/10.2307/2333009</a>
+    </li>
+    <li>
+      <strong>SaTScan.</strong>
+      Software implementing spatial, temporal, and space-time scan
+      statistics for outbreak detection. Used by many state and national
+      public-health agencies.
+      <a href="https://www.satscan.org/" target="_blank" rel="noopener">https://www.satscan.org/</a>
+    </li>
+    <li>
+      <strong>R <code>surveillance</code> package.</strong>
+      Reference R implementation of Farrington and other algorithms.
+      <a href="https://cran.r-project.org/package=surveillance" target="_blank" rel="noopener">https://cran.r-project.org/package=surveillance</a>
+    </li>
+  </ul>
+
+  <h3>Foodborne disease classification (import vs. travel)</h3>
+  <ul>
+    <li>
+      <strong>ECDC Salmonella surveillance.</strong>
+      The European Centre for Disease Prevention and Control publishes
+      annual epidemiological reports that distinguish imported food cases
+      from travel-associated cases.
+      <a href="https://www.ecdc.europa.eu/en/salmonellosis" target="_blank" rel="noopener">https://www.ecdc.europa.eu/en/salmonellosis</a>
+    </li>
+    <li>
+      <strong>CDC Salmonella surveillance.</strong>
+      U.S. national salmonellosis surveillance, including the Salmonella
+      Initiative case investigations.
+      <a href="https://www.cdc.gov/salmonella/php/surveillance/index.html" target="_blank" rel="noopener">https://www.cdc.gov/salmonella/php/surveillance/index.html</a>
+    </li>
+    <li>
+      <strong>FoodNet (CDC).</strong>
+      Active surveillance for foodborne disease in the U.S.; the
+      operational reference for case definitions.
+      <a href="https://www.cdc.gov/foodnet/" target="_blank" rel="noopener">https://www.cdc.gov/foodnet/</a>
+    </li>
+  </ul>
+
+  <p class="meta">
+    Specific clinical and microbiological claims in the CC and AMR
+    sections of this page are <strong>compilations from training-data
+    summaries of public surveillance literature, not peer-reviewed
+    statements</strong>. Domain experts should consult primary sources
+    before using them in any decision-making.
+  </p>
+</section>
+
+<section id="caveats">
+  <h2>Top-level caveats</h2>
+  <ol>
+    <li>
+      <strong>SalmonellaWatch-Ag is a personal research project, not an official
+      surveillance system.</strong> It is not authorized to issue health
+      advisories, food recalls, or outbreak declarations. CDC, FDA, and
+      USDA do that, with the benefit of epidemiological and laboratory
+      investigation that this dashboard does not perform.
+    </li>
+    <li>
+      <strong>Clusters are genomic predictions, not confirmed outbreaks.</strong>
+      Genomic relatedness is necessary but not sufficient for outbreak
+      confirmation. Cases in the same cluster may not share a real food
+      vector.
+    </li>
+    <li>
+      <strong>The CC and AMR labels have not been peer-reviewed.</strong>
+      They are based on the author's compilation of public literature
+      summaries. Treat them as pointers to the literature, not as
+      authoritative biological claims. Domain experts should review before
+      drawing conclusions.
+    </li>
+    <li>
+      <strong>Travel association is under-detected.</strong> The travel
+      signal catches only submitter-annotated travel cases. Most
+      travel-associated illness is not annotated this way.
+    </li>
+    <li>
+      <strong>Import and travel signals can co-fire on the same cluster.</strong>
+      Each is computed independently from different metadata fields.
+      Co-firing does not mean both phenomena are present — and absence
+      does not rule them out. Distinguishing requires epidemiological case
+      investigation that this dashboard cannot perform.
+    </li>
+    <li>
+      <strong>Data lags real-time deposits by hours to days.</strong> The
+      ingest runs nightly. A case sequenced today will appear here
+      tomorrow at the earliest.
+    </li>
+    <li>
+      <strong>Missing data is silent.</strong> An isolate without a
+      <code>target_creation_date</code> doesn't appear in active-cluster counts;
+      an isolate without a geocodable location doesn't appear on the map;
+      an isolate without an <code>IFSAC_category</code> doesn't contribute
+      to the IFSAC chip. These are common.
+    </li>
+  </ol>
+</section>
+
+<section>
+  <p class="meta">
+    <a href="index.html">← Back to dashboard</a>
+  </p>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>
+      SalmonellaWatch-Ag v1 · daily surveillance digest · Data from
+      <a href="https://www.ncbi.nlm.nih.gov/pathogens/">NCBI Pathogen Detection</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
